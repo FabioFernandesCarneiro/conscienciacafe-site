@@ -1,0 +1,36 @@
+{
+  "accounts": {
+    "conta_corrente": {
+      "name": "Conta Corrente Principal",
+      "type": "checking",
+      "omie_account_id": 2103553430,
+      "patterns": [
+        "corrente",
+        "checking"
+      ],
+      "description": "Conta corrente principal da empresa"
+    },
+    "caixinha": {
+      "name": "Caixinha",
+      "type": "cash",
+      "omie_account_id": 1952848402,
+      "patterns": [
+        "caixa",
+        "dinheiro",
+        "cash"
+      ],
+      "description": "Controle de caixa físico"
+    },
+    "cartao_credito": {
+      "name": "Cartão de Crédito",
+      "type": "credit_card",
+      "omie_account_id": 2103781092,
+      "patterns": [
+        "cartao",
+        "credit",
+        "credito"
+      ],
+      "description": "Cartão de crédito empresarial"
+    }
+  }
+}

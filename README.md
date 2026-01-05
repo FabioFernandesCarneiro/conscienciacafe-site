@@ -1,46 +1,65 @@
-# Astro Starter Kit: Basics
+# Consciência Café - Monorepo
 
-```sh
-npm create astro@latest -- --template basics
+Repositório centralizado com todos os projetos do Consciência Café.
+
+## Estrutura
+
+```
+ConscienciaCafe/
+├── apps/
+│   ├── site/           # Site institucional (Astro + Tailwind)
+│   ├── financeiro/     # Sistema de gestão financeira (Python/Flask)
+│   └── intellicoffee/  # App de gestão (Flutter + Firebase)
+└── README.md
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Projetos
 
-## 🚀 Project Structure
+### Site (`apps/site/`)
 
-Inside of your Astro project, you'll see the following folders and files:
+Site institucional do Consciência Café com blog sobre café.
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+**Tecnologias:** Astro, Tailwind CSS, TypeScript
+
+```bash
+cd apps/site
+npm install
+npm run dev      # Dev server em localhost:4321
+npm run build    # Build para produção
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+### Financeiro (`apps/financeiro/`)
 
-## 🧞 Commands
+Sistema de gestão financeira com conciliação bancária inteligente, integração Omie ERP e CRM B2B.
 
-All commands are run from the root of the project, from a terminal:
+**Tecnologias:** Python, Flask, SQLAlchemy, scikit-learn
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+```bash
+cd apps/financeiro
+python -m venv venv
+source venv/bin/activate  # ou venv\Scripts\activate no Windows
+pip install -r requirements.txt
+cp .env.example .env      # Configurar variáveis de ambiente
+python app.py
+```
 
-## 👀 Want to learn more?
+### IntelliCoffee (`apps/intellicoffee/`)
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Aplicativo de gestão para cafeterias com suporte a iOS, Android e Web.
+
+**Tecnologias:** Flutter, Dart, Firebase (Firestore, Auth, Functions)
+
+```bash
+cd apps/intellicoffee
+flutter pub get
+flutter run -d chrome     # Web
+flutter run               # Mobile
+```
+
+## Desenvolvimento
+
+Cada projeto mantém suas próprias dependências e pode ser desenvolvido independentemente.
+
+---
+
+Consciência Café - Foz do Iguaçu, PR

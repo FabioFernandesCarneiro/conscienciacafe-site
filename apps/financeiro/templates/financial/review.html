@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <h2 class="mb-4">Conciliação e Revisão</h2>
+
+    <!-- Transfer Suggestions -->
+    {% if suggested_transfers %}
+    <div class="card mb-4 border-info">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0"><i class="fas fa-exchange-alt me-2"></i>Transferências Sugeridas</h5>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Origem</th>
+                        <th>Destino</th>
+                        <th>Valor</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for suggestion in suggested_transfers %}
+                    <tr id="transfer-row-{{ loop.index }}">
+                        <td>{{ suggestion.outbound.date.strftime('%d/%m/%Y') }}</td>
+                        <td>{{ suggestion.outbound.account.name }}</td>
+                        <td>{{ suggestion.inbound.account.name }}</td>
+                        <td>R$ {{ suggestion.inbound.amount|abs }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-success confirm-transfer"
+                                data-outbound="{{ suggestion.outbound.id }}" data-inbound="{{ suggestion.inbound.id }}"
+                                data-row="transfer-row-{{ loop.index }}">
+                                Confirmar
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Transactions List -->
+    <div class="card">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">Transações Recentes</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Data</th>
+                            <th>Conta</th>
+                            <th>Descrição</th>
+                            <th>Valor</th>
+                            <th>Categoria</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for t in transactions %}
+                        <tr>
+                            <td>{{ t.date.strftime('%d/%m/%Y') }}</td>
+                            <td>
+                                <span class="badge bg-light text-dark border">{{ t.account.name }}</span>
+                            </td>
+                            <td>
+                                {{ t.description }}
+                                {% if t.original_description and t.original_description != t.description %}
+                                <br><small class="text-muted">{{ t.original_description }}</small>
+                                {% endif %}
+                            </td>
+                            <td class="{{ 'text-success' if t.amount > 0 else 'text-danger' }}">
+                                R$ {{ t.amount }}
+                            </td>
+                            <td>
+                                <select class="form-select form-select-sm category-select" data-id="{{ t.id }}">
+                                    <option value="">Sem Categoria</option>
+                                    {% for cat in categories %}
+                                    <option value="{{ cat.id }}" {% if t.category_id==cat.id %}selected{% endif %}>
+                                        {{ cat.name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                {% if t.type == 'transfer' %}
+                                <span class="badge bg-info">Transferência</span>
+                                {% elif t.user_corrected %}
+                                <span class="badge bg-success">Verificado</span>
+                                {% elif t.ml_confidence and t.ml_confidence > 0.8 %}
+                                <span class="badge bg-primary">IA ({{ (t.ml_confidence * 100)|int }}%)</span>
+                                {% else %}
+                                <span class="badge bg-warning text-dark">Pendente</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Update Category
+        document.querySelectorAll('.category-select').forEach(select => {
+            select.addEventListener('change', function () {
+                const tId = this.dataset.id;
+                const catId = this.value;
+
+                fetch(`/financial/api/transaction/${tId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ category_id: catId })
+                }).then(res => {
+                    if (res.ok) {
+                        // Optional: Show toast or visual feedback
+                        this.closest('tr').querySelector('.badge').className = 'badge bg-success';
+                        this.closest('tr').querySelector('.badge').innerText = 'Verificado';
+                    }
+                });
+            });
+        });
+
+        // Confirm Transfer
+        document.querySelectorAll('.confirm-transfer').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const outboundId = this.dataset.outbound;
+                const inboundId = this.dataset.inbound;
+                const rowId = this.dataset.row;
+
+                fetch('/financial/api/confirm-transfer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ outbound_id: outboundId, inbound_id: inboundId })
+                }).then(res => {
+                    if (res.ok) {
+                        document.getElementById(rowId).remove();
+                        location.reload(); // Reload to update main list
+                    }
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}

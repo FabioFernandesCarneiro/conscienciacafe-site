@@ -1,0 +1,61 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Regras gerais para permitir acesso aos usuários autenticados
+    match /{document=**} {
+      allow read: if request.auth != null;
+    }
+
+    // Regras específicas para cada coleção
+
+    // Usuários
+    match /users/{userId} {
+      // Permitir leitura para qualquer usuário autenticado para simplificar o desenvolvimento
+      // Em produção, isso seria mais restrito
+      allow read: if request.auth != null;
+
+      // Permitir criação, atualização e exclusão de usuários para qualquer usuário autenticado
+      // Em produção, deve ser restrito apenas a administradores
+      allow write: if request.auth != null;
+
+      // Subcoleções de usuários
+      match /{subcollection}/{document} {
+        allow read, write: if request.auth != null;
+      }
+    }
+
+    // Clientes
+    match /customers/{customerId} {
+      allow read, write: if request.auth != null;
+    }
+
+    // Pedidos
+    match /orders/{orderId} {
+      allow read, write: if request.auth != null;
+    }
+
+    // Produtos
+    match /products/{productId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null; // Em produção, seria restrito a administradores
+    }
+
+    // Produtos de café
+    match /coffeeProducts/{coffeeProductId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null; // Em produção, seria restrito a administradores
+    }
+
+    // Regras de fidelidade
+    match /loyaltyRules/{ruleId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null; // Em produção, seria restrito a administradores
+    }
+
+    // Transações de fidelidade
+    match /loyaltyTransactions/{transactionId} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}

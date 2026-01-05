@@ -1,24 +1,131 @@
-# build output
-dist/
+# =========================
+# Consciência Café Monorepo
+# =========================
 
-# generated types
-.astro/
-
-# dependencies
+# =========================
+# Node.js / JavaScript
+# =========================
 node_modules/
-
-# logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+.npm
+.yarn-integrity
 
-# environment variables
-.env
-.env.production
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+ENV/
+env/
+*.egg-info/
+*.egg
+.eggs/
+*.manifest
+*.spec
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.mypy_cache/
+*.db
+*.pkl
 
-# macOS-specific files
-.DS_Store
+# =========================
+# Flutter / Dart
+# =========================
+.dart_tool/
+.packages
+**/build/
+.flutter-plugins
+.flutter-plugins-dependencies
 
-# jetbrains setting folder
+# Android
+**/android/.gradle/
+**/android/captures/
+**/android/local.properties
+**/android/**/GeneratedPluginRegistrant.*
+
+# iOS
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/app.flx
+**/ios/Flutter/app.zip
+**/ios/Flutter/flutter_assets/
+**/ios/ServiceDefinitions.json
+**/ios/Runner/GeneratedPluginRegistrant.*
+
+# =========================
+# Astro
+# =========================
+.astro/
+dist/
+
+# =========================
+# Firebase
+# =========================
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+pubsub-debug.log
+
+# =========================
+# IDEs / Editors
+# =========================
 .idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.iml
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# =========================
+# Secrets / Credentials
+# =========================
+.env
+.env.local
+.env.*.local
+.env.production
+*.pem
+*.key
+google-credentials.json
+service-account*.json
+
+# =========================
+# Logs
+# =========================
+*.log

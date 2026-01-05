@@ -1,0 +1,870 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard B2B - Consciência Café{% endblock %}
+
+{% block extra_css %}
+<!-- Custom dashboard styles moved to custom.css -->
+{% endblock %}
+
+{% block content %}
+<div class="b2b-dashboard">
+    <div class="d-flex flex-wrap justify-content-between align-items-center pb-2 mb-3 border-bottom">
+        <div>
+            <h1 class="h2 mb-1">
+                <i class="bi bi-graph-up-arrow"></i> Dashboard B2B
+            </h1>
+            <p class="text-muted mb-0">Análise de vendas, clientes e previsões</p>
+        </div>
+        <div class="d-flex flex-wrap align-items-center gap-3">
+            <div class="d-flex align-items-center text-muted gap-2">
+                <i class="bi bi-calendar"></i>
+                <span id="current-date"></span>
+            </div>
+            <span class="badge bg-secondary-subtle text-secondary" id="data-source-label">Carregando...</span>
+            <div class="d-flex gap-2 align-items-center">
+                <button class="btn btn-outline-secondary btn-sm" id="prev-month" type="button" title="Mês anterior">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+                <input type="month" class="form-control form-control-sm" id="month-selector">
+                <button class="btn btn-outline-secondary btn-sm" id="next-month" type="button" title="Próximo mês">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+                <button class="btn btn-primary btn-sm" onclick="refreshDashboard()">
+                    <i class="bi bi-arrow-clockwise"></i> Atualizar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="alerts-container"></div>
+
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 border-start border-4 border-danger">
+                <div class="card-body text-center">
+                    <i class="bi bi-exclamation-triangle display-5 text-danger"></i>
+                    <h5 class="card-title mt-2">Clientes Inativos</h5>
+                    <h3 id="inactive-count" class="mb-2">-</h3>
+                    <small id="inactive-percentage" class="text-muted">- % do total</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 border-start border-4 border-success">
+                <div class="card-body text-center">
+                    <i class="bi bi-calendar-month display-5 text-success"></i>
+                    <h5 class="card-title mt-2">Receita do Mês</h5>
+                    <h3 id="current-month-revenue" class="mb-2">R$ -</h3>
+                    <small id="revenue-growth" class="text-muted">- % vs mês anterior</small>
+                    <hr class="my-2 opacity-25">
+                    <small class="opacity-75 text-muted">
+                        Total: <span id="total-revenue-small">R$ -</span>
+                    </small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 border-start border-4 border-info">
+                <div class="card-body text-center">
+                    <i class="bi bi-people display-5 text-info"></i>
+                    <h5 class="card-title mt-2">Total Clientes</h5>
+                    <h3 id="total-clients" class="mb-2">-</h3>
+                    <small id="active-clients" class="text-muted">- ativos no período</small>
+                    <hr class="my-2 opacity-25">
+                    <small class="opacity-75 text-muted">
+                        <i class="bi bi-person-plus"></i> Novos: <span id="new-clients-count">-</span>
+                    </small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 border-start border-4 border-warning">
+                <div class="card-body text-center">
+                    <i class="bi bi-graph-up-arrow display-5 text-warning"></i>
+                    <h5 class="card-title mt-2">Ticket Médio</h5>
+                    <h3 id="average-ticket" class="mb-2">R$ -</h3>
+                    <small id="ticket-trend" class="text-muted">Tendência do período</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="chart-container h-100">
+                <h5 class="mb-3">
+                    <i class="bi bi-person-plus text-success"></i> Novos Clientes do Mês
+                    <span class="badge bg-success" id="new-clients-count-badge">-</span>
+                </h5>
+                <div style="max-height: 320px; overflow-y: auto;">
+                    <div id="new-clients-detailed" class="list-group"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="chart-container h-100">
+                <h5 class="mb-3">
+                    <i class="bi bi-exclamation-triangle text-warning"></i> Clientes Inativos
+                    <span class="badge bg-warning text-dark" id="inactive-count-badge">-</span>
+                </h5>
+                <div style="max-height: 320px; overflow-y: auto;">
+                    <div id="inactive-clients-detailed" class="list-group"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="chart-container h-100">
+                <h5 class="mb-3">
+                    <i class="bi bi-shield-exclamation text-danger"></i> Alto Risco de Churn
+                    <span class="badge bg-danger" id="high-risk-count-badge">-</span>
+                </h5>
+                <div style="max-height: 320px; overflow-y: auto;">
+                    <div id="high-risk-clients-detailed" class="list-group"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="chart-container">
+                <h5 class="mb-3"><i class="bi bi-bar-chart"></i> Evolução da Receita Mensal</h5>
+                <div style="height: 320px;">
+                    <canvas id="revenue-chart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="chart-container">
+                <h5 class="mb-3"><i class="bi bi-archive"></i> Volume de Vendas (Kg)</h5>
+                <div style="height: 320px;">
+                    <canvas id="volume-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="chart-container">
+                <h5 class="mb-3"><i class="bi bi-globe"></i> Evolução por País</h5>
+                <div style="height: 300px;">
+                    <canvas id="countries-evolution-chart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="chart-container">
+                <h5 class="mb-3"><i class="bi bi-flag"></i> Receita por País (Mês Atual)</h5>
+                <div id="countries-revenue-cards"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="chart-container h-100">
+                <h5 class="mb-1">
+                    <i class="bi bi-trophy"></i> Top 10 Clientes (Período Total)
+                    <i class="bi bi-info-circle ms-1 text-muted" data-bs-toggle="tooltip"
+                        title="Ranking calculado sobre todo o histórico disponível, independente do mês selecionado."></i>
+                </h5>
+                <div class="text-muted small mb-2">Histórico completo (independe do mês selecionado)</div>
+                <div class="table-responsive">
+                    <table class="table table-hover" id="top-clients-table">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Receita</th>
+                                <th>Compras</th>
+                                <th>Última Compra</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="chart-container h-100">
+                <h5 class="mb-3"><i class="bi bi-funnel"></i> Funil de Leads</h5>
+                <div id="lead-funnel-summary" class="mb-3 text-muted small"></div>
+                <div id="lead-funnel-stages"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/dist/date-fns.min.js"></script>
+<script
+    src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@2.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+<script>
+    let revenueChart, volumeChart, countriesChart;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const currentDateElement = document.getElementById('current-date');
+        if (currentDateElement) {
+            currentDateElement.textContent = new Date().toLocaleDateString('pt-BR');
+        }
+        // Initialize Bootstrap tooltips (for info icons)
+        if (window.bootstrap && document.querySelector('[data-bs-toggle="tooltip"]')) {
+            document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
+                try { new bootstrap.Tooltip(el); } catch (_) { }
+            });
+        }
+
+        const essentialElements = [
+            'inactive-count',
+            'current-month-revenue',
+            'total-clients',
+            'average-ticket',
+            'month-selector',
+            'prev-month',
+            'next-month'
+        ];
+
+        const missingElements = essentialElements.filter(id => !document.getElementById(id));
+        if (missingElements.length > 0) {
+            console.error('❌ Elementos essenciais não encontrados:', missingElements);
+            return;
+        }
+
+        const monthControl = document.getElementById('month-selector');
+        if (monthControl && !monthControl.value) {
+            monthControl.value = formatMonthValue(new Date());
+        }
+        if (monthControl) {
+            monthControl.addEventListener('change', () => loadDashboardData());
+        }
+
+        const prevBtn = document.getElementById('prev-month');
+        const nextBtn = document.getElementById('next-month');
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => shiftMonth(-1));
+        }
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => shiftMonth(1));
+        }
+
+        loadDashboardData();
+    });
+
+    function refreshDashboard() {
+        loadDashboardData();
+    }
+
+    async function loadDashboardData() {
+        try {
+            showLoadingState();
+            const params = new URLSearchParams();
+            const monthValue = document.getElementById('month-selector')?.value;
+            if (monthValue) {
+                params.set('month', monthValue);
+            }
+            const query = params.toString();
+            const response = await fetch(`/api/b2b/dashboard${query ? `?${query}` : ''}`);
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`HTTP ${response.status}: ${errorText}`);
+            }
+
+            const data = await response.json();
+            updateDashboard(data);
+        } catch (error) {
+            console.error('❌ Erro ao carregar dashboard:', error);
+            showError(`Erro ao carregar dados: ${error.message}`);
+        }
+    }
+
+    function shiftMonth(delta) {
+        const monthControl = document.getElementById('month-selector');
+        if (!monthControl) return;
+
+        const currentValue = monthControl.value || formatMonthValue(new Date());
+        const [year, month] = currentValue.split('-').map(Number);
+        if (!year || !month) return;
+
+        const newDate = new Date(year, month - 1 + delta, 1);
+        monthControl.value = formatMonthValue(newDate);
+        loadDashboardData();
+    }
+
+    function formatMonthValue(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        return `${year}-${month}`;
+    }
+
+    function updateDashboard(data) {
+        try {
+            if (!data || typeof data !== 'object') {
+                showError('Dados inválidos recebidos do servidor');
+                return;
+            }
+
+            if (data.success === false) {
+                showError(data.error || 'Erro ao carregar dados');
+                return;
+            }
+
+            if (!data.metrics || typeof data.metrics !== 'object') {
+                showError('Dados de métricas não disponíveis');
+                return;
+            }
+
+            const sourceLabel = document.getElementById('data-source-label');
+            if (sourceLabel) {
+                sourceLabel.textContent = data.data_source || 'Banco de dados';
+            }
+
+            const summary = data.summary || {};
+            const metrics = data.metrics || {};
+            const monthControl = document.getElementById('month-selector');
+            if (monthControl && summary.month && monthControl.value !== summary.month) {
+                monthControl.value = summary.month;
+            }
+
+            updateMetricCards(summary, metrics);
+            updateCharts(metrics);
+            updateTables(metrics);
+            showAlerts(metrics);
+        } catch (error) {
+            console.error('Erro ao atualizar dashboard:', error);
+            showError('Erro ao processar dados do dashboard: ' + error.message);
+        }
+    }
+
+    function updateMetricCards(summary, metrics) {
+        const inactiveClients = metrics?.inactive_clients || {};
+        const totalInactive = summary.inactive_clients ?? inactiveClients.total_inactive ?? 0;
+        const totalClients = summary.total_clients ?? inactiveClients.total_clients ?? totalInactive;
+        const inactivePercentage = totalClients
+            ? (totalInactive / totalClients) * 100
+            : (inactiveClients.inactive_percentage || 0);
+
+        document.getElementById('inactive-count').textContent = totalInactive;
+        document.getElementById('inactive-percentage').textContent = `${inactivePercentage.toFixed(1)}% do total`;
+
+        const monthlyRevenue = metrics?.monthly_revenue || {};
+        const currentRevenueFormatted = summary.total_revenue_formatted || formatCurrency(summary.total_revenue || 0);
+        const totalRevenueOverall = summary.total_revenue_overall ?? monthlyRevenue.total_revenue ?? summary.total_revenue ?? 0;
+        const growthPercentage = summary.growth_rate ?? monthlyRevenue.growth_percentage ?? 0;
+        const growthText = growthPercentage >= 0 ? `+${growthPercentage.toFixed(1)}%` : `${growthPercentage.toFixed(1)}%`;
+
+        document.getElementById('current-month-revenue').textContent = currentRevenueFormatted;
+        document.getElementById('total-revenue-small').textContent = formatCurrency(totalRevenueOverall);
+        document.getElementById('revenue-growth').textContent = `${growthText} vs mês anterior`;
+
+        const activeClients = summary.active_clients ?? (totalClients - totalInactive);
+        const newClients = summary.new_clients ?? inactiveClients.new_clients_count ?? 0;
+        const avgTicketFormatted = summary.avg_ticket_formatted || formatCurrency(summary.avg_ticket || 0);
+        const trendLabel = summary.ticket_trend || 'Estável';
+
+        document.getElementById('total-clients').textContent = totalClients;
+        document.getElementById('active-clients').textContent = `${activeClients} ativos no período`;
+        document.getElementById('new-clients-count').textContent = newClients;
+        document.getElementById('average-ticket').textContent = avgTicketFormatted;
+        document.getElementById('ticket-trend').textContent = `Tendência: ${trendLabel}`;
+
+        updateDetailedLists(inactiveClients);
+    }
+
+    function updateCharts(metrics) {
+        const monthlyRevenue = metrics?.monthly_revenue || {};
+        updateRevenueChart(monthlyRevenue.monthly_data || []);
+        updateVolumeChart(monthlyRevenue.monthly_volume_data || []);
+        updateCountriesCharts(metrics?.country_metrics || {});
+    }
+
+    function updateRevenueChart(history) {
+        try {
+            const chartCanvas = document.getElementById('revenue-chart');
+            const ctx = chartCanvas?.getContext('2d');
+
+            if (revenueChart) {
+                revenueChart.destroy();
+                revenueChart = null;
+            }
+
+            const hasData = Array.isArray(history) && history.some(item => (item?.valor || 0) > 0);
+
+            if (!ctx || !hasData) {
+                return;
+            }
+
+            const labels = history.map(item => item?.mes_ano_str || item?.mes_ano || '');
+            const revenueData = history.map(item => item?.valor || 0);
+            const growthData = history.map(item => item?.crescimento_percentual || 0);
+
+            revenueChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [
+                        {
+                            label: 'Receita',
+                            data: revenueData,
+                            borderColor: '#764ba2',
+                            backgroundColor: 'rgba(118, 75, 162, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Crescimento %',
+                            data: growthData,
+                            borderColor: '#51cf66',
+                            borderDash: [5, 5],
+                            tension: 0.3,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: value => 'R$ ' + value.toLocaleString('pt-BR')
+                            }
+                        },
+                        y1: {
+                            beginAtZero: true,
+                            position: 'right',
+                            grid: {
+                                drawOnChartArea: false
+                            },
+                            ticks: {
+                                callback: value => `${value.toFixed(1)}%`
+                            }
+                        }
+                    }
+                }
+            });
+        } catch (error) {
+            console.error('Erro ao atualizar gráfico de receita:', error);
+        }
+    }
+
+    function updateVolumeChart(volumeData) {
+        try {
+            const chartCanvas = document.getElementById('volume-chart');
+            const ctx = chartCanvas?.getContext('2d');
+
+            if (volumeChart) {
+                volumeChart.destroy();
+                volumeChart = null;
+            }
+
+            const hasData = Array.isArray(volumeData) && volumeData.some(item => (item?.quantidade || 0) > 0);
+
+            if (!ctx || !hasData) {
+                return;
+            }
+
+            volumeChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: volumeData.map(d => d?.mes_ano_str || d?.mes_ano || ''),
+                    datasets: [{
+                        label: 'Volume (Kg)',
+                        data: volumeData.map(d => d?.quantidade || 0),
+                        backgroundColor: 'rgba(118, 75, 162, 0.6)',
+                        borderColor: '#764ba2',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: value => value + ' Kg'
+                            }
+                        }
+                    }
+                }
+            });
+        } catch (error) {
+            console.error('Erro ao atualizar gráfico de volume:', error);
+        }
+    }
+
+    function updateCountriesCharts(countriesData) {
+        try {
+            const monthlyByCountry = Array.isArray(countriesData?.monthly_by_country)
+                ? countriesData.monthly_by_country
+                : [];
+
+            const ctx = document.getElementById('countries-evolution-chart')?.getContext('2d');
+
+            if (countriesChart) {
+                countriesChart.destroy();
+                countriesChart = null;
+            }
+
+            if (ctx && monthlyByCountry.length > 0) {
+                const labels = [...new Set(monthlyByCountry.map(item => item?.mes_ano || ''))]
+                    .filter(Boolean)
+                    .sort();
+
+                const countries = [...new Set(monthlyByCountry.map(item => item?.pais || 'N/A'))];
+                const datasets = countries.map(country => {
+                    const dataPoints = labels.map(label => {
+                        const match = monthlyByCountry.find(item => item?.pais === country && item?.mes_ano === label);
+                        return match ? match.valor || 0 : 0;
+                    });
+
+                    return {
+                        label: country,
+                        data: dataPoints,
+                        fill: false,
+                        borderWidth: 2,
+                        tension: 0.3
+                    };
+                });
+
+                countriesChart = new Chart(ctx, {
+                    type: 'line',
+                    data: { labels, datasets },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom' }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: value => 'R$ ' + value.toLocaleString('pt-BR')
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            updateCountryCards(countriesData);
+        } catch (error) {
+            console.error('Erro ao atualizar gráficos por país:', error);
+        }
+    }
+
+    function updateCountryCards(countriesData) {
+        const container = document.getElementById('countries-revenue-cards');
+        if (!container) return;
+
+        container.innerHTML = '';
+
+        const selectedList = Array.isArray(countriesData?.countries_revenue_selected)
+            ? countriesData.countries_revenue_selected
+            : [];
+        const totalByCountry = countriesData?.total_by_country || {};
+
+        if (selectedList.length > 0) {
+            selectedList.forEach(entry => {
+                const countryName = entry?.pais || 'Indefinido';
+                const data = totalByCountry[countryName] || {};
+                const percentage = entry?.percentual ?? data?.percentual_receita ?? 0;
+                const receita = entry?.valor ?? data?.receita_mes_atual ?? 0;
+                const volume = data?.volume_mes_atual ?? 0;
+
+                const card = document.createElement('div');
+                card.className = 'd-flex align-items-center justify-content-between py-2 border-bottom';
+                card.innerHTML = `
+                    <div>
+                        <strong>${countryName}</strong>
+                    </div>
+                    <div class="text-end">
+                        <span class="fw-bold">${formatCurrency(receita)}</span><br>
+                        <small class="text-muted">${percentage.toFixed(1)}% do total</small><br>
+                        <small class="text-muted">${volume.toFixed(1)} Kg</small>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            return;
+        }
+
+        const entries = totalByCountry && typeof totalByCountry === 'object'
+            ? Object.entries(totalByCountry)
+            : [];
+
+        if (entries.length === 0) {
+            container.innerHTML = '<div class="text-center text-muted">Nenhum dado disponível</div>';
+            return;
+        }
+
+        entries.forEach(([countryName, data]) => {
+            const card = document.createElement('div');
+            card.className = 'd-flex align-items-center justify-content-between py-2 border-bottom';
+            card.innerHTML = `
+                <div>
+                    <strong>${countryName}</strong>
+                </div>
+                <div class="text-end">
+                    <span class="fw-bold">${formatCurrency(data?.receita_total || 0)}</span><br>
+                    <small class="text-muted">${(data?.percentual_receita || 0).toFixed(1)}% do total</small><br>
+                    <small class="text-muted">${(data?.volume_mes_atual || 0).toFixed(1)} Kg</small>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function updateTables(metrics) {
+        updateTopClientsTable(metrics?.top_clients || []);
+        updateLeadFunnel(metrics?.lead_funnel || {});
+    }
+
+    function updateTopClientsTable(topClients) {
+        const tbody = document.querySelector('#top-clients-table tbody');
+        if (!tbody) return;
+
+        tbody.innerHTML = '';
+        if (!Array.isArray(topClients) || topClients.length === 0) {
+            const row = tbody.insertRow();
+            row.innerHTML = '<td colspan="4" class="text-center text-muted">Nenhum dado disponível</td>';
+            return;
+        }
+
+        topClients.forEach(client => {
+            if (!client) return;
+            const row = tbody.insertRow();
+            row.innerHTML = `
+                <td><strong>${client?.cliente || 'N/A'}</strong></td>
+                <td><span class="text-success">${formatCurrency(client?.receita_total || 0)}</span></td>
+                <td><span class="badge bg-primary">${client?.numero_compras || 0}</span></td>
+                <td><small class="text-muted">${formatDate(client?.ultima_compra)}</small></td>
+            `;
+        });
+    }
+
+    function updateLeadFunnel(funnel) {
+        const summary = document.getElementById('lead-funnel-summary');
+        const stagesContainer = document.getElementById('lead-funnel-stages');
+        if (!summary || !stagesContainer) return;
+
+        const total = funnel?.total_leads || 0;
+        const newLeads = funnel?.new_leads || 0;
+        const converted = funnel?.converted_leads || 0;
+
+        summary.innerHTML = `
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <span>Total de leads</span>
+                <strong>${total}</strong>
+            </div>
+            <div class="d-flex justify-content-between small">
+                <span>Novos no mês: <strong>${newLeads}</strong></span>
+                <span>Convertidos: <strong>${converted}</strong></span>
+            </div>
+        `;
+
+        stagesContainer.innerHTML = '';
+        const stages = Array.isArray(funnel?.stages) ? funnel.stages : [];
+        if (!stages.length) {
+            stagesContainer.innerHTML = '<div class="text-muted">Nenhum lead registrado.</div>';
+            return;
+        }
+
+        stages.forEach(stage => {
+            const percentage = (stage?.percentage || 0).toFixed(1);
+            const badge = stage?.badge || 'info';
+            const safeBadge = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'dark'].includes(badge) ? badge : 'info';
+            const label = stage?.label || stage?.status || 'Etapa';
+            const count = stage?.count || 0;
+            const wrapper = document.createElement('div');
+            wrapper.className = 'mb-2';
+            wrapper.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>
+                        <span class="badge bg-${safeBadge} me-2">&nbsp;</span>
+                        ${label}
+                    </span>
+                    <span class="fw-semibold">${count} <small class="text-muted">(${percentage}%)</small></span>
+                </div>
+                <div class="progress" style="height: 8px;">
+                    <div class="progress-bar bg-${safeBadge}" role="progressbar" style="width: ${stage?.percentage || 0}%;"></div>
+                </div>
+            `;
+            stagesContainer.appendChild(wrapper);
+        });
+    }
+
+    function updateDetailedLists(inactiveData) {
+        const newClientsContainer = document.getElementById('new-clients-detailed');
+        const inactiveContainer = document.getElementById('inactive-clients-detailed');
+        const highRiskContainer = document.getElementById('high-risk-clients-detailed');
+
+        const safeData = inactiveData || {};
+
+        if (newClientsContainer) {
+            newClientsContainer.innerHTML = '';
+            const rawNewClients = safeData.new_clients || safeData.new_clients_list || [];
+            const normalizedClients = Array.isArray(rawNewClients)
+                ? rawNewClients.map(client => (typeof client === 'string' ? { nome: client } : client))
+                : [];
+
+            const newClientsCount = safeData.new_clients_count ?? normalizedClients.length;
+            const newClientsBadge = document.getElementById('new-clients-count-badge');
+            if (newClientsBadge) {
+                newClientsBadge.textContent = newClientsCount;
+            }
+
+            if (normalizedClients.length === 0) {
+                newClientsContainer.innerHTML = '<div class="list-group-item text-muted">Nenhum novo cliente neste período</div>';
+            } else {
+                normalizedClients.forEach(client => {
+                    const item = document.createElement('div');
+                    item.className = 'list-group-item list-group-item-action';
+                    const purchasesInfo = client?.compras ? `Compras: ${client.compras}` : '';
+                    const revenueInfo = client?.receita ? `Receita: ${formatCurrency(client.receita)}` : '';
+                    const hasDetail = purchasesInfo || revenueInfo;
+                    item.innerHTML = `
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">${client?.nome || client?.cliente || 'Cliente'}</h6>
+                            ${client?.primeira_compra ? `<small class="text-success">Desde ${formatDate(client.primeira_compra)}</small>` : ''}
+                        </div>
+                        ${hasDetail ? `<small class="text-muted">${purchasesInfo}${purchasesInfo && revenueInfo ? ' | ' : ''}${revenueInfo}</small>` : ''}
+                    `;
+                    newClientsContainer.appendChild(item);
+                });
+            }
+        }
+
+        if (inactiveContainer) {
+            inactiveContainer.innerHTML = '';
+            const inactiveClients = safeData.inactive_clients || [];
+            const inactiveCountBadge = document.getElementById('inactive-count-badge');
+            if (inactiveCountBadge) {
+                inactiveCountBadge.textContent = inactiveClients.length;
+            }
+            if (inactiveClients.length === 0) {
+                inactiveContainer.innerHTML = '<div class="list-group-item text-muted">Nenhum cliente inativo identificado</div>';
+            } else {
+                inactiveClients.forEach(client => {
+                    const item = document.createElement('div');
+                    item.className = 'list-group-item list-group-item-action';
+                    item.innerHTML = `<h6 class="mb-0">${client?.cliente || 'Cliente'}</h6>`;
+                    inactiveContainer.appendChild(item);
+                });
+            }
+        }
+
+        if (highRiskContainer) {
+            highRiskContainer.innerHTML = '';
+            const inactiveClients = safeData.inactive_clients || [];
+            const highRiskClients = inactiveClients.filter(client => (client?.risco_churn || '').toLowerCase() === 'alto');
+            const highRiskCount = safeData.high_risk_count ?? highRiskClients.length;
+            const highRiskBadge = document.getElementById('high-risk-count-badge');
+            if (highRiskBadge) {
+                highRiskBadge.textContent = highRiskCount;
+            }
+
+            if (highRiskClients.length === 0) {
+                highRiskContainer.innerHTML = '<div class="list-group-item text-muted">Nenhum cliente em alto risco</div>';
+            } else {
+                highRiskClients.slice(0, 10).forEach(client => {
+                    const item = document.createElement('div');
+                    item.className = 'list-group-item list-group-item-action';
+                    item.innerHTML = `
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">${client?.cliente || 'Cliente'}</h6>
+                            <span class="badge ${getRiskBadgeClass(client?.risco_churn)}">${client?.risco_churn || 'Alto'}</span>
+                        </div>
+                        <small class="text-muted">Última compra: ${formatDate(client?.ultima_compra)}</small>
+                    `;
+                    highRiskContainer.appendChild(item);
+                });
+            }
+        }
+    }
+
+    function getRiskBadgeClass(riskLevel) {
+        switch ((riskLevel || '').toLowerCase()) {
+            case 'alto':
+                return 'bg-danger';
+            case 'médio':
+            case 'medio':
+                return 'bg-warning text-dark';
+            case 'baixo':
+                return 'bg-success';
+            default:
+                return 'bg-secondary';
+        }
+    }
+
+    function showAlerts(metrics) {
+        const container = document.getElementById('alerts-container');
+        if (!container) return;
+
+        container.innerHTML = '';
+        const alerts = metrics?.alerts || [];
+        if (!Array.isArray(alerts) || alerts.length === 0) {
+            return;
+        }
+
+        alerts.forEach(alert => {
+            const div = document.createElement('div');
+            div.className = `alert alert-${alert.type || 'warning'} d-flex align-items-center`;
+            div.innerHTML = `
+                <i class="bi bi-exclamation-circle me-2"></i>
+                <div><strong>${alert.title || 'Atenção'}</strong><br>${alert.message || ''}</div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function showLoadingState() {
+        document.getElementById('alerts-container').innerHTML = `
+            <div class="alert alert-info d-flex align-items-center">
+                <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                Carregando dados do dashboard...
+            </div>
+        `;
+    }
+
+    function showError(message) {
+        document.getElementById('alerts-container').innerHTML = `
+            <div class="alert alert-danger d-flex align-items-center">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                <div>${message}</div>
+            </div>
+        `;
+    }
+
+    function formatCurrency(value) {
+        return `R$ ${(value || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    function formatDate(dateStr) {
+        if (!dateStr) return 'N/A';
+        try {
+            const date = new Date(dateStr);
+            if (Number.isNaN(date.getTime())) {
+                return dateStr;
+            }
+            return date.toLocaleDateString('pt-BR');
+        } catch (error) {
+            return dateStr;
+        }
+    }
+</script>
+{% endblock %}

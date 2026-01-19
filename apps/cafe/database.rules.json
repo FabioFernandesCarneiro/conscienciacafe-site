@@ -1,0 +1,39 @@
+{
+  "rules": {
+    // Users collection - gestores can manage, users can read their own
+    "users": {
+      ".read": "auth != null",
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth != null && (auth.uid == $uid || root.child('users').child(auth.uid).child('role').val() == 'gestor')"
+      }
+    },
+
+    // Customers - authenticated users can read, gerente+ can write
+    "customers": {
+      ".read": "auth != null",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() == 'gestor' || root.child('users').child(auth.uid).child('role').val() == 'gerente')",
+      ".indexOn": ["phone", "name"]
+    },
+
+    // Orders - authenticated users can read/write (all staff handle orders)
+    "orders": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      ".indexOn": ["status", "customerId", "createdAt"]
+    },
+
+    // Products - authenticated users can read, gestores can write
+    "products": {
+      ".read": "auth != null",
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() == 'gestor'",
+      ".indexOn": ["code", "active", "category"]
+    },
+
+    // Cash Registers - authenticated users can read, gerente+ can write
+    "cashRegisters": {
+      ".read": "auth != null",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() == 'gestor' || root.child('users').child(auth.uid).child('role').val() == 'gerente')"
+    }
+  }
+}

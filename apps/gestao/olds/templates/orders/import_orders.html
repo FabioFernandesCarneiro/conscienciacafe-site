@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Importar Pedidos{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="bi bi-cloud-arrow-down"></i>
+                    Importar pedidos da planilha B2B
+                </h5>
+                <span class="badge bg-secondary">{{ total_rows }} linhas</span>
+            </div>
+            <div class="card-body">
+                {% if using_mock_data %}
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        As credenciais do Google Sheets não foram configuradas. A importação utilizará dados de exemplo (mock).
+                    </div>
+                {% endif %}
+
+                <div class="alert alert-danger">
+                    <h6 class="alert-heading"><i class="bi bi-exclamation-octagon"></i> ATENÇÃO: Operação Destrutiva!</h6>
+                    <p class="mb-2"><strong>Esta importação irá APAGAR PERMANENTEMENTE:</strong></p>
+                    <ul class="mb-2">
+                        <li>❌ TODOS os leads cadastrados</li>
+                        <li>❌ TODOS os pedidos existentes</li>
+                        <li>❌ TODAS as interações do CRM</li>
+                    </ul>
+                    <p class="mb-0 small">
+                        <strong>Esta ação NÃO pode ser desfeita.</strong> Certifique-se de que deseja prosseguir.
+                    </p>
+                </div>
+
+                <p class="text-muted">
+                    Após limpar o banco de dados, o sistema irá:
+                </p>
+                <ul class="text-muted">
+                    <li>Criar leads simples com <strong>nome + país</strong> da planilha</li>
+                    <li>Registrar o pedido usando o catálogo padrão (1kg)</li>
+                    <li>Atualizar o status do lead para <strong>Cliente (fez pedido)</strong></li>
+                    <li><em>Sem</em> busca no Google Maps (importação simplificada)</li>
+                </ul>
+
+                <h6 class="mt-4">Pré-visualização</h6>
+                {% if preview_rows %}
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>Data</th>
+                                    <th>Quantidade (kg)</th>
+                                    <th>Valor</th>
+                                    <th>Observações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in preview_rows %}
+                                    <tr>
+                                        <td>{{ row.cliente }}</td>
+                                        <td>{{ row.data or '—' }}</td>
+                                        <td>{{ "%.2f"|format(row.quantidade or 0) }}</td>
+                                        <td>R$ {{ "%.2f"|format(row.valor or 0) }}</td>
+                                        <td>{{ row.observacoes or '—' }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted mb-0">Nenhum dado disponível na planilha.</p>
+                {% endif %}
+
+                <form method="post" class="mt-4">
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('orders.orders_index') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Voltar
+                        </a>
+                        <button type="submit" class="btn btn-primary" {% if not preview_rows %}disabled{% endif %}>
+                            <i class="bi bi-cloud-download"></i> Importar agora
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

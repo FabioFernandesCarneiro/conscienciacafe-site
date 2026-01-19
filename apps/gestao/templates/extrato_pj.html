@@ -1,0 +1,1886 @@
+{% extends "base.html" %}
+
+{% block title %}Extrato Pessoa Jurídica - Consciência Café{% endblock %}
+
+{% block content %}
+<style>
+    /* Tabelas compactas para melhor densidade de informação */
+    .table-compact {
+        font-size: 0.875rem;
+    }
+    .table-compact td, .table-compact th {
+        padding: 0.375rem 0.5rem !important;
+        vertical-align: middle;
+    }
+    .table-compact .small {
+        font-size: 0.8rem !important;
+    }
+    .table-compact .mb-1 {
+        margin-bottom: 0.15rem !important;
+    }
+    /* Otimizar espaçamento dos selects */
+    .table-compact select.form-select {
+        font-size: 0.8rem;
+        padding: 0.25rem 0.5rem;
+    }
+    .table-compact .btn-sm {
+        padding: 0.25rem 0.4rem;
+        font-size: 0.75rem;
+    }
+</style>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="bi bi-bank"></i> Extrato Pessoa Jurídica
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <button class="btn btn-success me-2" onclick="abrirModalConciliacao()">
+            <i class="bi bi-check2-square"></i> Conciliar
+        </button>
+        <button class="btn btn-primary" onclick="exportarExtrato()">
+            <i class="bi bi-download"></i> Exportar
+        </button>
+    </div>
+</div>
+
+<!-- Filtros -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="card-title mb-0">
+            <i class="bi bi-funnel"></i> Filtros
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-3">
+                <label for="selectConta" class="form-label">Conta</label>
+                <select class="form-select" id="selectConta">
+                    <option value="">Carregando contas...</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="dataInicio" class="form-label">Data Início</label>
+                <input type="date" class="form-control" id="dataInicio">
+            </div>
+            <div class="col-md-3">
+                <label for="dataFim" class="form-label">Data Fim</label>
+                <input type="date" class="form-control" id="dataFim">
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button class="btn btn-primary me-2" onclick="carregarExtrato()">
+                    <i class="bi bi-search"></i> Filtrar
+                </button>
+                <button class="btn btn-outline-secondary" onclick="limparFiltros()">
+                    <i class="bi bi-arrow-clockwise"></i> Limpar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Resumo -->
+<div class="row mb-4" id="resumoCards" style="display: none;">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="card-title text-success">
+                    <i class="bi bi-arrow-up-circle"></i> Créditos
+                </h5>
+                <h3 class="text-success" id="totalCreditos">R$ 0,00</h3>
+                <small class="text-muted" id="qtdCreditos">0 lançamentos</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="card-title text-danger">
+                    <i class="bi bi-arrow-down-circle"></i> Débitos
+                </h5>
+                <h3 class="text-danger" id="totalDebitos">R$ 0,00</h3>
+                <small class="text-muted" id="qtdDebitos">0 lançamentos</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="card-title text-primary">
+                    <i class="bi bi-calculator"></i> Saldo Período
+                </h5>
+                <h3 id="saldoPeriodo">R$ 0,00</h3>
+                <small class="text-muted" id="periodo">-</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="card-title text-info">
+                    <i class="bi bi-list-ul"></i> Total Lançamentos
+                </h5>
+                <h3 class="text-info" id="totalLancamentos">0</h3>
+                <small class="text-muted" id="contaAtual">-</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading -->
+<div class="loading" id="loadingSpinner" style="display: none;">
+    <div class="spinner-border" role="status">
+        <span class="visually-hidden">Carregando...</span>
+    </div>
+    <p class="mt-2 text-muted">Carregando extrato...</p>
+</div>
+
+<!-- Mensagem inicial -->
+<div class="card" id="mensagemInicial">
+    <div class="card-body text-center py-5">
+        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+        <h5 class="text-muted">Selecione uma conta e período para visualizar o extrato</h5>
+        <p class="text-muted">Use os filtros acima para carregar os dados financeiros.</p>
+    </div>
+</div>
+
+<!-- Tabela de Extrato -->
+<div class="card" id="extratoCard" style="display: none;">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0">
+            <i class="bi bi-table"></i> Extrato Detalhado
+        </h5>
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="mostrarApenasConciliados">
+            <label class="form-check-label" for="mostrarApenasConciliados">
+                Apenas Conciliados
+            </label>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover table-sm table-compact mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Data</th>
+                        <th>Descrição</th>
+                        <th>Categoria</th>
+                        <th>Tipo</th>
+                        <th class="text-end">Valor</th>
+                        <th class="text-end">Saldo</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="extratoTableBody">
+                    <!-- Dados serão inseridos via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Detalhes -->
+<div class="modal fade" id="modalDetalhes" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-info-circle"></i> Detalhes do Lançamento
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="modalDetalhesContent">
+                <!-- Conteúdo será inserido via JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Conciliação -->
+<div class="modal fade" id="modalConciliacao" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-check2-square"></i> Conciliação Bancária
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Formulário de Upload -->
+                <div id="formConciliacao">
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i>
+                        <strong>Conciliação Automática:</strong> 
+                        Envie um arquivo OFX para conciliar automaticamente com os dados da conta selecionada.
+                        O sistema usará o período de datas do arquivo OFX.
+                    </div>
+                    
+                    <form id="uploadForm" enctype="multipart/form-data">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="arquivoOfx" class="form-label">Arquivo OFX</label>
+                                <input type="file" class="form-control" id="arquivoOfx" accept=".ofx" required>
+                                <div class="form-text">Selecione o arquivo OFX para conciliação</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="contaConciliacao" class="form-label">Conta</label>
+                                <select class="form-select" id="contaConciliacao" required>
+                                    <option value="">Selecione uma conta...</option>
+                                </select>
+                                <div class="form-text">Conta que será conciliada com o OFX</div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-play-circle"></i> Iniciar Conciliação
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Loading -->
+                <div id="loadingConciliacao" class="text-center" style="display: none;">
+                    <div class="spinner-border text-success" role="status">
+                        <span class="visually-hidden">Processando...</span>
+                    </div>
+                    <p class="mt-2">Processando conciliação...</p>
+                </div>
+                
+                <!-- Resultados -->
+                <div id="resultadosConciliacao" style="display: none;">
+                    <!-- Resumo -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5 class="text-primary">Taxa</h5>
+                                    <h3 id="taxaConciliacao">0%</h3>
+                                    <small class="text-muted">Conciliação</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5 class="text-success">Matches</h5>
+                                    <h3 id="totalMatches">0</h3>
+                                    <small class="text-muted">Encontrados</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5 class="text-warning">OFX</h5>
+                                    <h3 id="totalOfx">0</h3>
+                                    <small class="text-muted">Transações</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5 class="text-info">Omie</h5>
+                                    <h3 id="totalOmie">0</h3>
+                                    <small class="text-muted">Movimentos</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Navegação entre Etapas -->
+                    <ul class="nav nav-tabs mb-4" id="etapasConciliacao" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="etapa1-tab" data-bs-toggle="tab" data-bs-target="#etapa1" 
+                                    type="button" role="tab" aria-controls="etapa1" aria-selected="true">
+                                <i class="bi bi-check2-square"></i> ETAPA 1: Matches Encontrados
+                                <span class="badge bg-success ms-2" id="badgeMatches">0</span>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="etapa2-tab" data-bs-toggle="tab" data-bs-target="#etapa2" 
+                                    type="button" role="tab" aria-controls="etapa2" aria-selected="false">
+                                <i class="bi bi-plus-square"></i> ETAPA 2: Incluir no Omie
+                                <span class="badge bg-warning ms-2" id="badgeSemMatch">0</span>
+                            </button>
+                        </li>
+                    </ul>
+                    
+                    <!-- Conteúdo das Etapas -->
+                    <div class="tab-content" id="etapasContent">
+                        <!-- ETAPA 1: Gestão dos Matches -->
+                        <div class="tab-pane fade show active" id="etapa1" role="tabpanel" aria-labelledby="etapa1-tab">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">
+                                        <i class="bi bi-check-circle text-success"></i> Matches Encontrados - Revisar e Conciliar
+                                    </h6>
+                                    <div>
+                                        <button class="btn btn-sm btn-outline-secondary me-2" onclick="selecionarTodosMatches(true)">
+                                            <i class="bi bi-check-all"></i> Todos
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-secondary me-2" onclick="selecionarTodosMatches(false)">
+                                            <i class="bi bi-square"></i> Nenhum
+                                        </button>
+                                        <button class="btn btn-success" onclick="conciliarMatchesSelecionados()">
+                                            <i class="bi bi-check2-square"></i> Conciliar Selecionados
+                                            <span class="badge bg-light text-dark ms-1" id="contadorMatches">0</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-sm table-compact mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th width="50"><input type="checkbox" id="selectAllMatches" onchange="selecionarTodosMatches(this.checked)"></th>
+                                                    <th>OFX</th>
+                                                    <th>Omie</th>
+                                                    <th width="100">Ações</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tabelaMatches">
+                                                <!-- Será preenchido via JavaScript -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- ETAPA 2: Incluir Sem Match -->
+                        <div class="tab-pane fade" id="etapa2" role="tabpanel" aria-labelledby="etapa2-tab">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">
+                                        <i class="bi bi-plus-square text-warning"></i> Transações para Incluir no Omie
+                                    </h6>
+                                    <div>
+                                        <button class="btn btn-sm btn-outline-secondary me-2" onclick="selecionarTodasInclusoes(true)">
+                                            <i class="bi bi-check-all"></i> Todos
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-secondary me-2" onclick="selecionarTodasInclusoes(false)">
+                                            <i class="bi bi-square"></i> Nenhum
+                                        </button>
+                                        <button class="btn btn-primary" onclick="incluirTransacoesSelecionadas()">
+                                            <i class="bi bi-plus-circle"></i> Incluir Selecionados
+                                            <span class="badge bg-light text-dark ms-1" id="contadorInclusoes">0</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-sm table-compact mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th width="50"><input type="checkbox" id="selectAllInclusoes" onchange="selecionarTodasInclusoes(this.checked)"></th>
+                                                    <th>Transação OFX</th>
+                                                    <th>Categoria Sugerida</th>
+                                                    <th>Cliente/Fornecedor</th>
+                                                    <th width="120">Ações</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tabelaInclusoes">
+                                                <!-- Será preenchido via JavaScript -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let extratoAtual = [];
+    let contasDisponiveis = [];
+    
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', function() {
+        carregarContas();
+        definirDatasDefault();
+        restaurarUltimoFiltro();
+        // Não carregar extrato automaticamente - só após o usuário escolher filtros
+    });
+    
+    function definirDatasDefault() {
+        const hoje = new Date();
+        const trintaDiasAtras = new Date();
+        trintaDiasAtras.setDate(hoje.getDate() - 30);
+        
+        document.getElementById('dataFim').value = hoje.toISOString().split('T')[0];
+        document.getElementById('dataInicio').value = trintaDiasAtras.toISOString().split('T')[0];
+    }
+    
+    async function carregarContas() {
+        try {
+            const response = await axios.get('/api/contas-disponiveis');
+            
+            if (response.data.success) {
+                contasDisponiveis = response.data.contas;
+                const select = document.getElementById('selectConta');
+                select.innerHTML = '';
+                
+                // Adicionar opção padrão
+                const optionDefault = document.createElement('option');
+                optionDefault.value = '';
+                optionDefault.textContent = 'Selecione uma conta...';
+                select.appendChild(optionDefault);
+                
+                contasDisponiveis.forEach(conta => {
+                    const option = document.createElement('option');
+                    option.value = conta.id;
+                    option.textContent = conta.nome;
+                    select.appendChild(option);
+                });
+            }
+        } catch (error) {
+            console.error('Erro ao carregar contas:', error);
+            mostrarAlerta('Erro ao carregar contas disponíveis', 'danger');
+        }
+    }
+    
+    async function carregarExtrato() {
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const extratoCard = document.getElementById('extratoCard');
+        const resumoCards = document.getElementById('resumoCards');
+        const mensagemInicial = document.getElementById('mensagemInicial');
+        
+        // Salvar filtro atual
+        salvarUltimoFiltro();
+        
+        // Mostrar loading e esconder outros elementos
+        loadingSpinner.style.display = 'block';
+        extratoCard.style.display = 'none';
+        resumoCards.style.display = 'none';
+        mensagemInicial.style.display = 'none';
+        
+        try {
+            const contaId = document.getElementById('selectConta').value;
+            const dataInicio = document.getElementById('dataInicio').value;
+            const dataFim = document.getElementById('dataFim').value;
+            
+            // Validar se uma conta foi selecionada
+            if (!contaId) {
+                mostrarAlerta('Por favor, selecione uma conta antes de filtrar.', 'warning');
+                loadingSpinner.style.display = 'none';
+                mensagemInicial.style.display = 'block';
+                return;
+            }
+            
+            // Converter datas para formato brasileiro (evitando problema de timezone)
+            const dataInicioFormatada = dataInicio ? formatDateBR(dataInicio) : '';
+            const dataFimFormatada = dataFim ? formatDateBR(dataFim) : '';
+            
+            const params = new URLSearchParams({
+                conta_id: contaId,
+                data_inicio: dataInicioFormatada,
+                data_fim: dataFimFormatada,
+                pagina: 1,
+                _t: Date.now()  // Timestamp para evitar cache
+            });
+            
+            const response = await axios.get(`/api/extrato-conta-corrente?${params}`);
+            
+            if (response.data.success) {
+                extratoAtual = response.data.extrato;
+                atualizarResumo(response.data.resumo, response.data.conta_info);
+                renderizarExtrato(extratoAtual);
+                
+                // Mostrar cards e tabela
+                resumoCards.style.display = 'flex';
+                extratoCard.style.display = 'block';
+            } else {
+                mostrarAlerta('Erro: ' + response.data.error, 'danger');
+            }
+        } catch (error) {
+            console.error('Erro ao carregar extrato:', error);
+            mostrarAlerta('Erro ao carregar extrato. Verifique a conexão.', 'danger');
+            mensagemInicial.style.display = 'block';
+        } finally {
+            loadingSpinner.style.display = 'none';
+        }
+    }
+    
+    function atualizarResumo(resumo, contaInfo) {
+        document.getElementById('totalCreditos').textContent = resumo.total_creditos_formatado;
+        document.getElementById('totalDebitos').textContent = resumo.total_debitos_formatado;
+        document.getElementById('saldoPeriodo').textContent = resumo.saldo_periodo_formatado;
+        document.getElementById('totalLancamentos').textContent = resumo.total_lancamentos;
+        document.getElementById('periodo').textContent = resumo.periodo;
+        document.getElementById('contaAtual').textContent = contaInfo.nome;
+        
+        // Definir cor do saldo
+        const saldoElement = document.getElementById('saldoPeriodo');
+        const saldoValor = parseFloat(resumo.saldo_periodo_formatado.replace('R$ ', '').replace('.', '').replace(',', '.'));
+        saldoElement.className = saldoValor >= 0 ? 'text-success' : 'text-danger';
+        
+        // Contar créditos e débitos
+        const qtdCreditos = extratoAtual.filter(item => item.tipo === 'Crédito').length;
+        const qtdDebitos = extratoAtual.filter(item => item.tipo === 'Débito').length;
+        document.getElementById('qtdCreditos').textContent = `${qtdCreditos} lançamentos`;
+        document.getElementById('qtdDebitos').textContent = `${qtdDebitos} lançamentos`;
+    }
+    
+    function renderizarExtrato(extrato) {
+        const tbody = document.getElementById('extratoTableBody');
+        const apenasConc = document.getElementById('mostrarApenasConciliados').checked;
+        
+        const extratoFiltrado = apenasConc ? extrato.filter(item => item.conciliado) : extrato;
+        
+        tbody.innerHTML = '';
+        
+        extratoFiltrado.forEach((item, index) => {
+            const row = document.createElement('tr');
+            
+            row.innerHTML = `
+                <td>${item.data}</td>
+                <td>
+                    <div class="fw-semibold">${truncateText(item.descricao, 40)}</div>
+                    ${item.cliente ? `<small class="text-muted d-block">Cliente: ${item.cliente}</small>` : ''}
+                    ${item.documento ? `<small class="text-muted">Doc: ${item.documento}</small>` : ''}
+                </td>
+                <td>
+                    <span class="badge bg-secondary">${item.categoria}</span>
+                </td>
+                <td>
+                    <span class="badge ${item.tipo === 'Crédito' ? 'badge-credito' : 'badge-debito'}">${item.tipo}</span>
+                </td>
+                <td class="text-end fw-bold ${item.tipo === 'Crédito' ? 'text-success' : 'text-danger'}">
+                    ${item.tipo === 'Crédito' ? '+' : '-'} ${item.valor_formatado}
+                </td>
+                <td class="text-end">${item.saldo_formatado}</td>
+                <td class="text-center">
+                    ${item.conciliado ? 
+                        '<i class="bi bi-check-circle-fill text-success" title="Conciliado"></i>' : 
+                        '<i class="bi bi-exclamation-circle text-warning" title="Não Conciliado"></i>'
+                    }
+                </td>
+                <td class="text-center">
+                    <button class="btn btn-sm btn-outline-primary" onclick="mostrarDetalhes(${index})">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </td>
+            `;
+            
+            tbody.appendChild(row);
+        });
+        
+        if (extratoFiltrado.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="8" class="text-center py-4 text-muted">
+                        <i class="bi bi-inbox display-6"></i>
+                        <p class="mt-2">Nenhum lançamento encontrado para os filtros selecionados</p>
+                    </td>
+                </tr>
+            `;
+        }
+    }
+    
+    function mostrarDetalhes(index) {
+        const item = extratoAtual[index];
+        const modalContent = document.getElementById('modalDetalhesContent');
+        
+        modalContent.innerHTML = `
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <strong>Data:</strong> ${item.data}
+                </div>
+                <div class="col-md-6">
+                    <strong>Tipo:</strong> 
+                    <span class="badge ${item.tipo === 'Crédito' ? 'badge-credito' : 'badge-debito'}">${item.tipo}</span>
+                </div>
+                <div class="col-12">
+                    <strong>Descrição:</strong><br>
+                    ${item.descricao}
+                </div>
+                ${item.cliente ? `
+                    <div class="col-md-6">
+                        <strong>Cliente:</strong><br>
+                        ${item.cliente}
+                    </div>
+                ` : ''}
+                <div class="col-md-6">
+                    <strong>Categoria:</strong><br>
+                    <span class="badge bg-secondary">${item.categoria}</span>
+                    ${item.categoria_codigo ? `<br><small class="text-muted">Código: ${item.categoria_codigo}</small>` : ''}
+                </div>
+                <div class="col-md-6">
+                    <strong>Valor:</strong><br>
+                    <span class="fw-bold ${item.tipo === 'Crédito' ? 'text-success' : 'text-danger'}">
+                        ${item.tipo === 'Crédito' ? '+' : '-'} ${item.valor_formatado}
+                    </span>
+                </div>
+                <div class="col-md-6">
+                    <strong>Saldo:</strong> ${item.saldo_formatado}
+                </div>
+                <div class="col-md-6">
+                    <strong>Status:</strong>
+                    ${item.conciliado ? 
+                        '<span class="badge bg-success">Conciliado</span>' : 
+                        '<span class="badge bg-warning">Não Conciliado</span>'
+                    }
+                    ${item.data_conciliacao ? `<br><small class="text-muted">Em: ${item.data_conciliacao}</small>` : ''}
+                </div>
+                ${item.documento ? `
+                    <div class="col-md-6">
+                        <strong>Documento:</strong> ${item.documento}
+                    </div>
+                ` : ''}
+                ${item.natureza ? `
+                    <div class="col-md-6">
+                        <strong>Natureza:</strong> ${item.natureza === 'R' ? 'Receita' : item.natureza === 'P' ? 'Pagamento' : item.natureza}
+                    </div>
+                ` : ''}
+                ${item.tipo_documento ? `
+                    <div class="col-md-6">
+                        <strong>Tipo Documento:</strong> ${item.tipo_documento}
+                    </div>
+                ` : ''}
+                ${item.origem ? `
+                    <div class="col-md-6">
+                        <strong>Origem:</strong> ${item.origem}
+                    </div>
+                ` : ''}
+                <div class="col-12">
+                    <strong>Código Omie:</strong> ${item.codigo}
+                </div>
+            </div>
+        `;
+        
+        const modal = new bootstrap.Modal(document.getElementById('modalDetalhes'));
+        modal.show();
+    }
+    
+    function limparFiltros() {
+        document.getElementById('selectConta').value = '';
+        definirDatasDefault();
+        
+        // Limpar dados exibidos
+        const extratoCard = document.getElementById('extratoCard');
+        const resumoCards = document.getElementById('resumoCards');
+        extratoCard.style.display = 'none';
+        resumoCards.style.display = 'none';
+        
+        // Limpar localStorage
+        localStorage.removeItem('ultimoFiltroExtrato');
+    }
+    
+    function exportarExtrato() {
+        mostrarAlerta('Funcionalidade de exportação em desenvolvimento', 'info');
+    }
+    
+    function abrirModalConciliacao() {
+        // Carregar contas no select de conciliação
+        const selectConciliacao = document.getElementById('contaConciliacao');
+        selectConciliacao.innerHTML = '<option value="">Selecione uma conta...</option>';
+        
+        contasDisponiveis.forEach(conta => {
+            const option = document.createElement('option');
+            option.value = conta.id;
+            option.textContent = conta.nome;
+            selectConciliacao.appendChild(option);
+        });
+        
+        // Pré-selecionar a conta atual se houver
+        const contaAtual = document.getElementById('selectConta').value;
+        if (contaAtual) {
+            selectConciliacao.value = contaAtual;
+        }
+        
+        // Resetar modal
+        document.getElementById('formConciliacao').style.display = 'block';
+        document.getElementById('loadingConciliacao').style.display = 'none';
+        document.getElementById('resultadosConciliacao').style.display = 'none';
+        document.getElementById('uploadForm').reset();
+        
+        // Abrir modal
+        const modal = new bootstrap.Modal(document.getElementById('modalConciliacao'));
+        modal.show();
+    }
+    
+    async function executarConciliacao(formData) {
+        try {
+            const response = await axios.post('/api/conciliar', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            
+            if (response.data.success) {
+                // Exibir resultados
+                exibirResultadosConciliacao(response.data);
+            } else {
+                mostrarAlerta('Erro: ' + response.data.error, 'danger');
+            }
+        } catch (error) {
+            console.error('Erro na conciliação:', error);
+            mostrarAlerta('Erro ao processar conciliação. Verifique o arquivo e tente novamente.', 'danger');
+        } finally {
+            // Esconder loading
+            document.getElementById('loadingConciliacao').style.display = 'none';
+            document.getElementById('formConciliacao').style.display = 'block';
+        }
+    }
+    
+    // Variáveis globais para dados de conciliação
+    let dadosConciliacao = {
+        matches: [],
+        ofx_nao_conciliadas: [],
+        resultados: {}
+    };
+    
+    // Cache para dados do Omie
+    let categoriasOmie = [];
+    let clientesFornecedores = [];
+
+    async function exibirResultadosConciliacao(data) {
+        // Armazenar dados globalmente
+        dadosConciliacao = data;
+        
+        const resultados = data.resultados;
+        
+        // Atualizar resumo
+        document.getElementById('taxaConciliacao').textContent = resultados.taxa_conciliacao + '%';
+        document.getElementById('totalMatches').textContent = resultados.matches_encontrados;
+        document.getElementById('totalOfx').textContent = resultados.total_ofx;
+        document.getElementById('totalOmie').textContent = resultados.total_omie;
+        
+        // Atualizar badges das etapas
+        document.getElementById('badgeMatches').textContent = data.matches.length;
+        document.getElementById('badgeSemMatch').textContent = data.ofx_nao_conciliadas.length;
+        
+        // Carregar dados do Omie antes de popular as tabelas
+        await carregarDadosOmie();
+        
+        // Popular ETAPA 1: Tabela de Matches
+        popularTabelaMatches(data.matches);
+        
+        // Popular ETAPA 2: Tabela de Inclusões
+        await popularTabelaInclusoes(data.ofx_nao_conciliadas);
+        
+        // Esconder form e loading, mostrar resultados
+        document.getElementById('formConciliacao').style.display = 'none';
+        document.getElementById('loadingConciliacao').style.display = 'none';
+        document.getElementById('resultadosConciliacao').style.display = 'block';
+        
+        // Mostrar alerta de sucesso
+        mostrarAlerta(`Conciliação concluída! Taxa: ${resultados.taxa_conciliacao}% (${resultados.matches_encontrados}/${resultados.total_ofx})`, 'success');
+    }
+    
+    async function carregarDadosOmie() {
+        try {
+            // Carregar categorias e clientes/fornecedores em paralelo
+            const [categoriasResponse, clientesResponse] = await Promise.all([
+                axios.get('/api/categorias-omie'),
+                axios.get('/api/clientes-fornecedores')
+            ]);
+            
+            if (categoriasResponse.data.success) {
+                categoriasOmie = categoriasResponse.data.categorias;
+                console.log(`✅ ${categoriasOmie.length} categorias carregadas`);
+            }
+            
+            if (clientesResponse.data.success) {
+                clientesFornecedores = clientesResponse.data.clientes_fornecedores;
+                console.log(`✅ ${clientesFornecedores.length} clientes/fornecedores carregados`);
+            }
+            
+        } catch (error) {
+            console.error('Erro ao carregar dados do Omie:', error);
+            // Usar dados fallback se necessário
+            if (categoriasOmie.length === 0) {
+                categoriasOmie = [
+                    { codigo: 'REC01', descricao: 'Vendas', tipo: 'R' },
+                    { codigo: 'REC02', descricao: 'Outras Receitas', tipo: 'R' },
+                    { codigo: 'DES01', descricao: 'Despesas Operacionais', tipo: 'D' },
+                    { codigo: 'DES02', descricao: 'Taxas Bancárias', tipo: 'D' },
+                    { codigo: 'DES03', descricao: 'Compras', tipo: 'D' }
+                ];
+            }
+        }
+    }
+    
+    function popularTabelaMatches(matches) {
+        const tabelaBody = document.getElementById('tabelaMatches');
+        tabelaBody.innerHTML = '';
+        
+        if (matches.length === 0) {
+            tabelaBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Nenhum match encontrado</td></tr>';
+            return;
+        }
+        
+        matches.forEach((match, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>
+                    <input type="checkbox" class="match-checkbox" data-index="${index}" checked onchange="atualizarContadorMatches()">
+                </td>
+                <td class="py-2">
+                    <div class="d-flex align-items-center justify-content-between mb-1">
+                        <strong class="text-primary small">${formatDateBR(match.ofx.data)}</strong>
+                        <span class="text-success fw-bold small">R$ ${match.ofx.valor.toFixed(2)}</span>
+                    </div>
+                    <div class="text-muted small">${truncateText(match.ofx.descricao || '', 80)}</div>
+                    ${match.ofx.numero_documento ? `<div class="text-info small">Doc: ${match.ofx.numero_documento}</div>` : ''}
+                </td>
+                <td class="py-2">
+                    <div class="d-flex align-items-center justify-content-between mb-1">
+                        <strong class="text-primary small">${match.omie.data}</strong>
+                        <span class="text-success fw-bold small">R$ ${match.omie.valor.toFixed(2)}</span>
+                    </div>
+                    <div class="text-muted small">${truncateText(match.omie.descricao || '', 70)}</div>
+                    <div class="text-info small">Cliente: ${truncateText(match.omie.cliente || '', 50)}</div>
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-outline-danger" onclick="removerMatch(${index})" title="Remover match">
+                        <i class="bi bi-x"></i>
+                    </button>
+                </td>
+            `;
+            tabelaBody.appendChild(row);
+        });
+        
+        // Atualizar contador
+        atualizarContadorMatches();
+    }
+    
+    async function popularTabelaInclusoes(transacoesSemMatch) {
+        const tabelaBody = document.getElementById('tabelaInclusoes');
+        tabelaBody.innerHTML = '';
+        
+        if (transacoesSemMatch.length === 0) {
+            tabelaBody.innerHTML = '<tr><td colspan="5" class="text-center text-success">Todas as transações foram conciliadas!</td></tr>';
+            return;
+        }
+        
+        transacoesSemMatch.forEach((transacao, index) => {
+            // Debug das sugestões
+            console.log(`🔍 Transação ${index + 1}:`, transacao);
+            
+            // Usar sugestões que já vêm do backend ou fallback
+            const sugestoes = transacao.sugestoes || { categoria: '', cliente: 'A definir', confianca: 0 };
+            
+            console.log(`🎯 Sugestões ${index + 1}: Categoria="${sugestoes.categoria}", Cliente="${sugestoes.cliente}", Fonte="${sugestoes.fonte}", Confiança=${sugestoes.confianca}`);
+            
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>
+                    <input type="checkbox" class="inclusao-checkbox" data-index="${index}" checked onchange="atualizarContadorInclusoes()">
+                </td>
+                <td class="py-2">
+                    <div class="d-flex align-items-center justify-content-between mb-1">
+                        <strong class="text-primary small">${formatDateBR(transacao.data)}</strong>
+                        <span class="text-${transacao.valor >= 0 ? 'success' : 'danger'} fw-bold small">
+                            R$ ${Math.abs(transacao.valor).toFixed(2)} ${transacao.valor >= 0 ? '(+)' : '(-)'}
+                        </span>
+                    </div>
+                    <div class="text-muted small">${truncateText(transacao.descricao || '', 85)}</div>
+                    ${transacao.numero_documento ? `<div class="text-info small">Doc: ${transacao.numero_documento}</div>` : ''}
+                </td>
+                <td>
+                    ${criarSelectCategorias(index, sugestoes.categoria)}
+                </td>
+                <td>
+                    ${criarInputCliente(index, sugestoes.cliente)}
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary" onclick="abrirModalNovoCliente(${index})" title="Cadastrar Novo Cliente">
+                        <i class="bi bi-person-plus"></i>
+                    </button>
+                </td>
+            `;
+            tabelaBody.appendChild(row);
+        });
+        
+        // Atualizar contador
+        atualizarContadorInclusoes();
+    }
+    
+    function criarSelectCategorias(index, categoriaSugerida) {
+        console.log(`🏷️ Criando select para índice ${index} com categoria sugerida: "${categoriaSugerida}"`);
+        console.log(`📋 Total categorias disponíveis: ${categoriasOmie.length}`);
+        
+        let options = '<option value="">[Selecionar Categoria]</option>';
+        
+        // Separar categorias por tipo
+        const receitas = categoriasOmie.filter(cat => cat.tipo === 'R');
+        const despesas = categoriasOmie.filter(cat => cat.tipo === 'D');
+        const neutras = categoriasOmie.filter(cat => cat.tipo === 'N' || cat.tipo === '');
+        
+        console.log(`📊 Categorias: ${receitas.length} receitas, ${despesas.length} despesas, ${neutras.length} neutras`);
+        
+        if (receitas.length > 0) {
+            options += '<optgroup label="📈 Receitas">';
+            receitas.forEach(cat => {
+                const selected = (cat.codigo === categoriaSugerida || cat.descricao === categoriaSugerida) ? 'selected' : '';
+                if (selected) {
+                    console.log(`✅ Categoria selecionada: ${cat.codigo} - ${cat.descricao}`);
+                }
+                options += `<option value="${cat.codigo}" ${selected}>${cat.descricao}</option>`;
+            });
+            options += '</optgroup>';
+        }
+        
+        if (despesas.length > 0) {
+            options += '<optgroup label="📉 Despesas">';
+            despesas.forEach(cat => {
+                const selected = (cat.codigo === categoriaSugerida || cat.descricao === categoriaSugerida) ? 'selected' : '';
+                if (selected) {
+                    console.log(`✅ Categoria selecionada: ${cat.codigo} - ${cat.descricao}`);
+                }
+                options += `<option value="${cat.codigo}" ${selected}>${cat.descricao}</option>`;
+            });
+            options += '</optgroup>';
+        }
+        
+        if (neutras.length > 0) {
+            options += '<optgroup label="⚪ Outras">';
+            neutras.forEach(cat => {
+                const selected = (cat.codigo === categoriaSugerida || cat.descricao === categoriaSugerida) ? 'selected' : '';
+                if (selected) {
+                    console.log(`✅ Categoria selecionada: ${cat.codigo} - ${cat.descricao}`);
+                }
+                options += `<option value="${cat.codigo}" ${selected}>${cat.descricao}</option>`;
+            });
+            options += '</optgroup>';
+        }
+        
+        return `<select class="form-select form-select-sm categoria-select" data-index="${index}">${options}</select>`;
+    }
+    
+    function criarInputCliente(index, clienteSugerido) {
+        // Criar datalist com clientes e fornecedores
+        const datalistId = `clientes-${index}`;
+        let datalist = `<datalist id="${datalistId}">`;
+        
+        // Adicionar opções agrupadas
+        const clientes = clientesFornecedores.filter(cf => cf.tipo === 'Cliente');
+        const fornecedores = clientesFornecedores.filter(cf => cf.tipo === 'Fornecedor');
+        
+        clientes.forEach(cliente => {
+            datalist += `<option value="${cliente.nome}">👤 ${cliente.nome}</option>`;
+        });
+        
+        fornecedores.forEach(fornecedor => {
+            datalist += `<option value="${fornecedor.nome}">🏢 ${fornecedor.nome}</option>`;
+        });
+        
+        datalist += '</datalist>';
+        
+        return `
+            <input type="text" class="form-control form-control-sm cliente-input" 
+                   data-index="${index}" value="${clienteSugerido}" 
+                   placeholder="Digite ou selecione..." 
+                   list="${datalistId}">
+            ${datalist}
+        `;
+    }
+    
+    function gerarSugestoesInteligentes(transacao) {
+        const descricao = (transacao.descricao || '').toLowerCase();
+        const valor = transacao.valor || 0;
+        const isCredito = valor > 0;
+        
+        // Algoritmo inteligente baseado em múltiplos critérios
+        let categoriaSugerida = null;
+        let clienteSugerido = '';
+        let confianca = 0;
+        
+        // 1. ANÁLISE POR VALOR - Primeiro critério
+        if (isCredito) {
+            // Para créditos, preferir receitas
+            categoriaSugerida = encontrarCategoriaRenda();
+        } else {
+            // Para débitos, analisar contexto
+            categoriaSugerida = encontrarCategoriaDespesa(descricao, Math.abs(valor));
+        }
+        
+        // 2. ANÁLISE POR PALAVRAS-CHAVE NA DESCRIÇÃO
+        const sugestaoDescricao = analisarPorDescricao(descricao, isCredito);
+        if (sugestaoDescricao.confianca > confianca) {
+            categoriaSugerida = sugestaoDescricao.categoria;
+            clienteSugerido = sugestaoDescricao.cliente;
+            confianca = sugestaoDescricao.confianca;
+        }
+        
+        // 3. ANÁLISE POR CLIENTE/FORNECEDOR CONHECIDO
+        const clienteEncontrado = buscarClienteFornecedorNaDescricao(descricao);
+        if (clienteEncontrado) {
+            clienteSugerido = clienteEncontrado.nome;
+            confianca += 0.3; // Aumentar confiança se encontrou cliente conhecido
+        }
+        
+        // 4. FALLBACK para categorias padrão
+        if (!categoriaSugerida) {
+            categoriaSugerida = isCredito ? 
+                encontrarCategoriaPorDescricao('receita') : 
+                encontrarCategoriaPorDescricao('despesa');
+        }
+        
+        return {
+            categoriaSugerida: categoriaSugerida || '',
+            clienteSugerido: clienteSugerido || 'A definir',
+            confianca: Math.min(confianca, 1.0)
+        };
+    }
+    
+    function encontrarCategoriaRenda() {
+        // Buscar primeira categoria de receita disponível
+        const receitas = categoriasOmie.filter(cat => cat.tipo === 'R');
+        if (receitas.length > 0) {
+            // Priorizar "Vendas" se existir
+            const vendas = receitas.find(cat => cat.descricao.toLowerCase().includes('venda'));
+            return vendas ? vendas.codigo : receitas[0].codigo;
+        }
+        return null;
+    }
+    
+    function encontrarCategoriaDespesa(descricao, valor) {
+        const despesas = categoriasOmie.filter(cat => cat.tipo === 'D');
+        if (despesas.length === 0) return null;
+        
+        // Análise contextual para despesas
+        if (descricao.includes('taxa') || descricao.includes('tarifa') || descricao.includes('juros')) {
+            const taxas = despesas.find(cat => 
+                cat.descricao.toLowerCase().includes('taxa') || 
+                cat.descricao.toLowerCase().includes('bancár')
+            );
+            if (taxas) return taxas.codigo;
+        }
+        
+        if (descricao.includes('compra') || descricao.includes('fornecedor')) {
+            const compras = despesas.find(cat => cat.descricao.toLowerCase().includes('compra'));
+            if (compras) return compras.codigo;
+        }
+        
+        if (valor < 100) {
+            // Valores baixos provavelmente são taxas
+            const taxas = despesas.find(cat => 
+                cat.descricao.toLowerCase().includes('taxa') || 
+                cat.descricao.toLowerCase().includes('administrativa')
+            );
+            if (taxas) return taxas.codigo;
+        }
+        
+        // Retornar primeira categoria de despesa
+        return despesas[0].codigo;
+    }
+    
+    function analisarPorDescricao(descricao, isCredito) {
+        let categoria = null;
+        let cliente = '';
+        let confianca = 0;
+        
+        // Padrões específicos com alta confiança
+        const padroes = [
+            // PIX - Alta confiança
+            {
+                regex: /pix.*receb/,
+                categoria: encontrarCategoriaPorDescricao('receita'),
+                cliente: 'Cliente PIX',
+                confianca: 0.9,
+                tipo: 'R'
+            },
+            {
+                regex: /pix.*(env|pag)/,
+                categoria: encontrarCategoriaPorDescricao('despesa'),
+                cliente: 'Fornecedor PIX', 
+                confianca: 0.9,
+                tipo: 'D'
+            },
+            
+            // Transferências
+            {
+                regex: /(ted|doc).*(receb|entrada)/,
+                categoria: encontrarCategoriaPorDescricao('receita'),
+                cliente: 'Cliente',
+                confianca: 0.8,
+                tipo: 'R'
+            },
+            {
+                regex: /(ted|doc).*(env|saida)/,
+                categoria: encontrarCategoriaPorDescricao('despesa'),
+                cliente: 'Fornecedor',
+                confianca: 0.8,
+                tipo: 'D'
+            },
+            
+            // Taxas bancárias
+            {
+                regex: /(taxa|tarifa|juros|anuidade)/,
+                categoria: encontrarCategoriaPorDescricao('taxa'),
+                cliente: 'Banco',
+                confianca: 0.95,
+                tipo: 'D'
+            },
+            
+            // Pagamentos específicos
+            {
+                regex: /(pagamento|fatura).*cart/,
+                categoria: encontrarCategoriaPorDescricao('despesa'),
+                cliente: 'Cartão',
+                confianca: 0.7,
+                tipo: 'D'
+            }
+        ];
+        
+        // Testar cada padrão
+        for (const padrao of padroes) {
+            if (padrao.regex.test(descricao)) {
+                // Verificar se o tipo bate com o valor (crédito/débito)
+                const tipoCorreto = (padrao.tipo === 'R') === isCredito;
+                if (tipoCorreto && padrao.confianca > confianca) {
+                    categoria = padrao.categoria;
+                    cliente = padrao.cliente;
+                    confianca = padrao.confianca;
+                }
+            }
+        }
+        
+        return { categoria, cliente, confianca };
+    }
+    
+    function encontrarCategoriaPorDescricao(tipo) {
+        const buscarPor = tipo.toLowerCase();
+        
+        let categoria = categoriasOmie.find(cat => {
+            const desc = cat.descricao.toLowerCase();
+            if (buscarPor === 'receita' && cat.tipo === 'R') {
+                return desc.includes('venda') || desc.includes('receita');
+            }
+            if (buscarPor === 'despesa' && cat.tipo === 'D') {
+                return desc.includes('despesa') || desc.includes('operacional');
+            }
+            if (buscarPor === 'taxa' && cat.tipo === 'D') {
+                return desc.includes('taxa') || desc.includes('bancár');
+            }
+            return desc.includes(buscarPor);
+        });
+        
+        // Fallback para primeira categoria do tipo
+        if (!categoria) {
+            const tipoFiltro = buscarPor === 'receita' ? 'R' : 'D';
+            categoria = categoriasOmie.find(cat => cat.tipo === tipoFiltro);
+        }
+        
+        return categoria ? categoria.codigo : null;
+    }
+    
+    function buscarClienteFornecedorNaDescricao(descricao) {
+        // Buscar nome de cliente/fornecedor na descrição
+        for (const cf of clientesFornecedores) {
+            const nomeNormalizado = cf.nome.toLowerCase().replace(/[^a-z0-9]/g, '');
+            const descNormalizada = descricao.replace(/[^a-z0-9]/g, '');
+            
+            // Buscar coincidência parcial (mínimo 4 caracteres)
+            if (nomeNormalizado.length >= 4 && descNormalizada.includes(nomeNormalizado)) {
+                return cf;
+            }
+            
+            // Buscar por palavras-chave do nome
+            const palavrasNome = cf.nome.split(' ').filter(p => p.length > 3);
+            for (const palavra of palavrasNome) {
+                if (descricao.includes(palavra.toLowerCase())) {
+                    return cf;
+                }
+            }
+        }
+        
+        return null;
+    }
+    
+    
+    // ======= FUNÇÕES DA ETAPA 1: GESTÃO DE MATCHES =======
+    
+    function selecionarTodosMatches(selecionar) {
+        const checkboxes = document.querySelectorAll('.match-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = selecionar;
+        });
+        
+        // Atualizar checkbox principal
+        document.getElementById('selectAllMatches').checked = selecionar;
+        
+        atualizarContadorMatches();
+    }
+    
+    function atualizarContadorMatches() {
+        const checkboxes = document.querySelectorAll('.match-checkbox');
+        const selecionados = document.querySelectorAll('.match-checkbox:checked');
+        
+        document.getElementById('contadorMatches').textContent = selecionados.length;
+        
+        // Atualizar estado do checkbox principal
+        const selectAll = document.getElementById('selectAllMatches');
+        if (selectAll) {
+            selectAll.indeterminate = selecionados.length > 0 && selecionados.length < checkboxes.length;
+            selectAll.checked = selecionados.length === checkboxes.length;
+        }
+    }
+    
+    function removerMatch(index) {
+        if (confirm('Tem certeza que deseja remover este match?')) {
+            // Obter match antes de remover
+            const matchRemovido = dadosConciliacao.matches[index];
+            
+            // Remover da lista de matches
+            dadosConciliacao.matches.splice(index, 1);
+            
+            // Mover OFX para lista de não conciliadas
+            if (matchRemovido) {
+                dadosConciliacao.ofx_nao_conciliadas.push(matchRemovido.ofx);
+            }
+            
+            // Recriar tabelas
+            popularTabelaMatches(dadosConciliacao.matches);
+            popularTabelaInclusoes(dadosConciliacao.ofx_nao_conciliadas);
+            
+            // Atualizar badges
+            document.getElementById('badgeMatches').textContent = dadosConciliacao.matches.length;
+            document.getElementById('badgeSemMatch').textContent = dadosConciliacao.ofx_nao_conciliadas.length;
+            
+            mostrarAlerta('Match removido com sucesso', 'info');
+        }
+    }
+    
+    async function conciliarMatchesSelecionados() {
+        const checkboxes = document.querySelectorAll('.match-checkbox:checked');
+        
+        if (checkboxes.length === 0) {
+            mostrarAlerta('Selecione pelo menos um match para conciliar', 'warning');
+            return;
+        }
+        
+        // Construir lista de matches selecionados
+        const matchesSelecionados = [];
+        checkboxes.forEach(checkbox => {
+            const index = parseInt(checkbox.dataset.index);
+            matchesSelecionados.push(dadosConciliacao.matches[index]);
+        });
+        
+        try {
+            // Mostrar loading
+            const btn = event.target;
+            const textoOriginal = btn.innerHTML;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Conciliando...';
+            btn.disabled = true;
+            
+            console.log(`🚀 Iniciando conciliação de ${matchesSelecionados.length} matches...`);
+            
+            // Chamar API de conciliação
+            const response = await fetch('/api/conciliar-matches', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    matches: matchesSelecionados
+                })
+            });
+            
+            const resultado = await response.json();
+            
+            // Restaurar botão
+            btn.innerHTML = textoOriginal;
+            btn.disabled = false;
+            
+            if (resultado.success) {
+                console.log(`✅ Conciliação concluída:`, resultado);
+                
+                // Mostrar resultado detalhado
+                const mensagem = `Conciliação finalizada: ${resultado.sucessos} sucessos, ${resultado.erros} erros (${resultado.taxa_sucesso.toFixed(1)}% sucesso)`;
+                const tipoAlerta = resultado.erros > 0 ? 'warning' : 'success';
+                mostrarAlerta(mensagem, tipoAlerta);
+                
+                // Marcar matches processados na interface
+                checkboxes.forEach(checkbox => {
+                    const index = parseInt(checkbox.dataset.index);
+                    const resultadoMatch = resultado.resultados.find(r => r.index === index);
+                    
+                    if (resultadoMatch && resultadoMatch.success) {
+                        // Match conciliado com sucesso
+                        checkbox.closest('tr').style.opacity = '0.6';
+                        checkbox.closest('tr').classList.add('table-success');
+                        checkbox.disabled = true;
+                        
+                        // Adicionar badge de sucesso
+                        const row = checkbox.closest('tr');
+                        const lastCell = row.cells[row.cells.length - 1];
+                        lastCell.innerHTML += '<span class="badge bg-success ms-2">Conciliado</span>';
+                    } else if (resultadoMatch) {
+                        // Match com erro
+                        checkbox.closest('tr').classList.add('table-danger');
+                        
+                        // Mostrar erro
+                        const row = checkbox.closest('tr');
+                        const lastCell = row.cells[row.cells.length - 1];
+                        lastCell.innerHTML += `<span class="badge bg-danger ms-2" title="${resultadoMatch.error}">Erro</span>`;
+                    }
+                });
+                
+            } else {
+                // Erro na API
+                console.error('Erro na conciliação:', resultado.error);
+                mostrarAlerta(`Erro na conciliação: ${resultado.error}`, 'danger');
+            }
+            
+        } catch (error) {
+            console.error('Erro ao conciliar matches:', error);
+            mostrarAlerta('Erro ao conciliar matches. Tente novamente.', 'danger');
+        }
+    }
+    
+    // ======= FUNÇÕES DA ETAPA 2: INCLUSÕES =======
+    
+    function selecionarTodasInclusoes(selecionar) {
+        const checkboxes = document.querySelectorAll('.inclusao-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = selecionar;
+        });
+        
+        // Atualizar checkbox principal
+        document.getElementById('selectAllInclusoes').checked = selecionar;
+        
+        atualizarContadorInclusoes();
+    }
+    
+    function atualizarContadorInclusoes() {
+        const checkboxes = document.querySelectorAll('.inclusao-checkbox');
+        const selecionados = document.querySelectorAll('.inclusao-checkbox:checked');
+        
+        document.getElementById('contadorInclusoes').textContent = selecionados.length;
+        
+        // Atualizar estado do checkbox principal
+        const selectAll = document.getElementById('selectAllInclusoes');
+        if (selectAll) {
+            selectAll.indeterminate = selecionados.length > 0 && selecionados.length < checkboxes.length;
+            selectAll.checked = selecionados.length === checkboxes.length;
+        }
+    }
+    
+    
+    async function incluirTransacoesSelecionadas() {
+        const checkboxes = document.querySelectorAll('.inclusao-checkbox:checked');
+        
+        if (checkboxes.length === 0) {
+            mostrarAlerta('Selecione pelo menos uma transação para incluir', 'warning');
+            return;
+        }
+        
+        // Validar se todas têm categoria selecionada
+        let erro = false;
+        const transacoesParaIncluir = [];
+        
+        checkboxes.forEach(checkbox => {
+            const index = parseInt(checkbox.dataset.index);
+            const row = checkbox.closest('tr');
+            const categoria = row.querySelector('.categoria-select').value;
+            const cliente = row.querySelector('.cliente-input').value;
+            
+            if (!categoria) {
+                row.classList.add('table-danger');
+                erro = true;
+                return;
+            } else {
+                row.classList.remove('table-danger');
+            }
+            
+            transacoesParaIncluir.push({
+                transacao: dadosConciliacao.ofx_nao_conciliadas[index],
+                categoria: categoria,
+                cliente: cliente || 'A definir'
+            });
+        });
+        
+        if (erro) {
+            mostrarAlerta('Selecione uma categoria para todas as transações marcadas em vermelho', 'danger');
+            return;
+        }
+        
+        try {
+            // Mostrar loading
+            const btn = event.target;
+            const textoOriginal = btn.innerHTML;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Incluindo...';
+            btn.disabled = true;
+            
+            console.log(`🚀 Iniciando inclusão de ${transacoesParaIncluir.length} lançamentos...`);
+            
+            // Chamar API de inclusão
+            const response = await fetch('/api/incluir-lancamentos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    lancamentos: transacoesParaIncluir
+                })
+            });
+            
+            const resultado = await response.json();
+            
+            // Restaurar botão
+            btn.innerHTML = textoOriginal;
+            btn.disabled = false;
+            
+            if (resultado.success) {
+                console.log(`✅ Inclusão concluída:`, resultado);
+                
+                // Mostrar resultado detalhado
+                const mensagem = `Inclusão finalizada: ${resultado.sucessos} sucessos, ${resultado.erros} erros (${resultado.taxa_sucesso.toFixed(1)}% sucesso)`;
+                const tipoAlerta = resultado.erros > 0 ? 'warning' : 'success';
+                mostrarAlerta(mensagem, tipoAlerta);
+                
+                // Marcar lançamentos processados na interface
+                checkboxes.forEach(checkbox => {
+                    const index = parseInt(checkbox.dataset.index);
+                    const resultadoLancamento = resultado.resultados.find(r => r.index === index);
+                    
+                    if (resultadoLancamento && resultadoLancamento.success) {
+                        // Lançamento incluído com sucesso
+                        checkbox.closest('tr').style.opacity = '0.6';
+                        checkbox.closest('tr').classList.add('table-success');
+                        checkbox.disabled = true;
+                        
+                        // Adicionar badge de sucesso
+                        const row = checkbox.closest('tr');
+                        const lastCell = row.cells[row.cells.length - 1];
+                        lastCell.innerHTML += '<span class="badge bg-success ms-2">Incluído</span>';
+                    } else if (resultadoLancamento) {
+                        // Lançamento com erro
+                        checkbox.closest('tr').classList.add('table-danger');
+                        
+                        // Mostrar erro
+                        const row = checkbox.closest('tr');
+                        const lastCell = row.cells[row.cells.length - 1];
+                        lastCell.innerHTML += `<span class="badge bg-danger ms-2" title="${resultadoLancamento.error}">Erro</span>`;
+                    }
+                });
+                
+            } else {
+                // Erro na API
+                console.error('Erro na inclusão:', resultado.error);
+                mostrarAlerta(`Erro na inclusão: ${resultado.error}`, 'danger');
+            }
+            
+        } catch (error) {
+            console.error('Erro ao incluir transações:', error);
+            mostrarAlerta('Erro ao incluir transações. Tente novamente.', 'danger');
+        }
+    }
+    
+    function truncateText(text, maxLength) {
+        return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+    }
+    
+    function formatDateBR(dateString) {
+        // Converter data do formato YYYY-MM-DD para DD/MM/YYYY sem problemas de timezone
+        if (!dateString) return '';
+        
+        const parts = dateString.split('-');
+        if (parts.length !== 3) return dateString;
+        
+        const year = parts[0];
+        const month = parts[1];
+        const day = parts[2];
+        
+        return `${day}/${month}/${year}`;
+    }
+    
+    function salvarUltimoFiltro() {
+        // Salvar último filtro usado no localStorage
+        const filtro = {
+            conta_id: document.getElementById('selectConta').value,
+            data_inicio: document.getElementById('dataInicio').value,
+            data_fim: document.getElementById('dataFim').value
+        };
+        localStorage.setItem('ultimoFiltroExtrato', JSON.stringify(filtro));
+    }
+    
+    function restaurarUltimoFiltro() {
+        // Restaurar último filtro do localStorage
+        try {
+            const ultimoFiltro = localStorage.getItem('ultimoFiltroExtrato');
+            if (ultimoFiltro) {
+                const filtro = JSON.parse(ultimoFiltro);
+                
+                // Aguardar as contas serem carregadas antes de aplicar o filtro
+                setTimeout(() => {
+                    if (filtro.conta_id) {
+                        const selectConta = document.getElementById('selectConta');
+                        selectConta.value = filtro.conta_id;
+                    }
+                    if (filtro.data_inicio) {
+                        document.getElementById('dataInicio').value = filtro.data_inicio;
+                    }
+                    if (filtro.data_fim) {
+                        document.getElementById('dataFim').value = filtro.data_fim;
+                    }
+                    
+                    // Se tinha um filtro válido, carregar automaticamente
+                    if (filtro.conta_id && filtro.data_inicio && filtro.data_fim) {
+                        carregarExtrato();
+                    }
+                }, 1000); // Aguardar 1 segundo para as contas carregarem
+            }
+        } catch (error) {
+            console.log('Erro ao restaurar último filtro:', error);
+        }
+    }
+    
+    function mostrarAlerta(mensagem, tipo = 'info') {
+        // Criar alerta temporário
+        const alertContainer = document.createElement('div');
+        alertContainer.className = `alert alert-${tipo} alert-dismissible fade show position-fixed`;
+        alertContainer.style.cssText = 'top: 20px; right: 20px; z-index: 1050; max-width: 400px;';
+        alertContainer.innerHTML = `
+            ${mensagem}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        
+        document.body.appendChild(alertContainer);
+        
+        // Auto-remover após 5 segundos
+        setTimeout(() => {
+            if (alertContainer.parentNode) {
+                alertContainer.parentNode.removeChild(alertContainer);
+            }
+        }, 5000);
+    }
+    
+    // Event listeners
+    document.getElementById('mostrarApenasConciliados').addEventListener('change', function() {
+        renderizarExtrato(extratoAtual);
+    });
+    
+    // Permitir filtrar com Enter
+    document.getElementById('dataInicio').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') carregarExtrato();
+    });
+    
+    document.getElementById('dataFim').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') carregarExtrato();
+    });
+    
+    // Event listener para formulário de conciliação
+    document.getElementById('uploadForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const arquivoOfx = document.getElementById('arquivoOfx').files[0];
+        const contaId = document.getElementById('contaConciliacao').value;
+        
+        if (!arquivoOfx) {
+            mostrarAlerta('Por favor, selecione um arquivo OFX.', 'warning');
+            return;
+        }
+        
+        if (!contaId) {
+            mostrarAlerta('Por favor, selecione uma conta.', 'warning');
+            return;
+        }
+        
+        // Mostrar loading
+        document.getElementById('formConciliacao').style.display = 'none';
+        document.getElementById('loadingConciliacao').style.display = 'block';
+        
+        // Preparar FormData
+        const formData = new FormData();
+        formData.append('arquivo_ofx', arquivoOfx);
+        formData.append('conta_id', contaId);
+        
+        // Executar conciliação
+        executarConciliacao(formData);
+    });
+    
+    // ======= FUNÇÕES PARA CADASTRO DE NOVO CLIENTE =======
+    
+    let indiceLinhaSelecionada = null; // Para saber qual linha está sendo editada
+    
+    function abrirModalNovoCliente(index) {
+        indiceLinhaSelecionada = index;
+        
+        // Limpar formulário
+        document.getElementById('formNovoCliente').reset();
+        
+        // Pré-preencher nome se houver sugestão
+        const transacao = dadosConciliacao.ofx_nao_conciliadas[index];
+        const sugestaoCliente = transacao?.sugestoes?.cliente;
+        
+        if (sugestaoCliente && sugestaoCliente !== 'A definir' && sugestaoCliente !== 'PIX') {
+            document.getElementById('nomeCliente').value = sugestaoCliente;
+        }
+        
+        // Exibir modal
+        const modal = new bootstrap.Modal(document.getElementById('modalNovoCliente'));
+        modal.show();
+    }
+    
+    // Event listener para o botão de salvar cliente
+    document.addEventListener('DOMContentLoaded', function() {
+        const btnSalvarCliente = document.getElementById('btnSalvarCliente');
+        if (btnSalvarCliente) {
+            btnSalvarCliente.addEventListener('click', async function() {
+                await salvarNovoCliente();
+            });
+        }
+    });
+    
+    async function salvarNovoCliente() {
+        const form = document.getElementById('formNovoCliente');
+        const formData = new FormData(form);
+        
+        // Validar campos obrigatórios
+        const nome = formData.get('nome');
+        if (!nome || nome.trim() === '') {
+            mostrarAlerta('Nome é obrigatório', 'danger');
+            return;
+        }
+        
+        try {
+            // Mostrar loading no botão
+            const btnSalvar = document.getElementById('btnSalvarCliente');
+            const textoOriginal = btnSalvar.innerHTML;
+            btnSalvar.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Criando...';
+            btnSalvar.disabled = true;
+            
+            // Preparar dados para API
+            const dadosCliente = {
+                nome: nome.trim(),
+                email: formData.get('email') || '',
+                ddd: formData.get('ddd') || '',
+                telefone: formData.get('telefone') || ''
+            };
+            
+            console.log('Criando cliente:', dadosCliente);
+            
+            // Chamar API
+            const response = await fetch('/api/criar-cliente', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dadosCliente)
+            });
+            
+            const resultado = await response.json();
+            
+            if (resultado.success) {
+                // Cliente criado com sucesso
+                mostrarAlerta(`Cliente "${nome}" criado com sucesso!`, 'success');
+                
+                // Atualizar o campo de cliente na linha
+                if (indiceLinhaSelecionada !== null) {
+                    const row = document.querySelector(`[data-index="${indiceLinhaSelecionada}"]`).closest('tr');
+                    const inputCliente = row.querySelector('.cliente-input');
+                    if (inputCliente) {
+                        inputCliente.value = nome.trim();
+                    }
+                }
+                
+                // Fechar modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('modalNovoCliente'));
+                modal.hide();
+                
+                // Limpar dados
+                indiceLinhaSelecionada = null;
+                
+                // Forçar atualização da lista de clientes no frontend
+                await recarregarListaClientes();
+                
+            } else {
+                // Erro na criação
+                mostrarAlerta(`Erro ao criar cliente: ${resultado.error}`, 'danger');
+            }
+            
+        } catch (error) {
+            console.error('Erro ao criar cliente:', error);
+            mostrarAlerta('Erro ao criar cliente. Verifique sua conexão e tente novamente.', 'danger');
+            
+        } finally {
+            // Restaurar botão
+            const btnSalvar = document.getElementById('btnSalvarCliente');
+            btnSalvar.innerHTML = '<i class="bi bi-check-circle me-1"></i>Cadastrar Cliente';
+            btnSalvar.disabled = false;
+        }
+    }
+    
+    async function recarregarListaClientes() {
+        /**
+         * Força o recarregamento da lista de clientes/fornecedores do cache
+         * Chamada após criação de novo cliente para atualizar os dados
+         */
+        try {
+            console.log('🔄 Recarregando lista de clientes/fornecedores...');
+            
+            // Forçar nova busca na API com parâmetro de cache-busting
+            const response = await fetch(`/api/clientes-fornecedores?t=${Date.now()}`);
+            
+            if (response.ok) {
+                const dados = await response.json();
+                console.log(`✅ Lista atualizada: ${dados.clientes_fornecedores.length} clientes/fornecedores`);
+                console.log(`   Forçada: ${dados.force_refreshed}, Cache: ${dados.cached}`);
+                
+                // Atualizar variável global do sistema
+                clientesFornecedores = dados.clientes_fornecedores;
+                
+                // Atualizar todos os datalists existentes
+                const inputsCliente = document.querySelectorAll('.cliente-input');
+                inputsCliente.forEach(input => {
+                    criarAutocompleteCliente(input, dados.clientes_fornecedores);
+                });
+                
+                const mensagem = dados.force_refreshed 
+                    ? 'Cache de clientes atualizado - novo cliente disponível!'
+                    : 'Lista de clientes recarregada com sucesso!';
+                mostrarAlerta(mensagem, 'success');
+                
+            } else {
+                console.warn('⚠️ Erro ao recarregar clientes:', response.status);
+            }
+            
+        } catch (error) {
+            console.error('❌ Erro ao recarregar lista de clientes:', error);
+        }
+    }
+    
+    function criarAutocompleteCliente(input, clientesFornecedoresData) {
+        /**
+         * Recria o autocomplete para um input de cliente com dados atualizados
+         * Atualiza o datalist existente ao invés de criar novo autocomplete
+         */
+        if (!clientesFornecedoresData || clientesFornecedoresData.length === 0) return;
+        
+        console.log(`🔄 Atualizando autocomplete para input ${input.dataset.index} com ${clientesFornecedoresData.length} itens`);
+        console.log(`📋 Primeiros 3 clientes:`, clientesFornecedoresData.slice(0, 3));
+        
+        // Encontrar o datalist existente associado ao input
+        const datalistId = input.getAttribute('list');
+        let datalist = document.getElementById(datalistId);
+        console.log(`🎯 Atualizando datalist: ${datalistId}`);
+        
+        if (datalist) {
+            // Limpar opções existentes
+            datalist.innerHTML = '';
+            
+            // Recriar as opções com dados atualizados
+            const clientes = clientesFornecedoresData.filter(cf => cf.tipo === 'Cliente');
+            const fornecedores = clientesFornecedoresData.filter(cf => cf.tipo === 'Fornecedor');
+            
+            // Criar Set para evitar duplicatas
+            const opcoesAdicionadas = new Set();
+            
+            // Função helper para adicionar opção única
+            const adicionarOpcao = (valor, texto, icone) => {
+                const chave = valor.toLowerCase();
+                if (!opcoesAdicionadas.has(chave)) {
+                    const option = document.createElement('option');
+                    option.value = valor;
+                    option.textContent = `${icone} ${texto}`;
+                    datalist.appendChild(option);
+                    opcoesAdicionadas.add(chave);
+                }
+            };
+            
+            // Adicionar todas as variações para busca case-insensitive
+            [...clientes, ...fornecedores].forEach(contato => {
+                const icone = contato.tipo === 'Cliente' ? '👤' : '🏢';
+                const nome = contato.nome;
+                
+                // Versão original (como vem do Omie)
+                adicionarOpcao(nome, nome, icone);
+                
+                // Versão com cada palavra em Title Case para facilitar busca
+                const palavras = nome.toLowerCase().split(' ');
+                for (let i = 1; i <= palavras.length; i++) {
+                    const fragmento = palavras.slice(0, i).join(' ');
+                    if (fragmento.length >= 3) { // Só adicionar fragmentos com pelo menos 3 chars
+                        const fragmentoCapitalizado = fragmento.charAt(0).toUpperCase() + fragmento.slice(1);
+                        adicionarOpcao(nome, nome, icone); // Usar nome original como value
+                    }
+                }
+            });
+            
+            console.log(`✅ Datalist ${datalistId} atualizado com ${clientes.length} clientes e ${fornecedores.length} fornecedores`);
+            
+            // Log das opções adicionadas para debug
+            const todasOpcoes = [...clientes, ...fornecedores];
+            const opcoesCarmo = todasOpcoes.filter(item => item.nome.toLowerCase().includes('carmo'));
+            if (opcoesCarmo.length > 0) {
+                console.log(`🔍 Opções com 'carmo' encontradas:`, opcoesCarmo.map(c => c.nome));
+            }
+        }
+    }
+    
+</script>
+
+<!-- Modal para Cadastrar Novo Cliente -->
+<div class="modal fade" id="modalNovoCliente" tabindex="-1" aria-labelledby="modalNovoClienteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalNovoClienteLabel">
+                    <i class="bi bi-person-plus me-2"></i>Cadastrar Novo Cliente
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formNovoCliente">
+                    <div class="mb-3">
+                        <label for="nomeCliente" class="form-label">Nome/Razão Social <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="nomeCliente" name="nome" required>
+                        <div class="form-text">Nome ou razão social do cliente (obrigatório)</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="emailCliente" class="form-label">E-mail</label>
+                        <input type="email" class="form-control" id="emailCliente" name="email">
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="dddCliente" class="form-label">DDD</label>
+                            <input type="text" class="form-control" id="dddCliente" name="ddd" maxlength="2" placeholder="11">
+                        </div>
+                        <div class="col-md-8">
+                            <label for="telefoneCliente" class="form-label">Telefone</label>
+                            <input type="text" class="form-control" id="telefoneCliente" name="telefone" placeholder="999999999">
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <small class="text-muted">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Campos opcionais podem ser preenchidos posteriormente no Omie
+                        </small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle me-1"></i>Cancelar
+                </button>
+                <button type="button" class="btn btn-primary" id="btnSalvarCliente">
+                    <i class="bi bi-check-circle me-1"></i>Cadastrar Cliente
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

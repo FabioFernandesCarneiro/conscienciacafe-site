@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}{% if coffee %}Editar Café{% else %}Novo Café{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-xl-6 col-lg-7">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="bi bi-cup-hot"></i>
+                    {% if coffee %}Editar Café{% else %}Novo Café{% endif %}
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label" for="name">Nome Comercial *</label>
+                            <input type="text" class="form-control" id="name" name="name" required
+                                   value="{{ coffee.name if coffee else '' }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="variety">Variedade</label>
+                            <input type="text" class="form-control" id="variety" name="variety"
+                                   value="{{ coffee.variety if coffee else '' }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="process">Processo</label>
+                            <input type="text" class="form-control" id="process" name="process"
+                                   value="{{ coffee.process if coffee else '' }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="farm_name">Fazenda</label>
+                            <input type="text" class="form-control" id="farm_name" name="farm_name"
+                                   value="{{ coffee.farm_name if coffee else '' }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="region">Região</label>
+                            <input type="text" class="form-control" id="region" name="region"
+                                   value="{{ coffee.region if coffee else '' }}">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" for="sensorial_notes">Sensorial</label>
+                            <textarea class="form-control" id="sensorial_notes" name="sensorial_notes" rows="2">{{ coffee.sensorial_notes if coffee else '' }}</textarea>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="sca_score">Pontuação SCA</label>
+                            <input type="text" class="form-control" id="sca_score" name="sca_score"
+                                   value="{{ coffee.sca_score if coffee else '' }}">
+                        </div>
+                        {% if coffee %}
+                        <div class="col-md-4 d-flex align-items-center">
+                            <div class="form-check mt-4">
+                                <input class="form-check-input" type="checkbox" value="1" id="active" name="active"
+                                       {% if coffee.active %}checked{% endif %}>
+                                <label class="form-check-label" for="active">Ativo</label>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <hr>
+                    <h6 class="fw-semibold mb-3">Preços por embalagem *</h6>
+                    <div class="row g-3">
+                        {% for size in package_sizes %}
+                        <div class="col-md-4">
+                            <label class="form-label" for="price_{{ size }}">{{ size }}</label>
+                            {% set field_value = '' %}
+                            {% if coffee and coffee.prices_map %}
+                                {% set field_value = coffee.prices_map.get(size, '') %}
+                            {% endif %}
+                            <input type="text" class="form-control" id="price_{{ size }}" name="price_{{ size }}"
+                                   value="{{ field_value }}"
+                                   placeholder="0.00">
+                       </div>
+                       {% endfor %}
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <a href="{{ url_for('orders.coffees_index') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Voltar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg"></i> Salvar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

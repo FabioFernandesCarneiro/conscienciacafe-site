@@ -1,0 +1,15 @@
+requests
+pandas
+numpy
+scikit-learn
+ofxparse
+python-dotenv
+flask
+flask-login
+werkzeug
+gspread
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+psycopg2-binary
+sqlalchemy

@@ -231,3 +231,45 @@ class MLCategorizer:
             'with_client_supplier': with_client,
             'model_trained': self.model is not None
         }
+
+
+# ==========================
+# Helper Functions
+# ==========================
+
+def clean_description_for_ml(description: str) -> str:
+    """Clean description for ML processing."""
+    import re
+
+    if not description:
+        return ""
+
+    clean = description.lower()
+    clean = re.sub(r'[^\w\s]', ' ', clean)
+    clean = re.sub(r'\s+', ' ', clean).strip()
+
+    return clean
+
+
+def extract_name_from_description(description: str) -> Optional[str]:
+    """Extract person/company name from transaction description."""
+    import re
+
+    if not description:
+        return None
+
+    patterns = [
+        r'pix.*?-\s*([A-Z][A-Z\s]+[A-Z])',
+        r'transferência.*?-\s*([A-Z][A-Z\s]+[A-Z])',
+        r'para\s+([A-Z][A-Z\s]+[A-Z])',
+        r'de\s+([A-Z][A-Z\s]+[A-Z])',
+    ]
+
+    for pattern in patterns:
+        match = re.search(pattern, description, re.IGNORECASE)
+        if match:
+            name = match.group(1).strip()
+            if len(name.split()) >= 2 and len(name) > 5:
+                return name.title()
+
+    return None

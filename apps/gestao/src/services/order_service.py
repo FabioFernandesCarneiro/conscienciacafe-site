@@ -2,27 +2,32 @@
 
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, datetime
 from typing import Any, Dict, List, Optional
 from decimal import Decimal, ROUND_HALF_UP
 
 from sqlalchemy.orm import joinedload
 
 from ..db import session_scope
-from ..models import Order, OrderItem, CRMLead
+from ..models import Order, OrderItem, CRMLead, CRMUser
 
 
 class OrderService:
+    def __init__(self):
+        pass
+
     def list_orders(
         self,
         *,
         lead_id: Optional[int] = None,
+        user_id: Optional[int] = None,
         start_date: Optional[date] = None,
         end_date: Optional[date] = None,
         coffee_id: Optional[int] = None,
         lead_name: Optional[str] = None,
         min_total: Optional[float] = None,
         max_total: Optional[float] = None,
+        payment_status: Optional[str] = None,
         limit: int = 200,
         offset: int = 0,
     ) -> List[Dict[str, Any]]:
@@ -30,6 +35,8 @@ class OrderService:
             query = session.query(Order).options(joinedload(Order.lead))
             if lead_id:
                 query = query.filter(Order.lead_id == lead_id)
+            if user_id:
+                query = query.filter(Order.user_id == user_id)
             if start_date:
                 query = query.filter(Order.order_date >= start_date)
             if end_date:
@@ -43,6 +50,8 @@ class OrderService:
                 query = query.filter(Order.total_amount >= float(min_total))
             if max_total is not None:
                 query = query.filter(Order.total_amount <= float(max_total))
+            if payment_status:
+                query = query.filter(Order.payment_status == payment_status)
             orders = (
                 query.order_by(Order.order_date.desc(), Order.id.desc())
                 .offset(offset)
@@ -72,16 +81,21 @@ class OrderService:
             order = Order(
                 lead_id=data.get('lead_id'),
                 client_id=data.get('client_id'),
+                user_id=data.get('user_id'),
                 order_date=order_date,
                 currency=data.get('currency', 'BRL'),
                 notes=data.get('notes'),
                 source=data.get('source'),
+                payment_status='pending',
+                paid_amount=Decimal('0.00'),
             )
             session.add(order)
             session.flush()
 
             order.total_amount = self._apply_items(order, items)
-            return order.id
+            order_id = order.id
+
+        return order_id
 
     def update_order(self, order_id: int, data: Dict[str, Any], items: List[Dict[str, Any]]) -> None:
         if not items:
@@ -100,6 +114,7 @@ class OrderService:
 
             order.lead_id = data.get('lead_id')
             order.client_id = data.get('client_id')
+            order.user_id = data.get('user_id')
             order.order_date = order_date
             order.currency = data.get('currency', 'BRL')
             order.notes = data.get('notes')
@@ -108,6 +123,59 @@ class OrderService:
             # Clear existing items (delete-orphan ensures DB sync)
             order.items[:] = []
             order.total_amount = self._apply_items(order, items)
+
+    def update_payment(
+        self,
+        order_id: int,
+        paid_amount: float,
+        payment_status: Optional[str] = None
+    ) -> None:
+        """
+        Update order payment information.
+        If payment_status becomes 'paid', calculate commission for sellers.
+
+        Args:
+            order_id: The order ID
+            paid_amount: Amount paid
+            payment_status: 'pending', 'partial', or 'paid'
+        """
+        with session_scope() as session:
+            order = session.get(Order, order_id)
+            if not order:
+                raise ValueError('Pedido nao encontrado')
+
+            order.paid_amount = Decimal(str(paid_amount))
+
+            # Auto-determine payment status if not provided
+            if payment_status:
+                order.payment_status = payment_status
+            else:
+                total = float(order.total_amount or 0)
+                if paid_amount >= total:
+                    order.payment_status = 'paid'
+                elif paid_amount > 0:
+                    order.payment_status = 'partial'
+                else:
+                    order.payment_status = 'pending'
+
+            order.updated_at = datetime.utcnow()
+
+    def update_user(self, order_id: int, user_id: Optional[int]) -> None:
+        """
+        Update the user (seller) associated with an order.
+        Recalculates commission if needed.
+
+        Args:
+            order_id: The order ID
+            user_id: The new user ID (can be None)
+        """
+        with session_scope() as session:
+            order = session.get(Order, order_id)
+            if not order:
+                raise ValueError('Pedido nao encontrado')
+
+            order.user_id = user_id
+            order.updated_at = datetime.utcnow()
 
     def order_exists(self, lead_id: int, order_date: Optional[date], total_amount: float) -> bool:
         with session_scope() as session:
@@ -181,11 +249,15 @@ class OrderService:
             'id': order.id,
             'lead_id': order.lead_id,
             'client_id': order.client_id,
+            'user_id': order.user_id,
+            'user_name': order.user.username if order.user else None,
             'order_date': order.order_date.isoformat() if order.order_date else None,
             'currency': order.currency,
             'notes': order.notes,
             'source': order.source,
             'total_amount': float(order.total_amount) if order.total_amount is not None else None,
+            'paid_amount': float(order.paid_amount) if order.paid_amount is not None else 0,
+            'payment_status': order.payment_status or 'pending',
             'lead_name': order.lead.name if order.lead else None,
             'client_name': None,  # TODO: Add client relationship when needed
             'created_at': order.created_at.isoformat() if order.created_at else None,

@@ -41,10 +41,21 @@
 
                         <div class="mb-3">
                             <label for="role" class="form-label">Perfil</label>
-                            <select class="form-select" id="role" name="role">
+                            <select class="form-select" id="role" name="role" onchange="toggleCountryField()">
                                 <option value="admin">Administrador</option>
                                 <option value="user">Usuário</option>
+                                <option value="vendedor">Vendedor</option>
                             </select>
+                        </div>
+
+                        <div class="mb-3" id="countryField" style="display: none;">
+                            <label for="country" class="form-label">País de Atuação</label>
+                            <select class="form-select" id="country" name="country">
+                                <option value="">Selecione...</option>
+                                <option value="BR">Brasil (BR)</option>
+                                <option value="PY">Paraguai (PY)</option>
+                            </select>
+                            <div class="form-text">Obrigatório para vendedores</div>
                         </div>
 
                         <div class="d-grid gap-2">
@@ -61,4 +72,26 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function toggleCountryField() {
+    const roleSelect = document.getElementById('role');
+    const countryField = document.getElementById('countryField');
+    const countrySelect = document.getElementById('country');
+
+    if (roleSelect.value === 'vendedor') {
+        countryField.style.display = 'block';
+        countrySelect.required = true;
+    } else {
+        countryField.style.display = 'none';
+        countrySelect.required = false;
+        countrySelect.value = '';
+    }
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', toggleCountryField);
+</script>
 {% endblock %}

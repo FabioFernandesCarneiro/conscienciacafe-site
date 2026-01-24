@@ -203,6 +203,8 @@
     src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@2.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 <script>
     let revenueChart, volumeChart, countriesChart;
+    let dashboardCurrency = 'BRL';
+    let dashboardCurrencySymbol = 'R$';
 
     document.addEventListener('DOMContentLoaded', () => {
         const currentDateElement = document.getElementById('current-date');
@@ -315,6 +317,10 @@
                 showError('Dados de métricas não disponíveis');
                 return;
             }
+
+            // Atualizar moeda do dashboard
+            dashboardCurrency = data.currency || 'BRL';
+            dashboardCurrencySymbol = data.currency_symbol || 'R$';
 
             const sourceLabel = document.getElementById('data-source-label');
             if (sourceLabel) {
@@ -436,7 +442,7 @@
                         y: {
                             beginAtZero: true,
                             ticks: {
-                                callback: value => 'R$ ' + value.toLocaleString('pt-BR')
+                                callback: value => dashboardCurrencySymbol + ' ' + value.toLocaleString('pt-BR')
                             }
                         },
                         y1: {
@@ -553,7 +559,7 @@
                             y: {
                                 beginAtZero: true,
                                 ticks: {
-                                    callback: value => 'R$ ' + value.toLocaleString('pt-BR')
+                                    callback: value => dashboardCurrencySymbol + ' ' + value.toLocaleString('pt-BR')
                                 }
                             }
                         }
@@ -851,7 +857,12 @@
     }
 
     function formatCurrency(value) {
-        return `R$ ${(value || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        const numValue = value || 0;
+        // Guarani não usa centavos
+        if (dashboardCurrency === 'PYG') {
+            return `${dashboardCurrencySymbol} ${Math.round(numValue).toLocaleString('pt-BR')}`;
+        }
+        return `${dashboardCurrencySymbol} ${numValue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     }
 
     function formatDate(dateStr) {

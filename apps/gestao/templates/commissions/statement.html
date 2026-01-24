@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}Extrato de Comissões{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center my-4">
+        <h2><i class="bi bi-file-earmark-text"></i> Extrato de Comissões</h2>
+        <a href="{{ url_for('commissions.index') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Voltar
+        </a>
+    </div>
+
+    <!-- Period Selector -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label">Mes</label>
+                    <select name="month" class="form-select">
+                        {% for m in months %}
+                        <option value="{{ m.value }}" {% if m.value == selected_month %}selected{% endif %}>
+                            {{ m.label }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Ano</label>
+                    <input type="number" name="year" class="form-control" value="{{ selected_year }}" min="2020" max="2030">
+                </div>
+                {% if current_user.is_admin and statement %}
+                <input type="hidden" name="user_id" value="{{ statement.user_id }}">
+                {% endif %}
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search"></i> Buscar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if statement %}
+    <!-- Statement Header -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                Extrato: {{ statement.username }}
+                {% if statement.country %}
+                <span class="badge bg-light text-dark ms-2">{{ statement.country }}</span>
+                {% endif %}
+            </h5>
+            <small>Periodo: {{ statement.period }}</small>
+        </div>
+        <div class="card-body">
+            <div class="row text-center">
+                <div class="col-md-3">
+                    <h6 class="text-muted">Total de Comissões</h6>
+                    <h3>{{ statement.totals.count }}</h3>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-muted">Valor Total</h6>
+                    <h3>R$ {{ "%.2f"|format(statement.totals.total) }}</h3>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-muted text-warning">Pendente</h6>
+                    <h3 class="text-warning">R$ {{ "%.2f"|format(statement.totals.pending) }}</h3>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-muted text-success">Pago</h6>
+                    <h3 class="text-success">R$ {{ "%.2f"|format(statement.totals.paid) }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Commission Items -->
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h6 class="mb-0">Detalhamento</h6>
+        </div>
+        <div class="card-body">
+            {% if statement.items %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Pedido</th>
+                                <th class="text-end">Valor Pedido</th>
+                                <th class="text-end">Taxa</th>
+                                <th class="text-end">Comissão</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in statement.items %}
+                            <tr>
+                                <td>{{ item.order_date }}</td>
+                                <td>
+                                    <a href="{{ url_for('orders.orders_edit', order_id=item.order_id) }}">
+                                        #{{ item.order_id }}
+                                    </a>
+                                </td>
+                                <td class="text-end">
+                                    {{ item.order_currency }} {{ "%.2f"|format(item.order_total) }}
+                                </td>
+                                <td class="text-end">{{ item.rate_applied }}%</td>
+                                <td class="text-end">
+                                    <strong>R$ {{ "%.2f"|format(item.amount) }}</strong>
+                                </td>
+                                <td>
+                                    {% if item.status == 'paid' %}
+                                        <span class="badge bg-success">Pago</span>
+                                    {% else %}
+                                        <span class="badge bg-warning">Pendente</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot class="table-light">
+                            <tr>
+                                <td colspan="4" class="text-end"><strong>Total:</strong></td>
+                                <td class="text-end"><strong>R$ {{ "%.2f"|format(statement.totals.total) }}</strong></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                    <p class="mt-3">Nenhuma comissao neste periodo</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -28,13 +28,39 @@
                             <input type="hidden" id="lead_id" name="lead_id" value="{{ current_lead_id or '' }}">
                             <div id="lead_suggestions" class="position-absolute bg-white border rounded shadow-sm" style="display: none; max-height: 300px; overflow-y: auto; z-index: 1000; width: calc(100% - 30px);"></div>
                         </div>
+                        <div class="col-md-6">
+                            {% if current_user.is_admin %}
+                            <label class="form-label" for="user_id">Responsavel</label>
+                            <select class="form-select" id="user_id" name="user_id">
+                                {% for user in users %}
+                                <option value="{{ user.id }}"
+                                        {% if (form_order.get('user_id') == user.id) or (not form_order.get('user_id') and user.id == current_user.id) %}selected{% endif %}>
+                                    {{ user.username }}
+                                    {% if user.role == 'vendedor' %} (Vendedor{% if user.country %} - {{ user.country }}{% endif %}){% endif %}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            {% else %}
+                            <input type="hidden" name="user_id" value="{{ current_user.id }}">
+                            {% endif %}
+                        </div>
                         <div class="col-md-3">
                             <label class="form-label" for="order_date">Data</label>
                             <input type="date" class="form-control" id="order_date" name="order_date" value="{{ request.form.get('order_date') or form_order.get('order_date') or default_date }}">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label" for="currency">Moeda</label>
-                            <input type="text" class="form-control" id="currency" name="currency" value="{{ request.form.get('currency') or form_order.get('currency') or 'BRL' }}">
+                            {% set current_currency = form_order.get('currency') or request.form.get('currency') or default_currency or 'BRL' %}
+                            {% if is_edit %}
+                            {# Na edição, moeda é somente leitura #}
+                            <input type="hidden" id="currency" name="currency" value="{{ current_currency }}">
+                            <input type="text" class="form-control" value="{{ current_currency }} ({{ 'Real' if current_currency == 'BRL' else 'Guarani' }})" disabled>
+                            {% else %}
+                            <select class="form-select" id="currency" name="currency">
+                                <option value="BRL" {% if current_currency == 'BRL' %}selected{% endif %}>BRL (Real)</option>
+                                <option value="PYG" {% if current_currency == 'PYG' %}selected{% endif %}>PYG (Guarani)</option>
+                            </select>
+                            {% endif %}
                         </div>
                         <div class="col-12">
                             <label class="form-label" for="source">Origem / Campanha</label>
@@ -74,7 +100,9 @@
                     <div class="d-flex justify-content-end mt-3">
                         <div class="text-end">
                             <div class="small text-muted">Total do pedido</div>
-                            <div class="fw-semibold" id="totalPedido">R$ {{ '%.2f'|format(form_order.get('total_amount') or 0) }}</div>
+                            {% set curr = request.form.get('currency') or form_order.get('currency') or default_currency or 'BRL' %}
+                            {% set symbol = '₲' if curr == 'PYG' else 'R$' %}
+                            <div class="fw-semibold" id="totalPedido">{{ symbol }} {{ '%.2f'|format(form_order.get('total_amount') or 0) }}</div>
                         </div>
                     </div>
 
@@ -99,6 +127,15 @@
     const PACKAGE_SIZES = {{ package_sizes | tojson }};
     const EXISTING_ITEMS = {{ (form_order.get('items') or []) | tojson }};
     const LEADS = {{ leads | tojson }};
+    const CURRENCY_SYMBOLS = { 'BRL': 'R$', 'PYG': '₲' };
+
+    function getCurrentCurrency() {
+        return document.getElementById('currency').value || 'BRL';
+    }
+
+    function getCurrencySymbol() {
+        return CURRENCY_SYMBOLS[getCurrentCurrency()] || 'R$';
+    }
 
     function optionCafes(selectedId = '') {
         return ['<option value="">(Padrão)</option>'].concat(
@@ -158,10 +195,12 @@
             return '';
         }
         const coffee = COFFEES.find(c => String(c.id) === String(coffeeId));
-        if (!coffee || !coffee.prices_map) {
+        if (!coffee || !coffee.prices_by_currency) {
             return '';
         }
-        const price = coffee.prices_map[packageSize];
+        const currency = getCurrentCurrency();
+        const pricesByCurrency = coffee.prices_by_currency[currency] || {};
+        const price = pricesByCurrency[packageSize];
         return price !== undefined ? price : '';
     }
 
@@ -207,7 +246,24 @@
             const valor = parseFloat((input.value || '').replace(',', '.')) || 0;
             total += valor;
         });
-        document.getElementById('totalPedido').textContent = `R$ ${total.toFixed(2)}`;
+        const symbol = getCurrencySymbol();
+        document.getElementById('totalPedido').textContent = `${symbol} ${total.toFixed(2)}`;
+    }
+
+    function atualizarPrecosAoMudarMoeda() {
+        // Atualiza os preços sugeridos de todos os itens quando a moeda muda
+        document.querySelectorAll('#tabelaItens tbody tr').forEach(row => {
+            const coffeeSelect = row.querySelector('select[name="item_coffee_id"]');
+            const packageSelect = row.querySelector('select[name="item_package_size"]');
+            const priceInput = row.querySelector('input[name="item_unit_price"]');
+            if (coffeeSelect && packageSelect && priceInput) {
+                const price = obterPrecoSugerido(coffeeSelect.value, packageSelect.value);
+                if (price !== '') {
+                    priceInput.value = price;
+                }
+            }
+        });
+        atualizarTotais();
     }
 
     // Lead autocomplete
@@ -295,6 +351,9 @@
             adicionarItem();
         }
         atualizarTotais();
+
+        // Atualizar preços quando moeda mudar
+        document.getElementById('currency').addEventListener('change', atualizarPrecosAoMudarMoeda);
     });
 </script>
 {% endblock %}

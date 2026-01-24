@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Selecionar Vendedor{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm mt-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-person-check"></i> Selecionar Vendedor</h5>
+                </div>
+                <div class="card-body p-4">
+                    <p>Selecione o vendedor para visualizar o extrato de comissoes:</p>
+
+                    <form method="get" action="{{ url_for('commissions.index') }}">
+                        <input type="hidden" name="month" value="{{ month }}">
+                        <input type="hidden" name="year" value="{{ year }}">
+
+                        <div class="mb-3">
+                            <label for="user_id" class="form-label">Vendedor</label>
+                            <select class="form-select" id="user_id" name="user_id" required>
+                                <option value="">Selecione...</option>
+                                {% for seller in sellers %}
+                                <option value="{{ seller.user_id }}">
+                                    {{ seller.username }}
+                                    {% if seller.country %}({{ seller.country }}){% endif %}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-cash-coin"></i> Ver Comissões
+                            </button>
+                            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Voltar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

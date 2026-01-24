@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Taxas de Comissão{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center my-4">
+        <h2><i class="bi bi-percent"></i> Taxas de Comissão por Vendedor</h2>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            {% if rates %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Vendedor</th>
+                                <th>Pais</th>
+                                <th class="text-end">Taxa Atual</th>
+                                <th>Vigente Desde</th>
+                                <th class="text-center">Acoes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for rate in rates %}
+                            <tr>
+                                <td>
+                                    <i class="bi bi-person"></i> {{ rate.username }}
+                                </td>
+                                <td>
+                                    {% if rate.country %}
+                                        <span class="badge bg-secondary">{{ rate.country }}</span>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    {% if rate.current_rate is not none %}
+                                        <strong>{{ rate.current_rate }}%</strong>
+                                    {% else %}
+                                        <span class="text-muted">Nao definida</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if rate.rate_start_date %}
+                                        {{ rate.rate_start_date }}
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    <a href="{{ url_for('commissions.rate_history', user_id=rate.user_id) }}"
+                                       class="btn btn-sm btn-outline-info" title="Historico">
+                                        <i class="bi bi-clock-history"></i>
+                                    </a>
+                                    <a href="{{ url_for('commissions.set_rate', user_id=rate.user_id) }}"
+                                       class="btn btn-sm btn-outline-primary" title="Definir Taxa">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-person-x" style="font-size: 3rem;"></i>
+                    <p class="mt-3">Nenhum vendedor cadastrado</p>
+                    <a href="{{ url_for('auth.new_user') }}" class="btn btn-success">
+                        <i class="bi bi-person-plus"></i> Criar Vendedor
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

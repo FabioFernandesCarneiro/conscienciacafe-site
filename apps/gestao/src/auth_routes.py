@@ -113,9 +113,14 @@ def create_auth_blueprint(auth_service: AuthService) -> Blueprint:
             password = request.form.get('password', '')
             confirm_password = request.form.get('confirm_password', '')
             role = (request.form.get('role') or 'user').strip().lower()
+            country = (request.form.get('country') or '').strip().upper() or None
+
+            if password != confirm_password:
+                flash('A senha e a confirmação não conferem.', 'danger')
+                return render_template('auth/new_user.html')
 
             try:
-                auth_service.create_user(username, password, role)
+                auth_service.create_user(username, password, role, country)
             except ValueError as exc:
                 flash(str(exc), 'danger')
                 return render_template('auth/new_user.html')
@@ -146,5 +151,35 @@ def create_auth_blueprint(auth_service: AuthService) -> Blueprint:
             flash('Usuário não encontrado.', 'danger')
 
         return redirect(url_for('auth.list_users'))
+
+    @bp.route('/users/<int:user_id>/edit', methods=['GET', 'POST'])
+    @login_required
+    def edit_user(user_id):
+        if not _require_admin():
+            return redirect(url_for('dashboard'))
+
+        user = auth_service.load_user_by_id(user_id)
+        if not user:
+            flash('Usuário não encontrado.', 'danger')
+            return redirect(url_for('auth.list_users'))
+
+        if request.method == 'POST':
+            role = (request.form.get('role') or 'user').strip().lower()
+            country = (request.form.get('country') or '').strip().upper() or None
+            active = 'active' in request.form
+
+            # Não permitir desativar o próprio usuário
+            if user_id == int(current_user.get_id()) and not active:
+                flash('Você não pode desativar seu próprio usuário.', 'danger')
+                return render_template('auth/edit_user.html', user=user.raw)
+
+            try:
+                auth_service.update_user(user_id, role=role, country=country, active=active)
+                flash('Usuário atualizado com sucesso!', 'success')
+                return redirect(url_for('auth.list_users'))
+            except ValueError as exc:
+                flash(str(exc), 'danger')
+
+        return render_template('auth/edit_user.html', user=user.raw)
 
     return bp

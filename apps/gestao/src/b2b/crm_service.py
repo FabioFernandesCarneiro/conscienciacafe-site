@@ -9,7 +9,6 @@ from typing import Dict, Any, List, Optional
 
 from sqlalchemy import func, or_
 
-from src.database_manager import DatabaseManager
 from src.db import session_scope
 from src.models import CRMLead, CRMInteraction
 
@@ -40,12 +39,10 @@ LEGACY_STAGE_MAP = {
 class CRMService:
     """High-level helper to manage CRM leads and interactions."""
 
-    def __init__(self, db: Optional[DatabaseManager] = None, *, use_sqlalchemy: Optional[bool] = None):
-        if use_sqlalchemy is None:
-            use_sqlalchemy = bool(os.getenv('DATABASE_URL'))
-
-        self.use_sqlalchemy = use_sqlalchemy
-        self.db = None if self.use_sqlalchemy else (db or DatabaseManager())
+    def __init__(self, *, use_sqlalchemy: Optional[bool] = None):
+        # Sempre usar SQLAlchemy (PostgreSQL) - SQLite legado removido
+        self.use_sqlalchemy = True
+        self.db = None
 
     # ----------------------
     # Stage helpers
@@ -221,6 +218,7 @@ class CRMService:
                 website=payload.get('website'),
                 primary_contact_name=payload.get('primary_contact_name'),
                 owner=payload.get('owner'),
+                user_id=payload.get('user_id'),
                 notes=payload.get('notes'),
                 google_place_id=payload.get('google_place_id'),
                 is_customer=payload.get('is_customer'),
@@ -252,6 +250,7 @@ class CRMService:
         self,
         status: Optional[str] = None,
         owner: Optional[str] = None,
+        user_id: Optional[int] = None,
         city: Optional[str] = None,
         country: Optional[str] = None,
         is_customer: Optional[bool] = None,
@@ -263,6 +262,7 @@ class CRMService:
             leads = self._list_leads_sqlite(
                 status=status,
                 owner=owner,
+                user_id=user_id,
                 city=city,
                 country=country,
                 is_customer=is_customer,
@@ -274,6 +274,7 @@ class CRMService:
             leads = self._list_leads_sqlalchemy(
                 status=status,
                 owner=owner,
+                user_id=user_id,
                 city=city,
                 country=country,
                 is_customer=is_customer,
@@ -470,6 +471,7 @@ class CRMService:
     def _list_leads_sqlalchemy(self, **filters: Any) -> List[Dict[str, Any]]:
         status = filters.get('status')
         owner = filters.get('owner')
+        user_id = filters.get('user_id')
         city = filters.get('city')
         country = filters.get('country')
         is_customer = filters.get('is_customer')
@@ -484,6 +486,8 @@ class CRMService:
                 query = query.filter(CRMLead.status == self.validate_stage(status))
             if owner:
                 query = query.filter(CRMLead.owner == owner)
+            if user_id:
+                query = query.filter(CRMLead.user_id == user_id)
             if city:
                 query = query.filter(CRMLead.city == city)
             if country:
@@ -597,7 +601,7 @@ class CRMService:
                 'address_line', 'address_number', 'address_complement', 'neighborhood',
                 'city', 'state', 'postal_code', 'country', 'latitude', 'longitude',
                 'phone', 'whatsapp', 'email', 'instagram', 'website', 'primary_contact_name',
-                'owner', 'notes', 'google_place_id', 'is_customer', 'converted_account_id'
+                'owner', 'user_id', 'notes', 'google_place_id', 'is_customer', 'converted_account_id'
             ]
 
             for field, value in updates.items():
@@ -678,6 +682,8 @@ class CRMService:
             'website': lead.website,
             'primary_contact_name': lead.primary_contact_name,
             'owner': lead.owner,
+            'user_id': lead.user_id,
+            'user_name': lead.user.username if lead.user else None,
             'notes': lead.notes,
             'google_place_id': lead.google_place_id,
             'is_customer': bool(lead.is_customer),

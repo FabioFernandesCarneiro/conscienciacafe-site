@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Taxas de Câmbio{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center my-4">
+        <h2><i class="bi bi-currency-exchange"></i> Taxas de Câmbio</h2>
+        <a href="{{ url_for('exchange.set_rate') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Nova Taxa
+        </a>
+    </div>
+
+    <!-- Current Rates Summary -->
+    {% if latest_rates %}
+    <div class="row mb-4">
+        {% for pair, rate in latest_rates.items() %}
+        <div class="col-md-4">
+            <div class="card bg-light">
+                <div class="card-body text-center">
+                    <h6 class="text-muted">{{ pair.replace('_', ' / ') }}</h6>
+                    <h3>{{ "%.6f"|format(rate) }}</h3>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Filter -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label">De</label>
+                    <select name="from_currency" class="form-select">
+                        <option value="PYG" {% if from_currency == 'PYG' %}selected{% endif %}>Guarani (PYG)</option>
+                        <option value="BRL" {% if from_currency == 'BRL' %}selected{% endif %}>Real (BRL)</option>
+                        <option value="USD" {% if from_currency == 'USD' %}selected{% endif %}>Dolar (USD)</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Para</label>
+                    <select name="to_currency" class="form-select">
+                        <option value="BRL" {% if to_currency == 'BRL' %}selected{% endif %}>Real (BRL)</option>
+                        <option value="PYG" {% if to_currency == 'PYG' %}selected{% endif %}>Guarani (PYG)</option>
+                        <option value="USD" {% if to_currency == 'USD' %}selected{% endif %}>Dolar (USD)</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search"></i> Filtrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Rate History -->
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h6 class="mb-0">Historico: {{ from_currency }} / {{ to_currency }}</h6>
+        </div>
+        <div class="card-body">
+            {% if rates %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Data Vigência</th>
+                                <th>De</th>
+                                <th>Para</th>
+                                <th class="text-end">Taxa</th>
+                                <th>Criado em</th>
+                                <th class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for rate in rates %}
+                            <tr>
+                                <td>{{ rate.effective_date }}</td>
+                                <td>{{ rate.from_currency }}</td>
+                                <td>{{ rate.to_currency }}</td>
+                                <td class="text-end">
+                                    <strong>{{ "%.6f"|format(rate.rate) }}</strong>
+                                </td>
+                                <td>{{ rate.created_at[:10] if rate.created_at else '-' }}</td>
+                                <td class="text-center">
+                                    <a href="{{ url_for('exchange.edit_rate', rate_id=rate.id) }}"
+                                       class="btn btn-sm btn-outline-primary" title="Editar">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form method="post" action="{{ url_for('exchange.delete_rate', rate_id=rate.id) }}"
+                                          style="display: inline;"
+                                          onsubmit="return confirm('Excluir esta taxa de câmbio?')">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                    <p class="mt-3">Nenhuma taxa cadastrada</p>
+                    <a href="{{ url_for('exchange.set_rate') }}" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> Definir Taxa
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -61,18 +61,40 @@
                     </div>
 
                     <hr>
-                    <h6 class="fw-semibold mb-3">Preços por embalagem *</h6>
+                    <h6 class="fw-semibold mb-3">Preços em Reais (BRL) *</h6>
                     <div class="row g-3">
                         {% for size in package_sizes %}
                         <div class="col-md-4">
-                            <label class="form-label" for="price_{{ size }}">{{ size }}</label>
+                            <label class="form-label" for="price_brl_{{ size }}">{{ size }}</label>
                             {% set field_value = '' %}
-                            {% if coffee and coffee.prices_map %}
-                                {% set field_value = coffee.prices_map.get(size, '') %}
+                            {% if coffee and coffee.prices_map_brl %}
+                                {% set raw_value = coffee.prices_map_brl.get(size, '') %}
+                                {% if raw_value %}
+                                    {% set field_value = '{:,.2f}'.format(raw_value).replace(',', 'X').replace('.', ',').replace('X', '.') %}
+                                {% endif %}
                             {% endif %}
-                            <input type="text" class="form-control" id="price_{{ size }}" name="price_{{ size }}"
+                            <input type="text" class="form-control" id="price_brl_{{ size }}" name="price_brl_{{ size }}"
                                    value="{{ field_value }}"
-                                   placeholder="0.00">
+                                   placeholder="0,00">
+                       </div>
+                       {% endfor %}
+                    </div>
+
+                    <h6 class="fw-semibold mb-3 mt-4">Preços em Guarani (PYG)</h6>
+                    <div class="row g-3">
+                        {% for size in package_sizes %}
+                        <div class="col-md-4">
+                            <label class="form-label" for="price_pyg_{{ size }}">{{ size }}</label>
+                            {% set field_value = '' %}
+                            {% if coffee and coffee.prices_map_pyg %}
+                                {% set raw_value = coffee.prices_map_pyg.get(size, '') %}
+                                {% if raw_value %}
+                                    {% set field_value = '{:,.0f}'.format(raw_value).replace(',', '.') %}
+                                {% endif %}
+                            {% endif %}
+                            <input type="text" class="form-control" id="price_pyg_{{ size }}" name="price_pyg_{{ size }}"
+                                   value="{{ field_value }}"
+                                   placeholder="0">
                        </div>
                        {% endfor %}
                     </div>

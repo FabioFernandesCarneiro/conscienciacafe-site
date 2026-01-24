@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Definir Taxa de Comissão{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm mt-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-percent"></i> Definir Taxa de Comissão</h5>
+                </div>
+                <div class="card-body p-4">
+                    {% if current_rate %}
+                    <div class="alert alert-info">
+                        <strong>Taxa atual:</strong> {{ current_rate.rate }}%
+                        <br>
+                        <small>Vigente desde: {{ current_rate.start_date }}</small>
+                    </div>
+                    {% endif %}
+
+                    <form method="post">
+                        <div class="mb-3">
+                            <label for="rate" class="form-label">Nova Taxa (%)</label>
+                            <input type="number" class="form-control" id="rate" name="rate"
+                                   min="0" max="100" step="0.01"
+                                   value="{{ current_rate.rate if current_rate else '10.00' }}" required>
+                            <div class="form-text">Percentual sobre o valor do pedido (ex: 10.00 = 10%)</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="start_date" class="form-label">Data de Inicio</label>
+                            <input type="date" class="form-control" id="start_date" name="start_date"
+                                   value="{{ today if today else '' }}">
+                            <div class="form-text">Deixe em branco para iniciar hoje</div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Salvar Taxa
+                            </button>
+                            <a href="{{ url_for('commissions.list_rates') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

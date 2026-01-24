@@ -62,7 +62,15 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
                 <div class="fw-semibold">{{ stats.count }} pedidos</div>
-                <div class="text-muted small">Total filtrado: R$ {{ '%.2f'|format(stats.total_amount or 0) }}</div>
+                <div class="text-muted small">
+                    {% if stats.total_by_currency %}
+                        {% for currency, total in stats.total_by_currency.items() %}
+                            {{ 'R$' if currency == 'BRL' else '₲' }} {{ '%.2f'|format(total) }}{% if not loop.last %} | {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        R$ {{ '%.2f'|format(stats.total_amount or 0) }}
+                    {% endif %}
+                </div>
             </div>
             {% if has_filters %}
             <span class="badge bg-info-subtle text-info">Filtros ativos</span>
@@ -96,7 +104,7 @@
                             {% endif %}
                         </td>
                         <td>{{ order.source or '-' }}</td>
-                        <td>R$ {{ '%.2f'|format(order.total_amount or 0) }}</td>
+                        <td>{{ 'R$' if order.currency == 'BRL' or not order.currency else '₲' }} {{ '%.2f'|format(order.total_amount or 0) }}</td>
                         <td class="text-end">
                             <div class="btn-group btn-group-sm" role="group">
                                 <a class="btn btn-outline-secondary" href="{{ url_for('orders.orders_view', order_id=order.id) }}" title="Visualizar">

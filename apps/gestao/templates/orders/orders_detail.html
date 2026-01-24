@@ -44,7 +44,7 @@
                     <dd class="col-sm-7">{{ order.source or '-' }}</dd>
 
                     <dt class="col-sm-5 text-muted">Valor total</dt>
-                    <dd class="col-sm-7">R$ {{ '%.2f'|format(order.total_amount or 0) }}</dd>
+                    <dd class="col-sm-7">{{ 'R$' if order.currency == 'BRL' or not order.currency else '₲' }} {{ '%.2f'|format(order.total_amount or 0) }}</dd>
                 </dl>
                 {% if order.notes %}
                 <hr>
@@ -120,8 +120,8 @@
                         <td>{{ item.coffee_name or 'Produto não informado' }}</td>
                         <td>{{ item.package_size or '-' }}</td>
                         <td class="text-end">{{ '%.2f'|format(item.quantity or 0) }}</td>
-                        <td class="text-end">R$ {{ '%.2f'|format(item.unit_price or 0) }}</td>
-                        <td class="text-end">R$ {{ '%.2f'|format(item.line_total or (item.quantity or 0) * (item.unit_price or 0)) }}</td>
+                        <td class="text-end">{{ 'R$' if order.currency == 'BRL' or not order.currency else '₲' }} {{ '%.2f'|format(item.unit_price or 0) }}</td>
+                        <td class="text-end">{{ 'R$' if order.currency == 'BRL' or not order.currency else '₲' }} {{ '%.2f'|format(item.line_total or (item.quantity or 0) * (item.unit_price or 0)) }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

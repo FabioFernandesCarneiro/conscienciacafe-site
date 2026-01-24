@@ -15,19 +15,16 @@ from typing import List, Dict, Any, Optional
 
 from sqlalchemy import case, func
 
-from src.database_manager import DatabaseManager
 from src.db import session_scope
 from src.models import Account, Category, Client, Transaction, ImportBatch
 
 
 class LocalDataService:
     def __init__(self, db_path: Optional[str] = None, use_sqlalchemy: Optional[bool] = None):
-        if use_sqlalchemy is None:
-            use_sqlalchemy = bool(os.getenv('DATABASE_URL'))
-
-        self.use_sqlalchemy = use_sqlalchemy
+        # Sempre usar SQLAlchemy (PostgreSQL) - SQLite legado removido
+        self.use_sqlalchemy = True
         self.db_path = db_path
-        self.db = None if self.use_sqlalchemy else DatabaseManager(db_path)
+        self.db = None
 
         # Configurar locale brasileiro para formatação
         try:

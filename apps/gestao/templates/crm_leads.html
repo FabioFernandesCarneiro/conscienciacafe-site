@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% set stage_options = stage_options or [] %}
+{% set users = users or [] %}
 
 {% block title %}CRM B2B - Consciência Café{% endblock %}
 
@@ -145,6 +146,9 @@
     const STAGE_LOOKUP = Object.fromEntries((STAGE_OPTIONS || []).map(stage => [stage.value, stage]));
     const DEFAULT_STAGE = (STAGE_OPTIONS && STAGE_OPTIONS.length) ? STAGE_OPTIONS[0].value : 'nao_contactado';
     const COUNTRY_OPTIONS = ['Brasil', 'Argentina', 'Paraguai'];
+    const USERS = {{ users | tojson }};
+    const CURRENT_USER_ID = {{ current_user.id if current_user.is_authenticated else 'null' }};
+    const CURRENT_USER_IS_ADMIN = {{ 'true' if current_user.is_authenticated and current_user.is_admin else 'false' }};
     const FIELD_LABELS = {
         name: 'Nome',
         category: 'Categoria',
@@ -200,6 +204,30 @@
             options.push(`<option value="${country}" ${country === normalized ? 'selected' : ''}>${country}</option>`);
         });
         return options.join('');
+    }
+
+    function buildUserOptions(selectedId = null) {
+        const selected = selectedId || CURRENT_USER_ID;
+        return (USERS || []).map(user => {
+            const suffix = user.role === 'vendedor' ? ` (Vendedor${user.country ? ' - ' + user.country : ''})` : '';
+            const isSelected = String(user.id) === String(selected) ? 'selected' : '';
+            return `<option value="${user.id}" ${isSelected}>${user.username}${suffix}</option>`;
+        }).join('');
+    }
+
+    function renderUserField(selectedId = null) {
+        if (CURRENT_USER_IS_ADMIN) {
+            return `
+                <div class="col-md-6">
+                    <label class="form-label">Responsavel</label>
+                    <select class="form-select" name="user_id">
+                        ${buildUserOptions(selectedId)}
+                    </select>
+                </div>
+            `;
+        } else {
+            return `<input type="hidden" name="user_id" value="${CURRENT_USER_ID || ''}">`;
+        }
     }
 
     function atualizarBadge(selectElement, stageValue) {
@@ -432,7 +460,7 @@
                         </select>
                     </div>
                 </td>
-                <td>${escapeHtml(lead.owner || '-')}</td>
+                <td>${escapeHtml(lead.user_name || lead.owner || '-')}</td>
                 <td class="text-end">
                     <button class="btn btn-sm btn-outline-info" onclick="editarLead(${lead.id})" title="Editar lead">
                         <i class="bi bi-pencil"></i>
@@ -822,7 +850,8 @@
             country: '',
             notes: '',
             primary_contact_name: '',
-            source: ''
+            source: '',
+            user_id: CURRENT_USER_ID
         };
         renderLeadModal(lead);
     }
@@ -891,6 +920,7 @@
                                     <label class="form-label">Origem</label>
                                     <input type="text" class="form-control" name="source" value="${safe(lead.source)}" placeholder="Google Maps, Indicação...">
                                 </div>
+                                ${renderUserField(lead.user_id)}
                                 <div class="col-md-4">
                                     <label class="form-label">Status</label>
                                     ${renderStageSelect({ selected: safe(lead.status) || DEFAULT_STAGE })}

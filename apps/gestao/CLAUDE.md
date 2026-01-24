@@ -8,25 +8,30 @@ Intelligent bank reconciliation system for Consciência Café business that inte
 
 ## Technology Stack
 
-- **Backend**: Python 3.8+ with Flask web framework
+- **Backend**: Python 3.11 (Homebrew) with Flask web framework
 - **ML/Data**: scikit-learn (TF-IDF + Naive Bayes), pandas, numpy
 - **Banking**: ofxparse for OFX bank file processing, `omieapi` library for Omie ERP
 - **External APIs**: Omie ERP integration, Google Sheets/Maps APIs
 - **Authentication**: gspread with google-auth for Google services
-- **Database**: SQLite for ML learning data and local storage
+- **Database**: PostgreSQL (production/Railway), SQLite (local ML data)
 
 ## Development Setup
 
 ```bash
-# Initial setup
-source venv/bin/activate
-pip install -r requirements.txt
+# Python 3.11 (instalado via Homebrew)
+/opt/homebrew/bin/python3.11 --version
+
+# Instalar dependencias (se necessario)
+/opt/homebrew/bin/pip3.11 install -r requirements.txt
+
+# Configurar ambiente
 cp .env.example .env  # Configure API credentials
 
-# Run applications
-python main.py           # CLI reconciliation system
-python app.py            # Web application (port 5001)
-./run.sh                # CLI with venv activation
+# Iniciar aplicacao web (RECOMENDADO)
+./start.sh              # Inicia servidor na porta 5002
+
+# Ou manualmente
+/opt/homebrew/bin/python3.11 app.py
 ```
 
 ## Core Architecture
@@ -106,8 +111,9 @@ python main.py                     # Interactive OFX reconciliation
 
 ### Web Application
 ```bash
-python app.py                      # Start web server on port 5001
-# Access: http://localhost:5001
+./start.sh                         # Iniciar servidor (recomendado)
+# Ou: /opt/homebrew/bin/python3.11 app.py
+# Acesse: http://localhost:5002
 ```
 
 ### Machine Learning & Training
@@ -184,17 +190,26 @@ FLASK_ENV=development
 - SQLite for persistent caching
 - Reduces API calls to Omie
 
-## Virtual Environment
+## Python 3.11 (Homebrew)
 
-The project uses a Python virtual environment located in `venv/`. Always activate it before running commands:
+O projeto usa Python 3.11 instalado via Homebrew. Nao usamos venv.
 
 ```bash
-source venv/bin/activate
+# Python e pip
+/opt/homebrew/bin/python3.11
+/opt/homebrew/bin/pip3.11
+
+# Instalar pacotes
+/opt/homebrew/bin/pip3.11 install <pacote>
+
+# Verificar versao
+/opt/homebrew/bin/python3.11 --version  # Python 3.11.x
 ```
 
-## Notes on Package Management
+## Quick Start
 
-- macOS uses externally-managed Python environment
-- Must use virtual environment for package installation
-- To upgrade packages: `source venv/bin/activate && pip install --upgrade package_name`
-- Never use `--break-system-packages` flag
+```bash
+cd apps/gestao
+./start.sh
+# Acesse http://localhost:5002
+```

@@ -16,15 +16,42 @@ from .b2b.lead_enrichment import LeadEnrichmentService
 from .b2b.google_maps_client import GoogleMapsClient
 
 
-def _parse_price_form(form) -> Dict[str, float]:
-    prices: Dict[str, float] = {}
+def _parse_brazilian_number(value: str) -> float:
+    """Parse Brazilian number format (1.234,56 -> 1234.56)."""
+    # Remove thousand separators (dots) and replace decimal comma with dot
+    normalized = value.strip().replace('.', '').replace(',', '.')
+    return float(normalized)
+
+
+def _parse_price_form(form) -> Dict[str, Dict[str, float]]:
+    """Parse price form fields for BRL and PYG currencies."""
+    prices: Dict[str, Dict[str, float]] = {'BRL': {}, 'PYG': {}}
+
     for size in PACKAGE_SIZES:
-        value = form.get(f'price_{size}')
-        if value:
+        # Parse BRL prices
+        brl_value = form.get(f'price_brl_{size}')
+        if brl_value:
             try:
-                prices[size] = float(value.replace(',', '.'))
+                prices['BRL'][size] = _parse_brazilian_number(brl_value)
+            except ValueError:
+                raise ValueError(f'Preço BRL inválido para {size}')
+
+        # Parse PYG prices
+        pyg_value = form.get(f'price_pyg_{size}')
+        if pyg_value:
+            try:
+                prices['PYG'][size] = _parse_brazilian_number(pyg_value)
+            except ValueError:
+                raise ValueError(f'Preço PYG inválido para {size}')
+
+        # Fallback: legacy format (price_{size})
+        legacy_value = form.get(f'price_{size}')
+        if legacy_value and size not in prices['BRL']:
+            try:
+                prices['BRL'][size] = _parse_brazilian_number(legacy_value)
             except ValueError:
                 raise ValueError(f'Preço inválido para {size}')
+
     return prices
 
 
@@ -35,6 +62,7 @@ def create_orders_blueprint(
     google_sheets_client: GoogleSheetsClient,
     lead_enrichment_service: LeadEnrichmentService,
     google_maps_client: Optional[GoogleMapsClient] = None,
+    auth_service=None,
 ) -> Blueprint:
     bp = Blueprint('orders', __name__, url_prefix='/orders')
 
@@ -255,7 +283,7 @@ def create_orders_blueprint(
                 'process': request.form.get('process', '').strip() or None,
                 'sensorial_notes': request.form.get('sensorial_notes', '').strip() or None,
                 'sca_score': request.form.get('sca_score') or None,
-                'active': int(bool(request.form.get('active', '1'))),
+                'active': 'active' in request.form,
             }
             if data['sca_score']:
                 try:
@@ -301,6 +329,11 @@ def create_orders_blueprint(
         min_total = _parse_number(min_total_raw)
         max_total = _parse_number(max_total_raw)
 
+        # Vendedor vê apenas seus próprios pedidos
+        user_id = None
+        if current_user.is_authenticated and current_user.is_seller:
+            user_id = current_user.id
+
         orders = order_service.list_orders(
             start_date=start_date,
             end_date=end_date,
@@ -309,9 +342,18 @@ def create_orders_blueprint(
             min_total=min_total,
             max_total=max_total,
             limit=500,
+            user_id=user_id,
         )
         coffees = catalog_service.list_coffees(include_inactive=True)
         total_amount = sum(order.get('total_amount') or 0 for order in orders)
+
+        # Calcular totais por moeda
+        total_by_currency: dict[str, float] = {}
+        for order in orders:
+            currency = order.get('currency') or 'BRL'
+            amount = order.get('total_amount') or 0
+            total_by_currency[currency] = total_by_currency.get(currency, 0) + amount
+
         has_filters = any([
             bool(start_date_raw),
             bool(end_date_raw),
@@ -331,6 +373,7 @@ def create_orders_blueprint(
         stats = {
             'count': len(orders),
             'total_amount': total_amount,
+            'total_by_currency': total_by_currency,
         }
         return render_template(
             'orders/orders_list.html',
@@ -344,9 +387,20 @@ def create_orders_blueprint(
     @bp.route('/new', methods=['GET', 'POST'])
     @login_required
     def orders_new():
-        leads = crm_service.list_leads(limit=500)
+        # Vendedor vê apenas seus próprios leads
+        user_id = None
+        if current_user.is_authenticated and current_user.is_seller:
+            user_id = current_user.id
+        leads = crm_service.list_leads(limit=500, user_id=user_id)
         coffees = catalog_service.list_coffees(include_inactive=True)
         default_date = date.today().isoformat()
+
+        # Lista de usuários para admin selecionar responsável
+        users = auth_service.get_all_active_users() if auth_service else []
+
+        # Moeda padrão baseada no país do usuário (PY → PYG, BR/outros → BRL)
+        default_currency = 'PYG' if current_user.is_authenticated and current_user.country == 'PY' else 'BRL'
+
         if request.method == 'POST':
             try:
                 order_data, items = _extract_order_form_data(request.form)
@@ -360,8 +414,21 @@ def create_orders_blueprint(
                     coffees=coffees,
                     package_sizes=PACKAGE_SIZES,
                     default_date=default_date,
+                    default_currency=default_currency,
                     is_edit=False,
+                    users=users,
                 )
+
+            # Admin pode selecionar usuário
+            if current_user.is_authenticated and current_user.is_admin:
+                form_user_id = request.form.get('user_id')
+                if form_user_id:
+                    order_data['user_id'] = int(form_user_id)
+                else:
+                    order_data['user_id'] = current_user.id
+            # Vendedor: user_id é automaticamente dele
+            elif current_user.is_authenticated and current_user.is_seller:
+                order_data['user_id'] = current_user.id
 
             try:
                 order_service.create_order(order_data, items)
@@ -376,7 +443,9 @@ def create_orders_blueprint(
                     coffees=coffees,
                     package_sizes=PACKAGE_SIZES,
                     default_date=default_date,
+                    default_currency=default_currency,
                     is_edit=False,
+                    users=users,
                 )
 
             flash('Pedido registrado com sucesso!', 'success')
@@ -389,7 +458,9 @@ def create_orders_blueprint(
             coffees=coffees,
             package_sizes=PACKAGE_SIZES,
             default_date=default_date,
+            default_currency=default_currency,
             is_edit=False,
+            users=users,
         )
 
     @bp.route('/<int:order_id>')
@@ -399,6 +470,13 @@ def create_orders_blueprint(
         if not order:
             flash('Pedido não encontrado.', 'warning')
             return redirect(url_for('orders.orders_index'))
+
+        # Vendedor só pode ver seus próprios pedidos
+        if current_user.is_authenticated and current_user.is_seller:
+            if order.get('user_id') != current_user.id:
+                flash('Você não tem permissão para ver este pedido.', 'danger')
+                return redirect(url_for('orders.orders_index'))
+
         lead = crm_service.get_lead(order['lead_id']) if order.get('lead_id') else None
         return render_template(
             'orders/orders_detail.html',
@@ -414,9 +492,22 @@ def create_orders_blueprint(
             flash('Pedido não encontrado.', 'warning')
             return redirect(url_for('orders.orders_index'))
 
-        leads = crm_service.list_leads(limit=500)
+        # Vendedor só pode editar seus próprios pedidos
+        if current_user.is_authenticated and current_user.is_seller:
+            if order.get('user_id') != current_user.id:
+                flash('Você não tem permissão para editar este pedido.', 'danger')
+                return redirect(url_for('orders.orders_index'))
+
+        # Vendedor vê apenas seus próprios leads
+        user_id = None
+        if current_user.is_authenticated and current_user.is_seller:
+            user_id = current_user.id
+        leads = crm_service.list_leads(limit=500, user_id=user_id)
         coffees = catalog_service.list_coffees(include_inactive=True)
         default_date = order.get('order_date') or date.today().isoformat()
+
+        # Lista de usuários para admin selecionar responsável
+        users = auth_service.get_all_active_users() if auth_service else []
 
         if request.method == 'POST':
             try:
@@ -433,7 +524,19 @@ def create_orders_blueprint(
                     package_sizes=PACKAGE_SIZES,
                     default_date=default_date,
                     is_edit=True,
+                    users=users,
                 )
+
+            # Admin pode selecionar usuário
+            if current_user.is_authenticated and current_user.is_admin:
+                form_user_id = request.form.get('user_id')
+                if form_user_id:
+                    order_data['user_id'] = int(form_user_id)
+                else:
+                    order_data['user_id'] = current_user.id
+            # Vendedor: user_id é automaticamente dele
+            elif current_user.is_authenticated and current_user.is_seller:
+                order_data['user_id'] = current_user.id
 
             try:
                 order_service.update_order(order_id, order_data, items)
@@ -450,6 +553,7 @@ def create_orders_blueprint(
                     package_sizes=PACKAGE_SIZES,
                     default_date=default_date,
                     is_edit=True,
+                    users=users,
                 )
 
             flash('Pedido atualizado com sucesso!', 'success')
@@ -463,6 +567,7 @@ def create_orders_blueprint(
             package_sizes=PACKAGE_SIZES,
             default_date=default_date,
             is_edit=True,
+            users=users,
         )
 
     # ARCHIVED: Import functionality moved to olds/ directory (2025-10-10)

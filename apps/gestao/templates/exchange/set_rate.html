@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}{% if edit_mode %}Editar{% else %}Definir{% endif %} Taxa de Câmbio{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm mt-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-currency-exchange"></i>
+                        {% if edit_mode %}Editar{% else %}Definir{% endif %} Taxa de Câmbio
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    {% if current_rate and not edit_mode %}
+                    <div class="alert alert-info">
+                        <strong>Taxa atual PYG/BRL:</strong> {{ "%.6f"|format(current_rate) }}
+                    </div>
+                    {% endif %}
+
+                    <form method="post">
+                        <div class="mb-3">
+                            <label for="from_currency" class="form-label">Moeda de Origem</label>
+                            <select class="form-select" id="from_currency" name="from_currency" required>
+                                <option value="PYG" {% if rate_data and rate_data.from_currency == 'PYG' %}selected{% elif not rate_data %}selected{% endif %}>Guarani (PYG)</option>
+                                <option value="BRL" {% if rate_data and rate_data.from_currency == 'BRL' %}selected{% endif %}>Real (BRL)</option>
+                                <option value="USD" {% if rate_data and rate_data.from_currency == 'USD' %}selected{% endif %}>Dolar (USD)</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="to_currency" class="form-label">Moeda de Destino</label>
+                            <select class="form-select" id="to_currency" name="to_currency" required>
+                                <option value="BRL" {% if rate_data and rate_data.to_currency == 'BRL' %}selected{% elif not rate_data %}selected{% endif %}>Real (BRL)</option>
+                                <option value="PYG" {% if rate_data and rate_data.to_currency == 'PYG' %}selected{% endif %}>Guarani (PYG)</option>
+                                <option value="USD" {% if rate_data and rate_data.to_currency == 'USD' %}selected{% endif %}>Dolar (USD)</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="rate" class="form-label">Taxa de Conversão</label>
+                            <input type="number" class="form-control" id="rate" name="rate"
+                                   min="0" step="0.000001"
+                                   value="{{ rate_data.rate if rate_data else (current_rate if current_rate else '0.00072') }}" required>
+                            <div class="form-text">
+                                Quantas unidades da moeda de destino equivalem a 1 unidade da moeda de origem.
+                                <br>Ex: BRL 1 = PYG 1300
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="effective_date" class="form-label">Data de Vigência</label>
+                            <input type="date" class="form-control" id="effective_date" name="effective_date"
+                                   value="{{ rate_data.effective_date if rate_data and rate_data.effective_date else '' }}">
+                            <div class="form-text">
+                                {% if edit_mode %}
+                                A taxa se aplica a pedidos a partir desta data.
+                                {% else %}
+                                Deixe em branco para vigência imediata (hoje)
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> {% if edit_mode %}Atualizar{% else %}Salvar{% endif %} Taxa
+                            </button>
+                            <a href="{{ url_for('exchange.index') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Converter Card -->
+            <div class="card shadow-sm mt-4">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="bi bi-calculator"></i> Conversor</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row g-2">
+                        <div class="col-5">
+                            <input type="number" class="form-control" id="convert_amount" placeholder="Valor" step="0.01">
+                        </div>
+                        <div class="col-3">
+                            <select class="form-select" id="convert_from">
+                                <option value="PYG">PYG</option>
+                                <option value="BRL">BRL</option>
+                            </select>
+                        </div>
+                        <div class="col-1 text-center pt-2">=</div>
+                        <div class="col-3">
+                            <input type="text" class="form-control" id="convert_result" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('convert_amount').addEventListener('input', convertCurrency);
+document.getElementById('convert_from').addEventListener('change', convertCurrency);
+
+function convertCurrency() {
+    const amount = parseFloat(document.getElementById('convert_amount').value) || 0;
+    const from = document.getElementById('convert_from').value;
+    const to = from === 'PYG' ? 'BRL' : 'PYG';
+
+    if (amount <= 0) {
+        document.getElementById('convert_result').value = '';
+        return;
+    }
+
+    fetch(`/exchange/api/convert?amount=${amount}&from=${from}&to=${to}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.converted) {
+                document.getElementById('convert_result').value = `${to} ${data.converted.toFixed(2)}`;
+            } else {
+                document.getElementById('convert_result').value = 'N/A';
+            }
+        })
+        .catch(() => {
+            document.getElementById('convert_result').value = 'Erro';
+        });
+}
+</script>
+{% endblock %}

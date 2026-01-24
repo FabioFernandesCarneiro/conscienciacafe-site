@@ -32,6 +32,7 @@
                                 <th>ID</th>
                                 <th>Usuário</th>
                                 <th>Perfil</th>
+                                <th>País</th>
                                 <th>Status</th>
                                 <th>Último Acesso</th>
                                 <th>Criado em</th>
@@ -51,8 +52,17 @@
                                 <td>
                                     {% if user.role == 'admin' %}
                                         <span class="badge bg-danger">Administrador</span>
+                                    {% elif user.role == 'vendedor' %}
+                                        <span class="badge bg-success">Vendedor</span>
                                     {% else %}
                                         <span class="badge bg-info">Usuário</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if user.country %}
+                                        <span class="badge bg-secondary">{{ user.country }}</span>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
                                     {% endif %}
                                 </td>
                                 <td>
@@ -71,6 +81,9 @@
                                 </td>
                                 <td>{{ user.created_at.strftime('%Y-%m-%d') if user.created_at and user.created_at is not string else (user.created_at[:10] if user.created_at else '-') }}</td>
                                 <td class="text-center">
+                                    <a href="{{ url_for('auth.edit_user', user_id=user.id) }}" class="btn btn-sm btn-outline-primary me-1">
+                                        <i class="bi bi-pencil"></i> Editar
+                                    </a>
                                     {% if user.id != current_user.get_id()|int %}
                                         <form method="post" action="{{ url_for('auth.toggle_user', user_id=user.id) }}" style="display: inline;">
                                             <button type="submit" class="btn btn-sm {% if user.active %}btn-outline-warning{% else %}btn-outline-success{% endif %}"
@@ -82,8 +95,6 @@
                                                 {% endif %}
                                             </button>
                                         </form>
-                                    {% else %}
-                                        <span class="text-muted small">-</span>
                                     {% endif %}
                                 </td>
                             </tr>

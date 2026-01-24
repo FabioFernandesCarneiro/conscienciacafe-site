@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+
+{% block title %}Minhas Comissões{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center my-4">
+        <h2><i class="bi bi-cash-coin"></i> Minhas Comissões</h2>
+        <div>
+            {% if is_admin %}
+            <a href="{{ url_for('commissions.list_rates') }}" class="btn btn-outline-primary">
+                <i class="bi bi-percent"></i> Taxas
+            </a>
+            {% endif %}
+            <a href="{{ url_for('commissions.payment_history') }}" class="btn btn-outline-success">
+                <i class="bi bi-file-earmark-text"></i> Histórico de Pagamentos
+            </a>
+        </div>
+    </div>
+
+    <!-- Month/Year Filter -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body py-3">
+            <form method="get" class="row g-3 align-items-end">
+                {% if is_admin and data.user_id %}
+                <input type="hidden" name="user_id" value="{{ data.user_id }}">
+                {% endif %}
+                <div class="col-auto">
+                    <label class="form-label mb-1">Mês</label>
+                    <select name="month" class="form-select">
+                        {% for m in months %}
+                        <option value="{{ m.value }}" {% if m.value == selected_month %}selected{% endif %}>
+                            {{ m.label }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <label class="form-label mb-1">Ano</label>
+                    <select name="year" class="form-select">
+                        {% for y in years %}
+                        <option value="{{ y }}" {% if y == selected_year %}selected{% endif %}>{{ y }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search"></i> Filtrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if data %}
+    {% set currency_symbol = 'R$' if data.native_currency == 'BRL' else '₲' %}
+    {% set is_pyg = data.native_currency == 'PYG' %}
+
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <!-- Total Commission Card -->
+        <div class="col-md-4">
+            <div class="card bg-light h-100">
+                <div class="card-body text-center">
+                    <h6 class="text-muted mb-2">Comissão do Mês</h6>
+                    <h3 class="mb-0">
+                        {{ currency_symbol }}
+                        {% if is_pyg %}{{ "%.0f"|format(data.totals.total_commission) }}{% else %}{{ "%.2f"|format(data.totals.total_commission) }}{% endif %}
+                    </h3>
+                    <small class="text-muted">{{ data.totals.order_count }} pedido(s) | Taxa: {{ data.rate }}%</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Card -->
+        <div class="col-md-4">
+            <div class="card bg-warning bg-opacity-25 h-100">
+                <div class="card-body text-center">
+                    <h6 class="text-muted mb-2">Pendente</h6>
+                    {% if data.totals.pending > 0 %}
+                    <h3 class="mb-0">
+                        {{ currency_symbol }}
+                        {% if is_pyg %}{{ "%.0f"|format(data.totals.pending) }}{% else %}{{ "%.2f"|format(data.totals.pending) }}{% endif %}
+                    </h3>
+                    {% else %}
+                    <h3 class="mb-0 text-success"><i class="bi bi-check-circle"></i> Tudo pago!</h3>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Paid Card -->
+        <div class="col-md-4">
+            <div class="card bg-success bg-opacity-25 h-100">
+                <div class="card-body text-center">
+                    <h6 class="text-muted mb-2">Pago</h6>
+                    <h3 class="mb-0">
+                        {{ currency_symbol }}
+                        {% if is_pyg %}{{ "%.0f"|format(data.totals.paid) }}{% else %}{{ "%.2f"|format(data.totals.paid) }}{% endif %}
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Orders with Commissions -->
+    <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Pedidos do Período</h5>
+            {% if is_admin and data.orders %}
+            <button type="button" class="btn btn-success btn-sm" id="btnRegisterPayment" disabled>
+                <i class="bi bi-check2-all"></i> Registrar Pagamento
+            </button>
+            {% endif %}
+        </div>
+        <div class="card-body">
+            {% if data.orders %}
+            <form id="paymentForm" method="post" action="{{ url_for('commissions.register_payment') }}">
+                <input type="hidden" name="user_id" value="{{ data.user_id }}">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                {% if is_admin %}
+                                <th class="text-center" style="width: 40px;">
+                                    <input type="checkbox" class="form-check-input" id="selectAll">
+                                </th>
+                                {% endif %}
+                                <th>Pedido</th>
+                                <th>Data</th>
+                                <th>Cliente</th>
+                                <th class="text-end">Valor Pedido</th>
+                                <th class="text-end">Taxa</th>
+                                <th class="text-end">Comissão</th>
+                                <th class="text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in data.orders %}
+                            <tr class="{% if order.is_paid %}table-success{% endif %}">
+                                {% if is_admin %}
+                                <td class="text-center">
+                                    {% if not order.is_paid %}
+                                    <input type="checkbox" class="form-check-input order-checkbox"
+                                           name="order_ids" value="{{ order.order_id }}">
+                                    {% else %}
+                                    <i class="bi bi-check-circle text-success"></i>
+                                    {% endif %}
+                                </td>
+                                {% endif %}
+                                <td>
+                                    <a href="{{ url_for('orders.orders_view', order_id=order.order_id) }}">
+                                        #{{ order.order_id }}
+                                    </a>
+                                </td>
+                                <td>{{ order.order_date }}</td>
+                                <td>{{ order.lead_name or '-' }}</td>
+                                <td class="text-end">
+                                    {% set order_symbol = 'R$' if order.order_currency == 'BRL' else '₲' %}
+                                    {{ order_symbol }}
+                                    {% if order.order_currency == 'PYG' %}{{ "%.0f"|format(order.order_total) }}{% else %}{{ "%.2f"|format(order.order_total) }}{% endif %}
+                                </td>
+                                <td class="text-end">{{ order.rate_applied }}%</td>
+                                <td class="text-end">
+                                    {% if order.conversion_failed %}
+                                    <span class="text-danger" title="Conversão falhou - cadastre taxa de câmbio">
+                                        <i class="bi bi-exclamation-triangle"></i>
+                                        {% if order.order_currency == 'PYG' %}₲ {{ "%.0f"|format(order.commission_original) }}{% else %}R$ {{ "%.2f"|format(order.commission_original) }}{% endif %}
+                                    </span>
+                                    {% else %}
+                                    <strong>
+                                        {{ currency_symbol }}
+                                        {% if is_pyg %}{{ "%.0f"|format(order.commission_native) }}{% else %}{{ "%.2f"|format(order.commission_native) }}{% endif %}
+                                    </strong>
+                                    {% if order.needs_conversion %}
+                                    <br>
+                                    <small class="text-muted">
+                                        ({% if order.order_currency == 'PYG' %}₲ {{ "%.0f"|format(order.commission_original) }}{% else %}R$ {{ "%.2f"|format(order.commission_original) }}{% endif %})
+                                    </small>
+                                    {% endif %}
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    {% if order.is_paid %}
+                                    <span class="badge bg-success">Pago</span>
+                                    {% else %}
+                                    <span class="badge bg-warning">Pendente</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                {% if is_admin %}
+                <!-- Payment Reference (hidden by default) -->
+                <div id="paymentReferenceDiv" class="mt-3" style="display: none;">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Referência do Pagamento (opcional)</label>
+                            <input type="text" class="form-control" name="payment_reference"
+                                   placeholder="Ex: PIX 2024-01-15, Transferência etc.">
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </form>
+            {% else %}
+            <div class="text-center py-5 text-muted">
+                <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                <p class="mt-3">Nenhum pedido encontrado para este período</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="mt-3 text-muted">
+        <small>
+            <i class="bi bi-info-circle"></i>
+            Vendedor: {{ data.username }}
+            {% if data.country %}({{ data.country }}){% endif %}
+            | Moeda: {{ data.native_currency }}
+            | Período: {{ data.period }}
+        </small>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> Selecione um vendedor para visualizar as comissões.
+    </div>
+    {% endif %}
+</div>
+
+{% if is_admin %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const selectAll = document.getElementById('selectAll');
+    const checkboxes = document.querySelectorAll('.order-checkbox');
+    const btnPayment = document.getElementById('btnRegisterPayment');
+    const paymentRefDiv = document.getElementById('paymentReferenceDiv');
+    const paymentForm = document.getElementById('paymentForm');
+
+    function updatePaymentButton() {
+        const checked = document.querySelectorAll('.order-checkbox:checked');
+        if (btnPayment) {
+            btnPayment.disabled = checked.length === 0;
+            if (paymentRefDiv) {
+                paymentRefDiv.style.display = checked.length > 0 ? 'block' : 'none';
+            }
+        }
+    }
+
+    if (selectAll) {
+        selectAll.addEventListener('change', function() {
+            checkboxes.forEach(cb => cb.checked = this.checked);
+            updatePaymentButton();
+        });
+    }
+
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', updatePaymentButton);
+    });
+
+    if (btnPayment) {
+        btnPayment.addEventListener('click', function() {
+            const checked = document.querySelectorAll('.order-checkbox:checked');
+            if (checked.length === 0) {
+                alert('Selecione pelo menos um pedido para registrar pagamento.');
+                return;
+            }
+
+            if (confirm(`Registrar pagamento de ${checked.length} comissão(ões)?`)) {
+                paymentForm.submit();
+            }
+        });
+    }
+});
+</script>
+{% endif %}
+{% endblock %}

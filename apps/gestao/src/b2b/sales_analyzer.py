@@ -36,11 +36,15 @@ class ClientMetric:
 class SalesAnalyzer:
     """Primary analytics façade for the B2B dashboard."""
 
+    CURRENCY_SYMBOLS = {'BRL': 'R$', 'PYG': '₲'}
+
     def __init__(
         self,
         sales_repository: Optional[SalesRepository] = None,
         crm_service: Optional['CRMService'] = None,
+        target_currency: str = 'BRL',
     ) -> None:
+        self._target_currency = target_currency.upper() if target_currency else 'BRL'
         self.repository = sales_repository or SalesRepository()
         self.metrics_calculator = B2BMetrics()
         self.crm_service = crm_service
@@ -48,20 +52,21 @@ class SalesAnalyzer:
         self._last_cache_update: Optional[datetime] = None
         self._cached_data: Optional[pd.DataFrame] = None
         self._cache_window: Tuple[Optional[date], Optional[date]] = (None, None)
+        self._cache_user_id: Optional[int] = None
         self.data_source_label = "Banco de dados"
 
     # ------------------------------------------------------------------
     # Public API
     # ------------------------------------------------------------------
-    def get_sales_summary(self, period_days: int = 30) -> Dict[str, Any]:
+    def get_sales_summary(self, period_days: int = 30, user_id: Optional[int] = None) -> Dict[str, Any]:
         end_date = datetime.now()
         start_date = end_date - timedelta(days=period_days)
 
-        period_frame = self._get_sales_data(start_date, end_date)
+        period_frame = self._get_sales_data(start_date, end_date, user_id=user_id)
         if period_frame.empty:
             return self._get_empty_summary()
 
-        full_frame = self.repository.fetch_sales_dataframe()
+        full_frame = self.repository.fetch_sales_dataframe(user_id=user_id)
         full_records = full_frame.to_dict("records")
 
         inactive_metrics = self.metrics_calculator.calculate_inactive_clients(
@@ -166,8 +171,12 @@ class SalesAnalyzer:
         forecast = self.metrics_calculator.calculate_sales_forecast(records, months_ahead)
         return {'forecast': forecast.get('forecast', []), 'trend': forecast.get('trend')}
 
-    def get_dashboard_data(self, reference_month: Optional[str] = None) -> Dict[str, Any]:
-        frame = self.repository.fetch_sales_dataframe()
+    def get_dashboard_data(
+        self,
+        reference_month: Optional[str] = None,
+        user_id: Optional[int] = None
+    ) -> Dict[str, Any]:
+        frame = self.repository.fetch_sales_dataframe(user_id=user_id)
         if frame.empty:
             return self._get_empty_dashboard_data()
 
@@ -226,6 +235,8 @@ class SalesAnalyzer:
             'selected_month': summary['month'],
             'total_records': len(selected_records),
             'last_updated': datetime.now().strftime('%d/%m/%Y %H:%M'),
+            'currency': self._target_currency,
+            'currency_symbol': self.CURRENCY_SYMBOLS.get(self._target_currency, 'R$'),
         }
 
     def clear_cache(self) -> None:
@@ -237,19 +248,30 @@ class SalesAnalyzer:
     # ------------------------------------------------------------------
     # Internal helpers
     # ------------------------------------------------------------------
-    def _get_sales_data(self, start_date: datetime, end_date: datetime) -> pd.DataFrame:
+    def _get_sales_data(
+        self,
+        start_date: datetime,
+        end_date: datetime,
+        user_id: Optional[int] = None
+    ) -> pd.DataFrame:
         window = (start_date.date(), end_date.date())
         if (
             self._cached_data is not None
             and self._last_cache_update
             and (datetime.now() - self._last_cache_update).seconds < self.cache_duration
             and self._cache_window == window
+            and self._cache_user_id == user_id
         ):
             return self._cached_data
 
-        frame = self.repository.fetch_sales_dataframe(start_date=window[0], end_date=window[1])
+        frame = self.repository.fetch_sales_dataframe(
+            start_date=window[0],
+            end_date=window[1],
+            user_id=user_id
+        )
         self._cached_data = frame
         self._cache_window = window
+        self._cache_user_id = user_id
         self._last_cache_update = datetime.now()
         return frame
 
@@ -528,9 +550,12 @@ class SalesAnalyzer:
             })
         return alerts
 
-    @staticmethod
-    def _format_currency(value: float) -> str:
-        return f"R$ {value:,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
+    def _format_currency(self, value: float) -> str:
+        symbol = self.CURRENCY_SYMBOLS.get(self._target_currency, 'R$')
+        if self._target_currency == 'PYG':
+            # Guarani não usa centavos
+            return f"{symbol} {value:,.0f}".replace(',', '.')
+        return f"{symbol} {value:,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
 
     @staticmethod
     def _trend_label(value: float) -> str:
@@ -549,14 +574,16 @@ class SalesAnalyzer:
         return 'baixo'
 
     def _get_empty_summary(self) -> Dict[str, Any]:
+        symbol = self.CURRENCY_SYMBOLS.get(self._target_currency, 'R$')
+        zero_formatted = f"{symbol} 0,00" if self._target_currency != 'PYG' else f"{symbol} 0"
         return {
             'summary': {
                 'total_revenue': 0,
-                'total_revenue_formatted': 'R$ 0,00',
+                'total_revenue_formatted': zero_formatted,
                 'active_clients': 0,
                 'inactive_clients': 0,
                 'avg_ticket': 0,
-                'avg_ticket_formatted': 'R$ 0,00',
+                'avg_ticket_formatted': zero_formatted,
                 'growth_rate': 0.0,
                 'new_clients': 0,
                 'churn_clients': 0,
@@ -575,6 +602,8 @@ class SalesAnalyzer:
             'total_orders': 0,
             'total_revenue_overall': 0,
             'month': '',
+            'currency': self._target_currency,
+            'currency_symbol': symbol,
         }
 
     def _get_empty_dashboard_data(self) -> Dict[str, Any]:
@@ -586,6 +615,8 @@ class SalesAnalyzer:
             'selected_month': None,
             'total_records': 0,
             'last_updated': datetime.now().strftime('%d/%m/%Y %H:%M'),
+            'currency': self._target_currency,
+            'currency_symbol': self.CURRENCY_SYMBOLS.get(self._target_currency, 'R$'),
         }
 
     def _get_empty_metrics(self) -> Dict[str, Any]:

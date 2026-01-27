@@ -3,8 +3,50 @@
 from __future__ import annotations
 
 import os
+import time
 from typing import Dict, Any, List, Optional
 import requests
+
+
+class PlaceDetailsCache:
+    """Cache simples em memória para Place Details com TTL."""
+
+    def __init__(self, ttl_seconds: int = 3600):
+        self._cache: Dict[str, Dict[str, Any]] = {}
+        self._timestamps: Dict[str, float] = {}
+        self._ttl = ttl_seconds
+
+    def get(self, place_id: str) -> Optional[Dict[str, Any]]:
+        """Retorna dados do cache se existir e não expirado."""
+        if place_id not in self._cache:
+            return None
+        if time.time() - self._timestamps.get(place_id, 0) > self._ttl:
+            # Expirado, remover
+            del self._cache[place_id]
+            del self._timestamps[place_id]
+            return None
+        return self._cache[place_id]
+
+    def set(self, place_id: str, data: Dict[str, Any]) -> None:
+        """Armazena dados no cache."""
+        self._cache[place_id] = data
+        self._timestamps[place_id] = time.time()
+
+    def clear(self) -> None:
+        """Limpa todo o cache."""
+        self._cache.clear()
+        self._timestamps.clear()
+
+    def stats(self) -> Dict[str, int]:
+        """Retorna estatísticas do cache."""
+        return {
+            'entries': len(self._cache),
+            'ttl_seconds': self._ttl,
+        }
+
+
+# Cache global compartilhado entre instâncias
+_place_details_cache = PlaceDetailsCache(ttl_seconds=3600)  # 1 hora
 
 
 class GoogleMapsClient:
@@ -13,6 +55,7 @@ class GoogleMapsClient:
         self.api_key = api_key or env_key
         if not self.api_key:
             raise RuntimeError('GOOGLE_MAPS_API_KEY / GOOGLE_API_KEY não configurada no ambiente')
+        self._cache = _place_details_cache
 
     BASE_URL = 'https://maps.googleapis.com/maps/api/place/textsearch/json'
     DETAILS_URL = 'https://maps.googleapis.com/maps/api/place/details/json'
@@ -30,11 +73,25 @@ class GoogleMapsClient:
         response.raise_for_status()
         return response.json()
 
-    def get_place_details(self, place_id: str) -> Dict[str, Any]:
+    def get_place_details(self, place_id: str, use_cache: bool = True) -> Dict[str, Any]:
         """
         Busca detalhes completos de um lugar via Place Details API.
         Retorna informações adicionais como telefone internacional, website, e links sociais.
+
+        Args:
+            place_id: ID do lugar no Google Maps
+            use_cache: Se True, verifica cache antes de chamar API (default: True)
+
+        Returns:
+            Dict com status e result (dados do lugar)
         """
+        # Verificar cache primeiro
+        if use_cache:
+            cached = self._cache.get(place_id)
+            if cached:
+                print(f"      💾 Cache hit para place_id: {place_id[:20]}...")
+                return cached
+
         params = {
             'key': self.api_key,
             'place_id': place_id,
@@ -44,7 +101,23 @@ class GoogleMapsClient:
 
         response = requests.get(self.DETAILS_URL, params=params, timeout=10)
         response.raise_for_status()
-        return response.json()
+        result = response.json()
+
+        # Armazenar no cache se sucesso
+        if result.get('status') == 'OK':
+            self._cache.set(place_id, result)
+            print(f"      📡 API call + cache save para place_id: {place_id[:20]}...")
+
+        return result
+
+    def get_cache_stats(self) -> Dict[str, int]:
+        """Retorna estatísticas do cache."""
+        return self._cache.stats()
+
+    def clear_cache(self) -> None:
+        """Limpa o cache de Place Details."""
+        self._cache.clear()
+        print("🗑️ Cache de Place Details limpo")
 
     def build_address(self, result: Dict[str, Any]) -> Dict[str, Any]:
         address_components = {comp['types'][0]: comp for comp in result.get('address_components', [])}
@@ -97,8 +170,9 @@ class GoogleMapsClient:
             # Dados básicos do Text Search
             phone = item.get('formatted_phone_number')
             website = item.get('website')
+            details_fetched = False
 
-            # Se solicitado, buscar detalhes adicionais
+            # Se solicitado, buscar detalhes adicionais (usa cache automaticamente)
             if fetch_details and place_id:
                 try:
                     details_response = self.get_place_details(place_id)
@@ -106,6 +180,7 @@ class GoogleMapsClient:
                         details = details_response.get('result', {})
                         phone = details.get('formatted_phone_number') or details.get('international_phone_number') or phone
                         website = details.get('website') or website
+                        details_fetched = True
                 except Exception as e:
                     print(f"⚠️ Erro ao buscar detalhes do place_id {place_id}: {e}")
 
@@ -128,8 +203,9 @@ class GoogleMapsClient:
                 'search_city': search_city,
                 'phone': phone,
                 'website': website,
-                'instagram': None,  # Precisa ser preenchido manualmente ou via scraping
-                'whatsapp': None,   # Precisa ser preenchido manualmente ou derivado do telefone
+                'instagram': None,  # Preenchido via enriquecimento sob demanda
+                'whatsapp': None,   # Preenchido via enriquecimento sob demanda
+                '_details_fetched': details_fetched,  # Flag para evitar chamadas duplicadas
             }
             leads.append(lead)
         return leads

@@ -21,57 +21,70 @@ class LeadEnrichmentService:
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
         })
 
-    def enrich_lead(self, lead_data: Dict, google_maps_client=None) -> Dict:
+    def enrich_lead(self, lead_data: Dict, google_maps_client=None, skip_api_calls: bool = False) -> Dict:
         """
         Enriquece um lead com dados adicionais.
 
         Args:
             lead_data: Dados básicos do lead (name, place_id, website, etc)
             google_maps_client: Cliente do Google Maps para buscar detalhes
+            skip_api_calls: Se True, pula chamadas à API do Google (usa apenas scraping)
 
         Returns:
             Dict com dados enriquecidos
         """
         enriched = lead_data.copy()
 
-        # 1. PRIORIDADE: Buscar direto na página do Google Meu Negócio
-        if lead_data.get('place_id'):
-            print(f"   🔍 Buscando no Google Business Profile: {lead_data.get('name')}")
+        # Verificar se já tem dados da API (evita chamadas duplicadas)
+        already_has_api_data = lead_data.get('_details_fetched', False)
+
+        # 1. Buscar detalhes via API APENAS se:
+        #    - Não foi marcado como já buscado
+        #    - Não foi solicitado para pular chamadas API
+        #    - Ainda falta phone ou website
+        if (google_maps_client and lead_data.get('place_id') and
+                not already_has_api_data and not skip_api_calls and
+                (not enriched.get('phone') or not enriched.get('website'))):
+            print(f"   📡 Buscando detalhes via API: {lead_data.get('name')}")
+            details = self._get_place_details(lead_data['place_id'], google_maps_client)
+            if details:
+                for key, value in details.items():
+                    if not enriched.get(key) and value:
+                        enriched[key] = value
+                enriched['_details_fetched'] = True
+
+        # 2. Scraping do Google Business Profile (grátis, mas pode ser lento)
+        #    Só faz se ainda não tiver instagram/whatsapp
+        if (lead_data.get('place_id') and
+                (not enriched.get('instagram') or not enriched.get('whatsapp'))):
+            print(f"   🔍 Scraping Google Business Profile: {lead_data.get('name')}")
             gmb_data = self._scrape_google_business_profile(lead_data['place_id'])
             if gmb_data:
-                # Dados do GMB têm prioridade máxima
                 for key, value in gmb_data.items():
-                    if value:
+                    if not enriched.get(key) and value:
                         enriched[key] = value
 
-        # 2. Buscar detalhes adicionais via API (se tiver place_id e ainda faltar dados)
-        if google_maps_client and lead_data.get('place_id'):
-            if not enriched.get('phone') or not enriched.get('website'):
-                details = self._get_place_details(lead_data['place_id'], google_maps_client)
-                if details:
-                    for key, value in details.items():
-                        if not enriched.get(key) and value:
-                            enriched[key] = value
-
         # 3. Extrair dados do website (se tiver e ainda faltar Instagram/WhatsApp)
-        if lead_data.get('website') and (not enriched.get('instagram') or not enriched.get('whatsapp')):
-            website_data = self._scrape_website_contacts(lead_data['website'])
+        if (enriched.get('website') and
+                (not enriched.get('instagram') or not enriched.get('whatsapp'))):
+            print(f"   🌐 Scraping website: {enriched.get('website')}")
+            website_data = self._scrape_website_contacts(enriched['website'])
             for key, value in website_data.items():
                 if not enriched.get(key) and value:
                     enriched[key] = value
 
-        # 4. Buscar no Instagram (se souber o nome da empresa e ainda não tiver)
+        # 4. Derivar WhatsApp do telefone (se tiver telefone e ainda não tiver WhatsApp)
+        if enriched.get('phone') and not enriched.get('whatsapp'):
+            enriched['whatsapp'] = self._extract_whatsapp_from_phone(enriched['phone'])
+
+        # 5. Sugerir Instagram baseado no nome (último recurso, apenas sugestão)
         if lead_data.get('name') and not enriched.get('instagram'):
             instagram_handle = self._guess_instagram_handle(
                 lead_data['name'],
                 lead_data.get('city')
             )
             if instagram_handle:
-                enriched['instagram'] = instagram_handle
-
-        # 5. Derivar WhatsApp do telefone (se tiver telefone e ainda não tiver WhatsApp)
-        if enriched.get('phone') and not enriched.get('whatsapp'):
-            enriched['whatsapp'] = self._extract_whatsapp_from_phone(enriched['phone'])
+                enriched['instagram_suggestion'] = instagram_handle  # Sugestão, não confirmado
 
         return enriched
 

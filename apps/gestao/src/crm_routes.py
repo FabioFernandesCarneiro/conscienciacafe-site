@@ -173,7 +173,20 @@ def create_crm_blueprint(
     @bp.route('/crm/api/leads/discover')
     @login_required
     def crm_leads_discover_api():
-        """Busca leads via Google Maps/Places"""
+        """
+        Busca leads via Google Maps/Places.
+
+        Parâmetros:
+            keyword: Termo de busca (ex: "cafeteria", "padaria")
+            city: Cidade para buscar
+            state: Estado (opcional)
+            country: País (opcional)
+            fetch_details: Se 'true', busca telefone/website via Place Details API
+                          (custo adicional, mas dados mais completos)
+
+        Nota: O enriquecimento (Instagram, WhatsApp) agora é feito sob demanda
+              via endpoint /crm/api/leads/<id>/enrich-full para economizar custos.
+        """
         if not google_maps_client:
             return jsonify({'success': False, 'error': 'GOOGLE_API_KEY nao configurada'}), 400
 
@@ -211,12 +224,17 @@ def create_crm_blueprint(
                 for lead in leads:
                     lead.setdefault('country', country)
 
-            enrich = request.args.get('enrich', 'false').lower() == 'true'
-            if enrich:
-                print(f"Enriquecendo {len(leads)} leads...")
-                leads = lead_enrichment_service.enrich_batch(leads, google_maps_client, delay_seconds=0.5)
+            # Enriquecimento em batch removido para economizar custos
+            # Use /crm/api/leads/<id>/enrich-full para enriquecer leads individuais
 
-            return jsonify({'success': True, 'results': leads, 'status': status})
+            cache_stats = google_maps_client.get_cache_stats()
+            return jsonify({
+                'success': True,
+                'results': leads,
+                'status': status,
+                'cache_stats': cache_stats,
+                'tip': 'Use fetch_details=true para obter telefone/website. Enriquecimento completo disponível ao salvar o lead.'
+            })
 
         except requests.HTTPError as exc:
             return jsonify({'success': False, 'error': f'HTTP error: {exc}'}), 502
@@ -226,7 +244,7 @@ def create_crm_blueprint(
     @bp.route('/crm/api/leads/<int:lead_id>/enrich', methods=['POST'])
     @login_required
     def crm_lead_enrich_api(lead_id: int):
-        """Enriquece um lead com dados adicionais (Instagram, WhatsApp, etc)"""
+        """Enriquece um lead com dados fornecidos manualmente (Instagram, WhatsApp, etc)"""
         try:
             payload = request.get_json(force=True) or {}
 
@@ -244,6 +262,99 @@ def create_crm_blueprint(
                 crm_service.update_lead(lead_id, **enrichment_data)
 
             return jsonify({'success': True, 'updated_fields': list(enrichment_data.keys())})
+
+        except Exception as exc:
+            return jsonify({'success': False, 'error': str(exc)}), 500
+
+    @bp.route('/crm/api/leads/<int:lead_id>/enrich-full', methods=['POST'])
+    @login_required
+    def crm_lead_enrich_full_api(lead_id: int):
+        """
+        Enriquecimento completo de um lead específico (sob demanda).
+
+        Este endpoint busca dados adicionais como Instagram e WhatsApp
+        via scraping do Google Business Profile e website do estabelecimento.
+
+        Custos:
+            - Place Details API: ~$0.017 por chamada (se necessário)
+            - Scraping: Grátis (mas mais lento)
+
+        O enriquecimento é feito sob demanda para economizar custos,
+        ao invés de enriquecer todos os leads em batch na busca.
+        """
+        try:
+            lead = crm_service.get_lead(lead_id)
+            if not lead:
+                return jsonify({'success': False, 'error': 'Lead não encontrado'}), 404
+
+            # Preparar dados para enriquecimento
+            lead_data = {
+                'name': lead.get('name'),
+                'place_id': lead.get('google_place_id'),
+                'website': lead.get('website'),
+                'phone': lead.get('phone'),
+                'city': lead.get('city'),
+                '_details_fetched': bool(lead.get('phone') and lead.get('website')),
+            }
+
+            # Executar enriquecimento
+            print(f"🔍 Enriquecendo lead #{lead_id}: {lead.get('name')}")
+            enriched = lead_enrichment_service.enrich_lead(
+                lead_data,
+                google_maps_client=google_maps_client,
+                skip_api_calls=False
+            )
+
+            # Extrair apenas campos que podem ser atualizados
+            update_data = {}
+            updatable_fields = ['phone', 'website', 'instagram', 'whatsapp']
+            for field in updatable_fields:
+                if enriched.get(field) and not lead.get(field):
+                    update_data[field] = enriched[field]
+
+            # Atualizar lead se houver novos dados
+            if update_data:
+                crm_service.update_lead(lead_id, **update_data)
+                print(f"✅ Lead #{lead_id} atualizado com: {list(update_data.keys())}")
+
+            return jsonify({
+                'success': True,
+                'updated_fields': list(update_data.keys()),
+                'enriched_data': {k: enriched.get(k) for k in updatable_fields},
+                'instagram_suggestion': enriched.get('instagram_suggestion'),
+            })
+
+        except Exception as exc:
+            print(f"❌ Erro ao enriquecer lead #{lead_id}: {exc}")
+            return jsonify({'success': False, 'error': str(exc)}), 500
+
+    @bp.route('/crm/api/leads/enrich-discovery', methods=['POST'])
+    @login_required
+    def crm_leads_enrich_discovery_api():
+        """
+        Enriquece um lead da busca (ainda não salvo) antes de salvar.
+
+        Recebe os dados do lead da busca e retorna os dados enriquecidos.
+        Útil para preview antes de salvar no CRM.
+        """
+        try:
+            lead_data = request.get_json(force=True) or {}
+
+            if not lead_data.get('name'):
+                return jsonify({'success': False, 'error': 'Dados do lead são obrigatórios'}), 400
+
+            print(f"🔍 Enriquecendo lead da busca: {lead_data.get('name')}")
+            enriched = lead_enrichment_service.enrich_lead(
+                lead_data,
+                google_maps_client=google_maps_client,
+                skip_api_calls=False
+            )
+
+            return jsonify({
+                'success': True,
+                'enriched_data': enriched,
+                'instagram_suggestion': enriched.get('instagram_suggestion'),
+            })
 
         except Exception as exc:
             return jsonify({'success': False, 'error': str(exc)}), 500

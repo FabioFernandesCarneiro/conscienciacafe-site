@@ -1,0 +1,1279 @@
+---
+// Cardápio para impressão - Consciência Café
+// Para imprimir: Ctrl+P (ou Cmd+P no Mac)
+// Formato: A4 frente e verso (2 páginas)
+---
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cardápio | Consciência Café</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+      /* ========================================
+         VARIÁVEIS E RESET
+         ======================================== */
+      :root {
+        --primary: #1A1A1A;
+        --accent: #E85A1E;
+        --gray: #666666;
+        --gray-light: #F5F5F5;
+        --white: #FFFFFF;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Inter', system-ui, sans-serif;
+        font-size: 10pt;
+        line-height: 1.3;
+        color: var(--primary);
+        background: var(--white);
+      }
+
+      h1, h2, h3, h4 {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-weight: 600;
+      }
+
+      /* ========================================
+         LAYOUT DE PÁGINA A4
+         ======================================== */
+      .page {
+        width: 210mm;
+        min-height: 297mm;
+        padding: 10mm 15mm;
+        margin: 0 auto;
+        background: var(--white);
+        position: relative;
+      }
+
+      /* ========================================
+         CABEÇALHO
+         ======================================== */
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 3.5mm;
+        padding-bottom: 2.5mm;
+      }
+
+      .logo {
+        height: 12mm;
+      }
+
+      .header-title {
+        text-align: right;
+      }
+
+      .header-title h1 {
+        font-size: 18pt;
+        letter-spacing: 0.03em;
+        color: var(--primary);
+      }
+
+      .header-title p {
+        font-size: 8pt;
+        color: var(--gray);
+        margin-top: 0.5mm;
+      }
+
+      /* ========================================
+         DESTAQUE PRINCIPAL (Golden Triangle - topo)
+         ======================================== */
+      .highlight-box {
+        background: var(--white);
+        color: var(--primary);
+        padding: 3.5mm 5mm;
+        border-radius: 3mm;
+        border: 1px solid #ddd;
+        margin-bottom: 3.5mm;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .highlight-box .star {
+        color: var(--accent);
+        font-size: 12pt;
+        margin-right: 2mm;
+      }
+
+      .highlight-box h2 {
+        font-size: 12pt;
+        display: inline;
+      }
+
+      .highlight-box .description {
+        font-size: 9pt;
+        color: var(--gray);
+        margin-top: 1.5mm;
+      }
+
+      .highlight-box .price {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: 18pt;
+        font-weight: 700;
+        color: var(--accent);
+      }
+
+
+      /* ========================================
+         GRID DE COLUNAS
+         ======================================== */
+      .columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5mm;
+      }
+
+      .column {
+        min-width: 0;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      /* ========================================
+         SEÇÕES
+         ======================================== */
+      .section {
+        margin-bottom: 3mm;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      .section-title {
+        font-size: 11pt;
+        color: var(--accent);
+        margin-bottom: 2mm;
+        padding-bottom: 1mm;
+        border-bottom: 1px solid var(--accent);
+        letter-spacing: 0.05em;
+      }
+
+      .section-subtitle {
+        font-size: 9pt;
+        color: var(--gray);
+        font-weight: 500;
+        margin-bottom: 1.5mm;
+        margin-top: 2mm;
+      }
+
+      /* ========================================
+         ITENS DO MENU
+         ======================================== */
+      .menu-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding: 1mm 0;
+        gap: 2mm;
+      }
+
+      .menu-item-info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .menu-item-name {
+        font-weight: 600;
+        font-size: 9.5pt;
+      }
+
+      .menu-item-desc {
+        font-size: 7.5pt;
+        color: var(--gray);
+        margin-top: 0.3mm;
+      }
+
+      .menu-item-price {
+        font-weight: 600;
+        font-size: 9.5pt;
+        white-space: nowrap;
+        padding-left: 2mm;
+      }
+
+      /* Preços sem linha conectora - psicologia de preços */
+      .menu-item::after {
+        content: none;
+      }
+
+      /* ========================================
+         GRÃOS DE CAFÉ (grid especial)
+         ======================================== */
+      .beans-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2mm;
+        margin-top: 2mm;
+      }
+
+      .bean-item {
+        background: var(--gray-light);
+        padding: 1.5mm 2mm;
+        border-radius: 2mm;
+        text-align: center;
+      }
+
+      .bean-item .name {
+        font-weight: 600;
+        font-size: 7.5pt;
+      }
+
+      .bean-item .desc {
+        font-size: 6.5pt;
+        color: var(--gray);
+        margin-top: 0.3mm;
+      }
+
+      .bean-item .price {
+        font-size: 8.5pt;
+        font-weight: 600;
+        color: var(--accent);
+        margin-top: 0.5mm;
+      }
+
+      /* ========================================
+         MÉTODOS DE PREPARO
+         ======================================== */
+      .methods-section {
+        background: var(--gray-light);
+        padding: 2.5mm 3.5mm;
+        border-radius: 2mm;
+        margin-bottom: 3mm;
+        text-align: center;
+      }
+
+      .methods-section .title {
+        font-size: 9pt;
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 1.5mm;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .methods-list {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 1.5mm;
+      }
+
+      .method-chip {
+        background: var(--white);
+        border: 1px solid #ddd;
+        padding: 1mm 2.5mm;
+        border-radius: 1.5mm;
+        font-size: 7.5pt;
+        font-weight: 500;
+        color: var(--primary);
+      }
+
+      /* ========================================
+         GRID DE CAFÉS - 1 LINHA
+         ======================================== */
+      .beans-row {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 1.5mm;
+        margin-top: 1.5mm;
+      }
+
+      .beans-row-2 {
+        display: none;
+      }
+
+      /* ========================================
+         OUTRAS BEBIDAS - 3 COLUNAS
+         ======================================== */
+      .outras-bebidas {
+        margin-top: 2mm;
+      }
+
+      .outras-bebidas .section-title {
+        margin-bottom: 1.5mm;
+      }
+
+      .outras-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 3.5mm 4mm;
+      }
+
+      .outras-grid .menu-item {
+        padding: 0.5mm 0;
+      }
+
+      .outras-grid .menu-item-name {
+        font-size: 9.5pt;
+      }
+
+      .outras-grid .menu-item-desc {
+        font-size: 7.5pt;
+      }
+
+      .outras-grid .menu-item-price {
+        font-size: 9.5pt;
+      }
+
+      /* ========================================
+         MONTE SEU LANCHE (destaque página 2)
+         ======================================== */
+      .build-your-own {
+        background: var(--white);
+        color: var(--primary);
+        padding: 4mm 5mm;
+        border-radius: 3mm;
+        border: 1px solid #ddd;
+        margin-bottom: 4mm;
+      }
+
+      .build-your-own h2 {
+        font-size: 12pt;
+        margin-bottom: 3mm;
+        display: flex;
+        align-items: center;
+        gap: 2mm;
+      }
+
+      .build-your-own .star {
+        color: var(--accent);
+      }
+
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 3mm;
+      }
+
+      .step {
+        text-align: center;
+      }
+
+      .step-number {
+        width: 6mm;
+        height: 6mm;
+        background: var(--accent);
+        color: var(--white);
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 9pt;
+        margin-bottom: 1.5mm;
+      }
+
+      .step-title {
+        font-weight: 600;
+        font-size: 8pt;
+        margin-bottom: 0.5mm;
+      }
+
+      .step-options {
+        font-size: 6.5pt;
+        color: var(--gray);
+        line-height: 1.2;
+      }
+
+      /* ========================================
+         CAFÉS ESPECIAIS FILTRADOS (2 passos)
+         ======================================== */
+      .filtered-coffee-section .steps {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 5mm;
+        margin-top: 2mm;
+      }
+
+      .filtered-coffee-section .step {
+        text-align: left;
+      }
+
+      .filtered-coffee-section .step-header {
+        display: flex;
+        align-items: center;
+        gap: 2mm;
+        margin-bottom: 2mm;
+      }
+
+      .filtered-coffee-section .step-number {
+        margin-bottom: 0;
+      }
+
+      .filtered-coffee-section .step-title {
+        margin-bottom: 0;
+      }
+
+      .filtered-coffee-section .grains-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5mm;
+        margin-top: 2mm;
+      }
+
+      .filtered-coffee-section .bean-item {
+        display: flex;
+        flex-direction: column;
+        padding: 1.5mm 2mm;
+        text-align: center;
+        background: var(--white);
+        border: 1px solid #ddd;
+        border-radius: 2mm;
+      }
+
+      .filtered-coffee-section .bean-item .name-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5mm;
+        font-size: 8.5pt;
+        font-weight: 600;
+      }
+
+      .filtered-coffee-section .bean-item .separator {
+        color: var(--gray);
+      }
+
+      .filtered-coffee-section .bean-item .price {
+        font-size: 8.5pt;
+        font-weight: 600;
+        color: var(--accent);
+      }
+
+      .filtered-coffee-section .bean-item .desc {
+        font-size: 6.5pt;
+        text-align: center;
+        margin-top: 0.5mm;
+        color: var(--gray);
+      }
+
+      .filtered-coffee-section .methods-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5mm;
+        justify-content: flex-start;
+        align-items: flex-start;
+        margin-top: 2mm;
+      }
+
+      /* ========================================
+         ÍCONES DE RESTRIÇÕES
+         ======================================== */
+      .icons-legend {
+        display: flex;
+        justify-content: center;
+        gap: 4mm;
+        margin-top: 3mm;
+        padding-top: 3mm;
+        border-top: 1px dashed #444;
+      }
+
+      .icon-item {
+        display: flex;
+        align-items: center;
+        gap: 1.5mm;
+        font-size: 8pt;
+        color: #aaa;
+      }
+
+      .icon {
+        width: 4mm;
+        height: 4mm;
+        border: 1px solid var(--accent);
+        border-radius: 1mm;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 6pt;
+        color: var(--accent);
+      }
+
+      /* ========================================
+         RODAPÉ
+         ======================================== */
+      .footer {
+        position: absolute;
+        bottom: 10mm;
+        left: 18mm;
+        right: 18mm;
+        text-align: center;
+        font-size: 8pt;
+        color: var(--gray);
+        padding-top: 3mm;
+        border-top: 1px solid #eee;
+      }
+
+      .footer-contact {
+        display: flex;
+        justify-content: center;
+        gap: 6mm;
+        margin-bottom: 1mm;
+      }
+
+      /* ========================================
+         ESTILOS DE IMPRESSÃO
+         ======================================== */
+      @media print {
+        @page {
+          size: A4;
+          margin: 0;
+        }
+
+        body {
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+
+        .page {
+          page-break-after: always;
+          margin: 0;
+        }
+
+        .page:last-child {
+          page-break-after: avoid;
+        }
+
+        .no-print {
+          display: none !important;
+        }
+
+        .bean-item {
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+
+        .section,
+        .columns,
+        .column,
+        .highlight-box,
+        .build-your-own,
+        .methods-section {
+          break-inside: avoid;
+          page-break-inside: avoid;
+        }
+      }
+
+      /* ========================================
+         PREVIEW NA TELA
+         ======================================== */
+      @media screen {
+        body {
+          background: #e0e0e0;
+          padding: 20px;
+        }
+
+        .page {
+          box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+          margin-bottom: 20px;
+        }
+
+        .print-hint {
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: var(--accent);
+          color: white;
+          padding: 12px 20px;
+          border-radius: 8px;
+          font-size: 12pt;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+          z-index: 100;
+        }
+
+        .print-hint kbd {
+          background: rgba(255,255,255,0.2);
+          padding: 2px 6px;
+          border-radius: 3px;
+          font-family: monospace;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Dica de impressão (apenas na tela) -->
+    <div class="print-hint no-print">
+      Pressione <kbd>Ctrl+P</kbd> para imprimir
+    </div>
+
+    <!-- ==========================================
+         PÁGINA 1: BEBIDAS
+         ========================================== -->
+    <div class="page">
+      <!-- Cabeçalho -->
+      <header class="header">
+        <img src="/images/LOGOBRANCO.png" alt="Consciência Café" class="logo" style="filter: invert(1);">
+        <div class="header-title">
+          <h1>Bebidas</h1>
+        </div>
+      </header>
+
+      <!-- Cafés Especiais Filtrados -->
+      <section class="section filtered-coffee-section">
+        <h3 class="section-title">Cafés Especiais Filtrados</h3>
+        <p style="font-size: 8pt; color: var(--gray); margin-bottom: 2mm;">
+          Grãos selecionados da nossa torrefação, preparados na mesa pelos nossos baristas
+        </p>
+
+        <div class="steps">
+          <!-- Passo 1: Escolha o Grão -->
+          <div class="step">
+            <div class="step-header">
+              <div class="step-number">1</div>
+              <div class="step-title">Escolha o Grão</div>
+            </div>
+            <div class="grains-container">
+              <div class="bean-item">
+                <div class="name-row">
+                  <span>Consciência</span>
+                  <span class="separator">·</span>
+                  <span class="price">15</span>
+                </div>
+                <div class="desc">Escolha da casa</div>
+              </div>
+              <div class="bean-item">
+                <div class="name-row">
+                  <span>Frutado</span>
+                  <span class="separator">·</span>
+                  <span class="price">17</span>
+                </div>
+                <div class="desc">Notas cítricas</div>
+              </div>
+              <div class="bean-item">
+                <div class="name-row">
+                  <span>Microlotes</span>
+                  <span class="separator">·</span>
+                  <span class="price">17</span>
+                </div>
+                <div class="desc">Edição limitada</div>
+              </div>
+              <div class="bean-item">
+                <div class="name-row">
+                  <span>Caparaó</span>
+                  <span class="separator">·</span>
+                  <span class="price">17</span>
+                </div>
+                <div class="desc">Serra do Caparaó</div>
+              </div>
+              <div class="bean-item">
+                <div class="name-row">
+                  <span>Descafeinado</span>
+                  <span class="separator">·</span>
+                  <span class="price">19</span>
+                </div>
+                <div class="desc">Sem cafeína</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Passo 2: Escolha o Método -->
+          <div class="step">
+            <div class="step-header">
+              <div class="step-number">2</div>
+              <div class="step-title">Escolha o Método</div>
+            </div>
+            <div class="methods-container">
+              <span class="method-chip">Cafeteira Italiana</span>
+              <span class="method-chip">V60</span>
+              <span class="method-chip">Kalita Wave</span>
+              <span class="method-chip">Clever</span>
+              <span class="method-chip">AeroPress</span>
+              <span class="method-chip">Chemex</span>
+              <span class="method-chip">Prensa Francesa</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Menu Degustação (movido para cá) -->
+      <div class="highlight-box" style="margin-top: 3mm;">
+        <div>
+          <span class="star">★</span>
+          <h2>Menu Degustação</h2>
+          <p class="description">3 cafés em 3 métodos diferentes, preparados na mesa</p>
+        </div>
+        <div class="price">45</div>
+      </div>
+
+      <!-- Duas colunas: Quentes + Geladas -->
+      <div class="columns">
+        <!-- Coluna Esquerda: Bebidas Quentes -->
+        <div class="column">
+          <section class="section">
+            <h3 class="section-title">Quentes</h3>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Espresso</div>
+                <div class="menu-item-desc">Curto 30ml ou Carioca 60ml</div>
+              </div>
+              <div class="menu-item-price">9</div>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Espresso Duplo</div>
+                <div class="menu-item-desc">Curto 60ml ou Americano 180ml</div>
+              </div>
+              <div class="menu-item-price">11</div>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Macchiato Pequeno</div>
+                <div class="menu-item-desc">Espresso com toque de leite</div>
+              </div>
+              <div class="menu-item-price">12</div>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Latte</div>
+                <div class="menu-item-desc">Espresso com leite vaporizado</div>
+              </div>
+              <div class="menu-item-price">15</div>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Macchiato Grande</div>
+                <div class="menu-item-desc">Espresso duplo com leite vaporizado 180ml</div>
+              </div>
+              <div class="menu-item-price">15</div>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Cappuccino Italiano</div>
+                <div class="menu-item-desc">Espresso, leite vaporizado (canela ou cacau opcionais)</div>
+              </div>
+              <div class="menu-item-price">16</div>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Cappuccino Especial</div>
+                <div class="menu-item-desc">Espresso, leite, pedaços de chocolate e canela</div>
+              </div>
+              <div class="menu-item-price">18</div>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Mocha</div>
+                <div class="menu-item-desc">Espresso, cacau e leite</div>
+              </div>
+              <div class="menu-item-price">18</div>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Caramel Macchiato</div>
+                <div class="menu-item-desc">Baunilha, caramelo, espresso e leite vaporizado</div>
+              </div>
+              <div class="menu-item-price">18</div>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Chocolate Quente</div>
+                <div class="menu-item-desc">Leite vaporizado, chocolate cremoso ou cacau</div>
+              </div>
+              <div class="menu-item-price">16</div>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- Coluna Direita: Bebidas Geladas -->
+        <div class="column">
+          <section class="section">
+            <h3 class="section-title">Geladas</h3>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Frapês</div>
+                <div class="menu-item-desc">Gelo, sorvete, leite e espresso (Nutella, doce de leite ou morango)</div>
+              </div>
+              <div class="menu-item-price">20</div>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Latte Gelado</div>
+                <div class="menu-item-desc">Gelo, espresso e leite</div>
+              </div>
+              <div class="menu-item-price">16</div>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Cappuccino Especial Gelado</div>
+                <div class="menu-item-desc">Gelo, sorvete, espresso e leite</div>
+              </div>
+              <div class="menu-item-price">18</div>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Iced Vanilla Latte</div>
+                <div class="menu-item-desc">Baunilha, espresso e leite</div>
+              </div>
+              <div class="menu-item-price">18</div>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Mocha Gelado</div>
+                <div class="menu-item-desc">Cacau, gelo, espresso e leite</div>
+              </div>
+              <div class="menu-item-price">18</div>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Espresso Tônica</div>
+                <div class="menu-item-desc">Espresso e água tônica</div>
+              </div>
+              <div class="menu-item-price">15</div>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Affogato</div>
+                <div class="menu-item-desc">Espresso e sorvete de creme</div>
+              </div>
+              <div class="menu-item-price">18</div>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Chocolate Gelado</div>
+                <div class="menu-item-desc">Leite, cacau e gelo</div>
+              </div>
+              <div class="menu-item-price">14</div>
+            </div>
+
+          </section>
+        </div>
+      </div>
+
+      <!-- Outras Bebidas - Largura Total -->
+      <section class="section outras-bebidas">
+        <h3 class="section-title">Outras Bebidas</h3>
+        <div class="outras-grid">
+          <div class="menu-item">
+            <div class="menu-item-info">
+              <div class="menu-item-name">Soda Italiana</div>
+              <div class="menu-item-desc">Romã, limão siciliano, maçã verde e tangerina</div>
+            </div>
+            <div class="menu-item-price">14</div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-info">
+              <div class="menu-item-name">Milk Shake</div>
+              <div class="menu-item-desc">Café, chocolate, morango ou creme</div>
+            </div>
+            <div class="menu-item-price">20</div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-info">
+              <div class="menu-item-name">Whey Protein</div>
+              <div class="menu-item-desc">Baunilha ou chocolate com leite</div>
+            </div>
+            <div class="menu-item-price">18</div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-info">
+              <div class="menu-item-name">Whey Protein c/ Frutas</div>
+              <div class="menu-item-desc">Baunilha ou chocolate com leite e frutas</div>
+            </div>
+            <div class="menu-item-price">20</div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-info">
+              <div class="menu-item-name">Suco Natural</div>
+              <div class="menu-item-desc">Laranja, morango, abacaxi com hortelã, maracujá, detox</div>
+            </div>
+            <div class="menu-item-price">14</div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-info">
+              <div class="menu-item-name">Vitamina de Frutas</div>
+              <div class="menu-item-desc">Leite com banana ou morango</div>
+            </div>
+            <div class="menu-item-price">15</div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-info">
+              <div class="menu-item-name">Kombucha</div>
+              <div class="menu-item-desc">Pera e jasmim, uva e lavanda, maracujá e manga, limão e framboesa</div>
+            </div>
+            <div class="menu-item-price">18</div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-info">
+              <div class="menu-item-name">Mate Leão</div>
+              <div class="menu-item-desc">Original</div>
+            </div>
+            <div class="menu-item-price">8</div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-info">
+              <div class="menu-item-name">Ice Tea Leão</div>
+              <div class="menu-item-desc">Limão ou pêssego</div>
+            </div>
+            <div class="menu-item-price">8</div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-info">
+              <div class="menu-item-name">Refrigerante</div>
+              <div class="menu-item-desc">Coca-cola, zero, água tônica ou citrus</div>
+            </div>
+            <div class="menu-item-price">8</div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-info">
+              <div class="menu-item-name">Água de Coco</div>
+              <div class="menu-item-desc">Natural da fruta</div>
+            </div>
+            <div class="menu-item-price">12</div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-info">
+              <div class="menu-item-name">Água</div>
+              <div class="menu-item-desc">Sem gás ou com gás</div>
+            </div>
+            <div class="menu-item-price">6</div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ==========================================
+         PÁGINA 2: COMIDAS
+         ========================================== -->
+    <div class="page">
+      <!-- Cabeçalho simplificado -->
+      <header class="header">
+        <img src="/images/LOGOBRANCO.png" alt="Consciência Café" class="logo" style="filter: invert(1);">
+        <div class="header-title">
+          <h1>Comidas</h1>
+        </div>
+      </header>
+
+      <!-- Destaque: Monte seu Lanche -->
+      <div class="build-your-own">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4mm;">
+          <h2 style="margin-bottom: 0;"><span class="star">★</span> Monte seu Lanche</h2>
+          <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 18pt; font-weight: 700; color: var(--accent);">22</div>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-title">Escolha a Base</div>
+            <div class="step-options">Waffle de Pão de Queijo, Omelete, Tapioca, Tapioca Virada, Crepioca, Ciabatta, Croissant ou Pão de Fermentação</div>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-title">1 Proteína</div>
+            <div class="step-options">Ovo mexido, Frango desfiado, Carne desfiada, Presunto ou Bacon</div>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-title">2 Acompanhamentos</div>
+            <div class="step-options">Queijo, Queijo sem lactose, Queijo vegano, Tomate, Cebola, Azeitona ou Requeijão</div>
+          </div>
+          <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-title">2 Finalizações</div>
+            <div class="step-options">Azeite, Orégano, Molho pesto, Manteiga Ghee ou Homus</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Duas colunas: Pães Artesanais + Brunch (itens de maior valor primeiro) -->
+      <div class="columns">
+        <div class="column">
+          <section class="section">
+            <h3 class="section-title">Pães Sourdough</h3>
+            <p style="font-size: 8pt; color: var(--gray); margin-bottom: 3mm; margin-top: -2mm;">
+              Fermentação natural
+            </p>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Avocado Toast</div>
+                <div class="menu-item-desc">Abacate, ovos, bacon, azeite e tomate</div>
+              </div>
+              <div class="menu-item-price">25</div>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Bruschetta</div>
+                <div class="menu-item-desc">Tomates, azeite, molho pesto e orégano</div>
+              </div>
+              <div class="menu-item-price">18</div>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Pão para Levar</div>
+                <div class="menu-item-desc">Pão de fermentação natural fresquinho</div>
+              </div>
+              <div class="menu-item-price">24</div>
+            </div>
+          </section>
+        </div>
+
+        <div class="column">
+          <section class="section">
+            <h3 class="section-title">Brunch</h3>
+            <p style="font-size: 8pt; color: var(--gray); margin-bottom: 3mm; margin-top: -2mm;">
+              Combinação especial
+            </p>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Brunch Consciência</div>
+                <div class="menu-item-desc">Espresso duplo, suco natural, torrada, ovos e bacon e bolo do dia</div>
+              </div>
+              <div class="menu-item-price">60</div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- Salgados - Largura Total com 2 colunas -->
+      <section class="section">
+        <h3 class="section-title">Salgados</h3>
+        <div class="outras-grid" style="grid-template-columns: repeat(2, 1fr);">
+          <div class="menu-item">
+            <div class="menu-item-info">
+              <div class="menu-item-name">Waffle de Pão de Queijo</div>
+              <div class="menu-item-desc">Massa de pão de queijo sem recheio</div>
+            </div>
+            <div class="menu-item-price">10</div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-info">
+              <div class="menu-item-name">Pão com Ovo</div>
+              <div class="menu-item-desc">Pão francês, integral ou sem glúten com manteiga ghee e ovo frito</div>
+            </div>
+            <div class="menu-item-price">9</div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-info">
+              <div class="menu-item-name">Torradas, Ovos e Bacon</div>
+              <div class="menu-item-desc">Pão francês ou de forma torrado com ovos e bacon</div>
+            </div>
+            <div class="menu-item-price">15</div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-info">
+              <div class="menu-item-name">Pão com Manteiga</div>
+              <div class="menu-item-desc">Pão francês ou sem glúten com manteiga ghee</div>
+            </div>
+            <div class="menu-item-price">7</div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-info">
+              <div class="menu-item-name">Ovos Mexidos</div>
+              <div class="menu-item-desc">Dois ovos mexidos no ponto da sua escolha</div>
+            </div>
+            <div class="menu-item-price">9</div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-info">
+              <div class="menu-item-name">Croissant Recheado</div>
+              <div class="menu-item-desc">Queijo e presunto, 4 queijos ou frango com requeijão</div>
+            </div>
+            <div class="menu-item-price">14</div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-info">
+              <div class="menu-item-name">Misto Quente</div>
+              <div class="menu-item-desc">Pão francês, de forma, integral ou sem glúten, queijo e presunto</div>
+            </div>
+            <div class="menu-item-price">13</div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-info">
+              <div class="menu-item-name">Porção de Chipa</div>
+              <div class="menu-item-desc">Com 4 unidades</div>
+            </div>
+            <div class="menu-item-price">9</div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-info">
+              <div class="menu-item-name">Bauru</div>
+              <div class="menu-item-desc">Pão francês, de forma, integral ou sem glúten, queijo, presunto e tomate</div>
+            </div>
+            <div class="menu-item-price">14</div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-info">
+              <div class="menu-item-name">Porção de Pão de Queijo</div>
+              <div class="menu-item-desc">Com 4 unidades</div>
+            </div>
+            <div class="menu-item-price">9</div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-info">
+              <div class="menu-item-name">Queijo Quente</div>
+              <div class="menu-item-desc">Pão francês, de forma, integral ou sem glúten, queijo tradicional, sem lactose ou vegano</div>
+            </div>
+            <div class="menu-item-price">12</div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-info">
+              <div class="menu-item-name">Porção de Pão de Beijo</div>
+              <div class="menu-item-desc">Versão vegana do pão de queijo, 4 unidades</div>
+            </div>
+            <div class="menu-item-price">12</div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-info">
+              <div class="menu-item-name">Coxinha de Frango</div>
+              <div class="menu-item-desc">Com requeijão, assada na air fryer</div>
+            </div>
+            <div class="menu-item-price">10</div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-info">
+              <div class="menu-item-name">Troca</div>
+              <div class="menu-item-desc">Pão de fermentação natural</div>
+            </div>
+            <div class="menu-item-price">+4</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Seção de Doces (largura total) -->
+      <section class="section">
+        <h3 class="section-title">Doces</h3>
+        <div class="outras-grid" style="grid-template-columns: repeat(3, 1fr);">
+          <div>
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Banoffee</div>
+                <div class="menu-item-desc">Feita na hora na taça · Pequena 14 · Grande 18</div>
+              </div>
+              <div class="menu-item-price">14/18</div>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Bolo do Dia</div>
+                <div class="menu-item-desc">Tradicional 11 · Recheado 13</div>
+              </div>
+              <div class="menu-item-price">11/13</div>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Sorvete de Café</div>
+                <div class="menu-item-desc">Taça de sorvete artesanal do Café Consciência</div>
+              </div>
+              <div class="menu-item-price">15</div>
+            </div>
+          </div>
+
+          <div>
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Açaí</div>
+                <div class="menu-item-desc">Com frutas e granola · Pequena 14 · Grande 18</div>
+              </div>
+              <div class="menu-item-price">14/18</div>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Tortas</div>
+                <div class="menu-item-desc">Italianíssima, Banana e Chocolate ou Especial de Fim de Semana</div>
+              </div>
+              <div class="menu-item-price">18</div>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Waffle Pão de Queijo</div>
+                <div class="menu-item-desc">Nutella, doce de leite ou chocolate com banana</div>
+              </div>
+              <div class="menu-item-price">18</div>
+            </div>
+          </div>
+
+          <div>
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Brownie</div>
+              </div>
+              <div class="menu-item-price">10</div>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Brownie Sem Glúten</div>
+              </div>
+              <div class="menu-item-price">12</div>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Brigadeiro</div>
+              </div>
+              <div class="menu-item-price">8</div>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-item-info">
+                <div class="menu-item-name">Bola de Sorvete de Creme</div>
+              </div>
+              <div class="menu-item-price">10</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </body>
+</html>

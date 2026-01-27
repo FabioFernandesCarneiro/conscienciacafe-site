@@ -311,6 +311,60 @@ def create_orders_blueprint(
 
         return render_template('orders/coffees_form.html', coffee=coffee, package_sizes=PACKAGE_SIZES)
 
+    @bp.route('/coffees/<int:coffee_id>/duplicate', methods=['GET', 'POST'])
+    @login_required
+    def coffees_duplicate(coffee_id: int):
+        if not _require_admin():
+            return redirect(url_for('orders.coffees_index'))
+        original_coffee = catalog_service.get_coffee(coffee_id)
+        if not original_coffee:
+            flash('Café não encontrado.', 'danger')
+            return redirect(url_for('orders.coffees_index'))
+
+        if request.method == 'POST':
+            data = {
+                'name': request.form.get('name', '').strip(),
+                'variety': request.form.get('variety', '').strip() or None,
+                'farm_name': request.form.get('farm_name', '').strip() or None,
+                'region': request.form.get('region', '').strip() or None,
+                'process': request.form.get('process', '').strip() or None,
+                'sensorial_notes': request.form.get('sensorial_notes', '').strip() or None,
+                'sca_score': request.form.get('sca_score') or None,
+                'active': True,
+            }
+            if data['sca_score']:
+                try:
+                    data['sca_score'] = float(data['sca_score'].replace(',', '.'))
+                except ValueError:
+                    flash('Pontuação SCA inválida.', 'danger')
+                    return render_template('orders/coffees_form.html', coffee={**data, 'prices_map': {}}, package_sizes=PACKAGE_SIZES, is_duplicate=True)
+            try:
+                prices = _parse_price_form(request.form)
+                if not prices:
+                    flash('Informe pelo menos um preço de embalagem.', 'danger')
+                    return render_template('orders/coffees_form.html', coffee={**data, 'prices_map': {}}, package_sizes=PACKAGE_SIZES, is_duplicate=True)
+                catalog_service.create_coffee(data, prices)
+            except ValueError as exc:
+                flash(str(exc), 'danger')
+                return render_template('orders/coffees_form.html', coffee={**data, 'prices_map': prices}, package_sizes=PACKAGE_SIZES, is_duplicate=True)
+
+            flash('Café duplicado com sucesso!', 'success')
+            return redirect(url_for('orders.coffees_index'))
+
+        # Pre-fill form with original coffee data but suggest a new name
+        duplicate_coffee = {
+            'name': f"{original_coffee.get('name', '')} (Cópia)",
+            'variety': original_coffee.get('variety'),
+            'farm_name': original_coffee.get('farm_name'),
+            'region': original_coffee.get('region'),
+            'process': original_coffee.get('process'),
+            'sensorial_notes': original_coffee.get('sensorial_notes'),
+            'sca_score': original_coffee.get('sca_score'),
+            'prices_map_brl': original_coffee.get('prices_map_brl', {}),
+            'prices_map_pyg': original_coffee.get('prices_map_pyg', {}),
+        }
+        return render_template('orders/coffees_form.html', coffee=duplicate_coffee, package_sizes=PACKAGE_SIZES, is_duplicate=True)
+
     @bp.route('/')
     @login_required
     def orders_index():

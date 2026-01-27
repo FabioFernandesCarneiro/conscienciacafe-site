@@ -8,6 +8,7 @@ import {
   CubeIcon,
   ArrowUpTrayIcon,
   FunnelIcon,
+  DocumentDuplicateIcon,
 } from '@heroicons/react/24/outline';
 import { subscribeToProducts, deactivateProduct, reactivateProduct } from '@/lib/firebase/products';
 import type { Product, Station } from '@/lib/types';
@@ -31,6 +32,7 @@ export default function ProdutosPage() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [isDuplicating, setIsDuplicating] = useState(false);
   const [filter, setFilter] = useState<'all' | 'active' | 'inactive'>('active');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -112,12 +114,20 @@ export default function ProdutosPage() {
 
   const handleEdit = (product: Product) => {
     setEditingProduct(product);
+    setIsDuplicating(false);
+    setShowForm(true);
+  };
+
+  const handleDuplicate = (product: Product) => {
+    setEditingProduct(product);
+    setIsDuplicating(true);
     setShowForm(true);
   };
 
   const handleCloseForm = () => {
     setShowForm(false);
     setEditingProduct(null);
+    setIsDuplicating(false);
   };
 
   if (loading) {
@@ -279,8 +289,16 @@ export default function ProdutosPage() {
                   <td className="px-4 py-3 text-right">
                     <div className="flex items-center justify-end gap-2">
                       <button
+                        onClick={() => handleDuplicate(product)}
+                        className="rounded-lg p-2 text-gray-mid hover:bg-gray-light hover:text-primary"
+                        title="Duplicar"
+                      >
+                        <DocumentDuplicateIcon className="h-4 w-4" />
+                      </button>
+                      <button
                         onClick={() => handleEdit(product)}
                         className="rounded-lg p-2 text-gray-mid hover:bg-gray-light hover:text-primary"
+                        title="Editar"
                       >
                         <PencilIcon className="h-4 w-4" />
                       </button>
@@ -323,6 +341,7 @@ export default function ProdutosPage() {
       {showForm && (
         <ProductForm
           product={editingProduct}
+          isDuplicating={isDuplicating}
           onClose={handleCloseForm}
           onSuccess={handleCloseForm}
         />

@@ -60,6 +60,9 @@
                         </td>
                         {% if current_user.role == 'admin' %}
                         <td class="text-end">
+                            <a class="btn btn-sm btn-outline-secondary me-1" href="{{ url_for('orders.coffees_duplicate', coffee_id=coffee.id) }}" title="Duplicar">
+                                <i class="bi bi-files"></i> Duplicar
+                            </a>
                             <a class="btn btn-sm btn-outline-primary" href="{{ url_for('orders.coffees_edit', coffee_id=coffee.id) }}">
                                 <i class="bi bi-pencil"></i> Editar
                             </a>

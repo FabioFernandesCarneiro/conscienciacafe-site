@@ -9,6 +9,7 @@ import type { Product, Station, ProductType } from '@/lib/types';
 
 interface ProductFormProps {
   product?: Product | null;
+  isDuplicating?: boolean;
   onClose: () => void;
   onSuccess: () => void;
 }
@@ -32,8 +33,8 @@ const DEFAULT_CATEGORIES = [
   'Produtos de exposição',
 ];
 
-export default function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
-  const isEditing = !!product;
+export default function ProductForm({ product, isDuplicating = false, onClose, onSuccess }: ProductFormProps) {
+  const isEditing = !!product && !isDuplicating;
 
   // Include product's category in list if not already present
   const categories = product?.category && !DEFAULT_CATEGORIES.includes(product.category)
@@ -133,7 +134,7 @@ export default function ProductForm({ product, onClose, onSuccess }: ProductForm
               <Dialog.Panel className="w-full max-w-lg transform rounded-2xl bg-white p-6 shadow-xl transition-all">
                 <div className="flex items-center justify-between">
                   <Dialog.Title className="text-xl font-bold text-primary">
-                    {isEditing ? 'Editar Produto' : 'Novo Produto'}
+                    {isDuplicating ? 'Duplicar Produto' : isEditing ? 'Editar Produto' : 'Novo Produto'}
                   </Dialog.Title>
                   <button
                     onClick={onClose}
@@ -353,7 +354,7 @@ export default function ProductForm({ product, onClose, onSuccess }: ProductForm
                       disabled={loading}
                       className="flex-1 rounded-lg bg-accent px-4 py-2.5 text-sm font-medium text-white transition hover:bg-accent-hover disabled:opacity-50"
                     >
-                      {loading ? 'Salvando...' : isEditing ? 'Salvar' : 'Adicionar'}
+                      {loading ? 'Salvando...' : isDuplicating ? 'Duplicar' : isEditing ? 'Salvar' : 'Adicionar'}
                     </button>
                   </div>
                 </form>

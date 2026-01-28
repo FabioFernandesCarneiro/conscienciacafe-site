@@ -374,6 +374,7 @@ def create_orders_blueprint(
         client_query = (request.args.get('client_query') or '').strip()
         min_total_raw = request.args.get('min_total')
         max_total_raw = request.args.get('max_total')
+        seller_id_raw = request.args.get('seller_id')
 
         start_date = _to_date(start_date_raw)
         end_date = _to_date(end_date_raw)
@@ -384,9 +385,13 @@ def create_orders_blueprint(
         max_total = _parse_number(max_total_raw)
 
         # Vendedor vê apenas seus próprios pedidos
+        # Admin pode filtrar por vendedor específico
         user_id = None
         if current_user.is_authenticated and current_user.is_seller:
             user_id = current_user.id
+        elif current_user.is_authenticated and current_user.is_admin and seller_id_raw:
+            if seller_id_raw.isdigit():
+                user_id = int(seller_id_raw)
 
         orders = order_service.list_orders(
             start_date=start_date,
@@ -400,6 +405,11 @@ def create_orders_blueprint(
         )
         coffees = catalog_service.list_coffees(include_inactive=True)
         total_amount = sum(order.get('total_amount') or 0 for order in orders)
+
+        # Lista de vendedores para filtro (apenas para admin)
+        sellers = []
+        if current_user.is_authenticated and current_user.is_admin and auth_service:
+            sellers = auth_service.get_all_active_users()
 
         # Calcular totais por moeda
         total_by_currency: dict[str, float] = {}
@@ -415,6 +425,7 @@ def create_orders_blueprint(
             bool(client_query),
             bool(min_total_raw),
             bool(max_total_raw),
+            bool(seller_id_raw),
         ])
         filters = {
             'start_date': start_date_raw or '',
@@ -423,6 +434,7 @@ def create_orders_blueprint(
             'client_query': client_query,
             'min_total': min_total_raw or '',
             'max_total': max_total_raw or '',
+            'seller_id': seller_id_raw or '',
         }
         stats = {
             'count': len(orders),
@@ -436,6 +448,7 @@ def create_orders_blueprint(
             filters=filters,
             has_filters=has_filters,
             stats=stats,
+            sellers=sellers,
         )
 
     @bp.route('/new', methods=['GET', 'POST'])

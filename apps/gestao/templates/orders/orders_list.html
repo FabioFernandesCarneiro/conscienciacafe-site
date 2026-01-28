@@ -24,7 +24,7 @@
                 <label class="form-label" for="end_date">Até</label>
                 <input type="date" class="form-control" id="end_date" name="end_date" value="{{ filters.end_date }}">
             </div>
-            <div class="col-sm-6 col-lg-3">
+            <div class="col-sm-6 col-lg-2">
                 <label class="form-label" for="coffee_id">Produto</label>
                 <select class="form-select" id="coffee_id" name="coffee_id">
                     <option value="">Todos</option>
@@ -33,10 +33,21 @@
                     {% endfor %}
                 </select>
             </div>
-            <div class="col-sm-6 col-lg-3">
+            <div class="col-sm-6 col-lg-2">
                 <label class="form-label" for="client_query">Cliente</label>
                 <input type="text" class="form-control" id="client_query" name="client_query" placeholder="Nome do cliente" value="{{ filters.client_query }}">
             </div>
+            {% if current_user.role == 'admin' and sellers %}
+            <div class="col-sm-6 col-lg-2">
+                <label class="form-label" for="seller_id">Vendedor</label>
+                <select class="form-select" id="seller_id" name="seller_id">
+                    <option value="">Todos</option>
+                    {% for seller in sellers %}
+                    <option value="{{ seller.id }}" {% if filters.seller_id and filters.seller_id|int == seller.id %}selected{% endif %}>{{ seller.username }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
             <div class="col-sm-6 col-lg-1">
                 <label class="form-label" for="min_total">Valor mín.</label>
                 <input type="number" step="0.01" min="0" class="form-control" id="min_total" name="min_total" value="{{ filters.min_total }}">

@@ -1,0 +1,373 @@
+========================================================================================================================
+LANÇAMENTOS PENDENTES DE CATEGORIZAÇÃO - Consciência Café
+Total: 70 lançamentos
+========================================================================================================================
+
+CATEGORIAS DISPONÍVEIS:
+----------------------------------------
+RECEITA:     REC_B2B, REC_PIX, REC_IFOOD, REC_GRANITO_CRED, REC_GRANITO_DEB, REC_CAIXINHA
+CPV:         CPV_CAFE, CPV_INSUMOS, CPV_BEBIDAS, CPV_SORVETE, CPV_OUTROS
+VARIAVEL:    VAR_FRETE, VAR_EMBALAGENS
+FIXO:        FIX_ALUGUEL, FIX_ENERGIA, FIX_AGUA, FIX_PESSOAL_CLT, FIX_PESSOAL_EXTRA,
+             FIX_FGTS, FIX_VR, FIX_CONTADOR, FIX_SISTEMA, FIX_MARKETING, FIX_ADMIN, FIX_MANUTENCAO
+IMPOSTO:     IMP_DAS, IMP_DARF, IMP_PREFEITURA
+INVESTIM:    INV_EQUIPAMENTO
+OPERACIONAL: OP_SANGRIA, OP_PAGAMENTO_FATURA, OP_TRANSFERENCIA
+OUTROS:      PESSOAL_SOCIO, AJUSTE
+----------------------------------------
+
+LANÇAMENTOS (ordenados por valor):
+========================================================================================================================
+
+[01] ID: cart_20250916_041
+     Data: 2025-09-16  |  Valor: R$   -9220.39  |  Fonte: cartao-credito
+     Descrição: Pagamento recebido
+     >>> CATEGORIA: _________________
+
+[02] ID: cc_20251031_299
+     Data: 2025-10-31  |  Valor: R$   -1297.00  |  Fonte: conta-corrente
+     Descrição: Pagamento de boleto efetuado - 51 715 497 GIORGIO TARARTHUCH BASTOS
+     >>> CATEGORIA: _________________
+
+[03] ID: cc_20251205_656
+     Data: 2025-12-05  |  Valor: R$   -1250.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - ISABELI QUARTERO GALVEZ - •••.890.798-•• - ITAÚ UNIBANCO S.A. (0341) Agência: 3094 Conta: 27032-3
+     >>> CATEGORIA: _________________
+
+[04] ID: cc_20251205_655
+     Data: 2025-12-05  |  Valor: R$   -1056.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - B.F.A.V. E-COMMERCE COMERCIO LTDA - 62.363.217/0001-13 - BCO DO BRASIL S.A. (0001) Agência: 2494 Conta: 22863-0
+     >>> CATEGORIA: _________________
+
+[05] ID: cart_20251127_151
+     Data: 2025-11-27  |  Valor: R$    -459.98  |  Fonte: cartao-credito
+     Descrição: Amazonmktplc*Flaviohen
+     >>> CATEGORIA: _________________
+
+[06] ID: cc_20251024_234
+     Data: 2025-10-24  |  Valor: R$    -450.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - BRUNO ALMEIDA SILVA - •••.731.958-•• - BANCO INTER (0077) Agência: 1 Conta: 3065372-0
+     >>> CATEGORIA: _________________
+
+[07] ID: cc_20251007_061
+     Data: 2025-10-07  |  Valor: R$    -405.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - ERINEIA SANTANA DE OLIVEIRA - •••.365.539-•• - BANCO INTER (0077) Agência: 1 Conta: 3779383-7
+     >>> CATEGORIA: _________________
+
+[08] ID: cc_20251210_694
+     Data: 2025-12-10  |  Valor: R$    -379.40  |  Fonte: conta-corrente
+     Descrição: Pagamento de boleto efetuado - LIMAE BULLA LTDA ME
+     >>> CATEGORIA: _________________
+
+[09] ID: cart_20250915_069
+     Data: 2025-09-15  |  Valor: R$    -190.70  |  Fonte: cartao-credito
+     Descrição: Amazon - Parcela 9/10
+     >>> CATEGORIA: _________________
+
+[10] ID: cc_20251125_534
+     Data: 2025-11-25  |  Valor: R$    -178.60  |  Fonte: conta-corrente
+     Descrição: Pagamento de boleto efetuado - LIMAE BULLA LTDA ME
+     >>> CATEGORIA: _________________
+
+[11] ID: cart_20251113_077
+     Data: 2025-11-13  |  Valor: R$    -157.98  |  Fonte: cartao-credito
+     Descrição: Amazonmktplc*Vfcomerci
+     >>> CATEGORIA: _________________
+
+[12] ID: cc_20251223_849
+     Data: 2025-12-23  |  Valor: R$    -150.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - ADILSON MORETTI RODRIGUES - •••.474.719-•• - COOP SICREDI VANGUARDA PR/SP/RJ Agência: 710 Conta: 1749410-4
+     >>> CATEGORIA: _________________
+
+[13] ID: cart_20250915_071
+     Data: 2025-09-15  |  Valor: R$    -142.91  |  Fonte: cartao-credito
+     Descrição: Amazon - Parcela 3/10
+     >>> CATEGORIA: _________________
+
+[14] ID: cc_20251105_352
+     Data: 2025-11-05  |  Valor: R$    -139.60  |  Fonte: conta-corrente
+     Descrição: Pagamento de boleto efetuado - LIMAE BULLA LTDA ME
+     >>> CATEGORIA: _________________
+
+[15] ID: cc_20251108_388
+     Data: 2025-11-08  |  Valor: R$    -115.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - Saymon Emanuel Cornélio Fuentes - •••.349.039-•• - NU PAGAMENTOS - IP (0260) Agência: 1 Conta: 94130605-6
+     >>> CATEGORIA: _________________
+
+[16] ID: cc_20251015_129
+     Data: 2025-10-15  |  Valor: R$    -113.60  |  Fonte: conta-corrente
+     Descrição: Pagamento de boleto efetuado - LIMAE BULLA LTDA ME
+     >>> CATEGORIA: _________________
+
+[17] ID: cc_20251127_564
+     Data: 2025-11-27  |  Valor: R$    -113.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - 32733055 LAURA POSSOBAM - 32.733.055/0001-05 - SISPRIME DO BRASIL - COOP (0084) Agência: 38 Conta: 110689-9
+     >>> CATEGORIA: _________________
+
+[18] ID: cart_20250915_058
+     Data: 2025-09-15  |  Valor: R$    -103.90  |  Fonte: cartao-credito
+     Descrição: Amazonmktplc*Muellerfo - Parcela 6/10
+     >>> CATEGORIA: _________________
+
+[19] ID: cc_20251026_247
+     Data: 2025-10-26  |  Valor: R$     -96.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - Aline Dalsgaard de Niemeyer - •••.639.007-•• - BANCO INTER (0077) Agência: 1 Conta: 30450433-5
+     >>> CATEGORIA: _________________
+
+[20] ID: cart_20250915_063
+     Data: 2025-09-15  |  Valor: R$     -94.94  |  Fonte: cartao-credito
+     Descrição: Pg *Nuvem Mugsandmore - Parcela 4/5
+     >>> CATEGORIA: _________________
+
+[21] ID: cart_20250915_056
+     Data: 2025-09-15  |  Valor: R$     -92.59  |  Fonte: cartao-credito
+     Descrição: Amazon Retail Br Cpi - Parcela 9/12
+     >>> CATEGORIA: _________________
+
+[22] ID: cc_20251216_767
+     Data: 2025-12-16  |  Valor: R$     -88.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - Rafael Florentin Cheng - •••.896.139-•• - BANCO INTER (0077) Agência: 1 Conta: 33936880-2
+     >>> CATEGORIA: _________________
+
+[23] ID: cart_20251210_126
+     Data: 2025-12-10  |  Valor: R$     -85.00  |  Fonte: cartao-credito
+     Descrição: Amazonmktplc*Silveiras
+     >>> CATEGORIA: _________________
+
+[24] ID: cart_20251001_022
+     Data: 2025-10-01  |  Valor: R$     -71.82  |  Fonte: cartao-credito
+     Descrição: Amazon
+     >>> CATEGORIA: _________________
+
+[25] ID: cart_20251014_003
+     Data: 2025-10-14  |  Valor: R$     -71.81  |  Fonte: cartao-credito
+     Descrição: Amazon
+     >>> CATEGORIA: _________________
+
+[26] ID: cc_20251009_080
+     Data: 2025-10-09  |  Valor: R$     -70.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - RHAVIER CORDEIRO DA COSTA - •••.447.059-•• - ITAÚ UNIBANCO S.A. (0341) Agência: 629 Conta: 64426-1
+     >>> CATEGORIA: _________________
+
+[27] ID: cc_20251012_105
+     Data: 2025-10-12  |  Valor: R$     -70.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - RHAVIER CORDEIRO DA COSTA - •••.447.059-•• - ITAÚ UNIBANCO S.A. (0341) Agência: 629 Conta: 64426-1
+     >>> CATEGORIA: _________________
+
+[28] ID: cc_20251108_383
+     Data: 2025-11-08  |  Valor: R$     -70.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - RAFAEL FLORENTIN CHENG - •••.896.139-•• - BANCO INTER (0077) Agência: 1 Conta: 33936880-2
+     >>> CATEGORIA: _________________
+
+[29] ID: cc_20251216_764
+     Data: 2025-12-16  |  Valor: R$     -70.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - Priscila Silva de Carvalho - •••.076.992-•• - PICPAY (0380) Agência: 1 Conta: 19954732-7
+     >>> CATEGORIA: _________________
+
+[30] ID: cart_20251130_141
+     Data: 2025-11-30  |  Valor: R$     -64.62  |  Fonte: cartao-credito
+     Descrição: Amazon
+     >>> CATEGORIA: _________________
+
+[31] ID: cart_20251210_127
+     Data: 2025-12-10  |  Valor: R$     -59.99  |  Fonte: cartao-credito
+     Descrição: Amazonmktplc*Ebeybesto
+     >>> CATEGORIA: _________________
+
+[32] ID: cart_20251012_005
+     Data: 2025-10-12  |  Valor: R$     -59.59  |  Fonte: cartao-credito
+     Descrição: Amazon
+     >>> CATEGORIA: _________________
+
+[33] ID: cart_20250915_051
+     Data: 2025-09-15  |  Valor: R$     -56.49  |  Fonte: cartao-credito
+     Descrição: Amazon Marketplace - Parcela 3/6
+     >>> CATEGORIA: _________________
+
+[34] ID: cart_20251030_100
+     Data: 2025-10-30  |  Valor: R$     -55.99  |  Fonte: cartao-credito
+     Descrição: Amazon
+     >>> CATEGORIA: _________________
+
+[35] ID: cart_20250915_066
+     Data: 2025-09-15  |  Valor: R$     -55.87  |  Fonte: cartao-credito
+     Descrição: Amazonmktplc*Amaralcom - Parcela 2/8
+     >>> CATEGORIA: _________________
+
+[36] ID: cart_20250928_027
+     Data: 2025-09-28  |  Valor: R$     -54.55  |  Fonte: cartao-credito
+     Descrição: Amazon - Parcela 1/8
+     >>> CATEGORIA: _________________
+
+[37] ID: cc_20251201_601
+     Data: 2025-12-01  |  Valor: R$     -54.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - JEAN CARLOS ARAUJO DE LIMA - •••.314.219-•• - BANCO INTER (0077) Agência: 1 Conta: 44946744-9
+     >>> CATEGORIA: _________________
+
+[38] ID: cart_20251025_109
+     Data: 2025-10-25  |  Valor: R$     -53.19  |  Fonte: cartao-credito
+     Descrição: Amazon - Parcela 1/10
+     >>> CATEGORIA: _________________
+
+[39] ID: cart_20251001_020
+     Data: 2025-10-01  |  Valor: R$     -50.63  |  Fonte: cartao-credito
+     Descrição: Amazon
+     >>> CATEGORIA: _________________
+
+[40] ID: cart_20251204_134
+     Data: 2025-12-04  |  Valor: R$     -49.90  |  Fonte: cartao-credito
+     Descrição: Amazon
+     >>> CATEGORIA: _________________
+
+[41] ID: cart_20251008_011
+     Data: 2025-10-08  |  Valor: R$     -49.50  |  Fonte: cartao-credito
+     Descrição: Amazonmktplc*Lhsindust - Parcela 1/2
+     >>> CATEGORIA: _________________
+
+[42] ID: cart_20251125_154
+     Data: 2025-11-25  |  Valor: R$     -46.82  |  Fonte: cartao-credito
+     Descrição: Amazon - Parcela 1/6
+     >>> CATEGORIA: _________________
+
+[43] ID: cart_20250915_046
+     Data: 2025-09-15  |  Valor: R$     -44.32  |  Fonte: cartao-credito
+     Descrição: Amazonmktplc*Duarfreco - Parcela 4/6
+     >>> CATEGORIA: _________________
+
+[44] ID: cart_20251201_140
+     Data: 2025-12-01  |  Valor: R$     -44.10  |  Fonte: cartao-credito
+     Descrição: Amazon
+     >>> CATEGORIA: _________________
+
+[45] ID: cc_20251027_257
+     Data: 2025-10-27  |  Valor: R$     -41.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - CARLINHO MOREIRA DO PRADO JUNIOR 06283337902 - 46.696.913/0001-95 - BANCO BTG PACTUAL S.A. (0208) Agência: 50 Conta: 914330-9
+     >>> CATEGORIA: _________________
+
+[46] ID: cart_20251006_013
+     Data: 2025-10-06  |  Valor: R$     -39.50  |  Fonte: cartao-credito
+     Descrição: Amazonmktplc*Vfcomerci - Parcela 1/2
+     >>> CATEGORIA: _________________
+
+[47] ID: cart_20250915_047
+     Data: 2025-09-15  |  Valor: R$     -39.49  |  Fonte: cartao-credito
+     Descrição: Amazonmktplc*Vfcomrcio - Parcela 2/2
+     >>> CATEGORIA: _________________
+
+[48] ID: cart_20250915_057
+     Data: 2025-09-15  |  Valor: R$     -38.48  |  Fonte: cartao-credito
+     Descrição: Amazonmktplc*Vfcomrcio - Parcela 2/6
+     >>> CATEGORIA: _________________
+
+[49] ID: cart_20250915_059
+     Data: 2025-09-15  |  Valor: R$     -38.45  |  Fonte: cartao-credito
+     Descrição: Amazon - Parcela 5/6
+     >>> CATEGORIA: _________________
+
+[50] ID: cc_20251022_208
+     Data: 2025-10-22  |  Valor: R$     -36.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - JEAN CARLOS ARAUJO DE LIMA - •••.314.219-•• - BANCO INTER (0077) Agência: 1 Conta: 44946744-9
+     >>> CATEGORIA: _________________
+
+[51] ID: cart_20250915_065
+     Data: 2025-09-15  |  Valor: R$     -34.66  |  Fonte: cartao-credito
+     Descrição: Amazonmktplc*Lhsindust - Parcela 3/3
+     >>> CATEGORIA: _________________
+
+[52] ID: cart_20250915_054
+     Data: 2025-09-15  |  Valor: R$     -33.00  |  Fonte: cartao-credito
+     Descrição: Amazon - Parcela 2/3
+     >>> CATEGORIA: _________________
+
+[53] ID: cart_20250915_060
+     Data: 2025-09-15  |  Valor: R$     -31.11  |  Fonte: cartao-credito
+     Descrição: Amazonmktplc*Wbcomerci - Parcela 3/5
+     >>> CATEGORIA: _________________
+
+[54] ID: cc_20251125_546
+     Data: 2025-11-25  |  Valor: R$     -30.40  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - ANA CAROLINE GULART DO PRADO - •••.019.999-•• - BANCO INTER (0077) Agência: 1 Conta: 5207101-4
+     >>> CATEGORIA: _________________
+
+[55] ID: cc_20251017_164
+     Data: 2025-10-17  |  Valor: R$     -19.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - 50 264 932 cristiane ramao dos santos - 50.264.932/0001-10 - BCO C6 S.A. (0336) Agência: 1 Conta: 28029991-5
+     >>> CATEGORIA: _________________
+
+[56] ID: cc_20251031_308
+     Data: 2025-10-31  |  Valor: R$     -18.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - JEAN CARLOS ARAUJO DE LIMA - •••.314.219-•• - BANCO INTER (0077) Agência: 1 Conta: 44946744-9
+     >>> CATEGORIA: _________________
+
+[57] ID: cc_20251117_467
+     Data: 2025-11-17  |  Valor: R$     -18.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - JOAO VICTOR SANTOS DA SILVA - •••.801.045-•• - BCO DO BRASIL S.A. (0001) Agência: 3460 Conta: 78718-3
+     >>> CATEGORIA: _________________
+
+[58] ID: cc_20251007_059
+     Data: 2025-10-07  |  Valor: R$     -17.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - MARLEI ARAUJO AMERICO - •••.536.519-•• - COOP SICREDI VANGUARDA PR/SP/RJ Agência: 710 Conta: 83682-6
+     >>> CATEGORIA: _________________
+
+[59] ID: cc_20251012_103
+     Data: 2025-10-12  |  Valor: R$     -17.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - Thiago Moraes Silva - •••.990.323-•• - NU PAGAMENTOS - IP (0260) Agência: 1 Conta: 12166969-1
+     >>> CATEGORIA: _________________
+
+[60] ID: cc_20251122_517
+     Data: 2025-11-22  |  Valor: R$     -15.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - Saymon Emanuel Cornélio Fuentes - •••.349.039-•• - NU PAGAMENTOS - IP (0260) Agência: 1 Conta: 94130605-6
+     >>> CATEGORIA: _________________
+
+[61] ID: cc_20251017_166
+     Data: 2025-10-17  |  Valor: R$     -14.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - William Pereira - •••.961.269-•• - NU PAGAMENTOS - IP (0260) Agência: 1 Conta: 40314098-8
+     >>> CATEGORIA: _________________
+
+[62] ID: cc_20251010_088
+     Data: 2025-10-10  |  Valor: R$     -12.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - Gabriel Hoffmann Cavaglieri - •••.314.359-•• - NU PAGAMENTOS - IP (0260) Agência: 1 Conta: 473952163-3
+     >>> CATEGORIA: _________________
+
+[63] ID: cc_20251012_102
+     Data: 2025-10-12  |  Valor: R$     -12.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - LUIZ CARLOS DE OLIVEIRA ROCHA JUNIOR - •••.755.429-•• - BCO SANTANDER (BRASIL) S.A. (0033) Agência: 2981 Conta: 2005739-4
+     >>> CATEGORIA: _________________
+
+[64] ID: cc_20251127_563
+     Data: 2025-11-27  |  Valor: R$     -10.80  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - ANA CAROLINE GULART DO PRADO - •••.019.999-•• - BANCO INTER (0077) Agência: 1 Conta: 5207101-4
+     >>> CATEGORIA: _________________
+
+[65] ID: cart_20250915_053
+     Data: 2025-09-15  |  Valor: R$     -10.26  |  Fonte: cartao-credito
+     Descrição: Mercado*Importsclios - Parcela 2/6
+     >>> CATEGORIA: _________________
+
+[66] ID: cc_20251027_253
+     Data: 2025-10-27  |  Valor: R$     -10.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - BRENO MOIZES MATHEUS - •••.559.319-•• - BCO C6 S.A. (0336) Agência: 1 Conta: 23169133-5
+     >>> CATEGORIA: _________________
+
+[67] ID: cc_20251015_142
+     Data: 2025-10-15  |  Valor: R$      -8.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - Fernando Augusto Habitzreuter - •••.283.469-•• - NU PAGAMENTOS - IP (0260) Agência: 1 Conta: 285253917-1
+     >>> CATEGORIA: _________________
+
+[68] ID: cc_20251017_165
+     Data: 2025-10-17  |  Valor: R$      -6.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - BRUNA ALINE DOS SANTOS - •••.351.769-•• - PAGSEGURO INTERNET IP S.A. (0290) Agência: 1 Conta: 7150280-1
+     >>> CATEGORIA: _________________
+
+[69] ID: cc_20251213_729
+     Data: 2025-12-13  |  Valor: R$      -5.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - Maria Yohhana Pereira Lara - •••.990.879-•• - NU PAGAMENTOS - IP (0260) Agência: 1 Conta: 95482963-0
+     >>> CATEGORIA: _________________
+
+[70] ID: cc_20251117_466
+     Data: 2025-11-17  |  Valor: R$      -2.00  |  Fonte: conta-corrente
+     Descrição: Transferência enviada pelo Pix - SHIN MIN HOU JUNIOR - •••.113.279-•• - BANCO INTER (0077) Agência: 1 Conta: 35284906-1
+     >>> CATEGORIA: _________________
+
+========================================================================================================================
+Preencha a categoria de cada item e me envie de volta.

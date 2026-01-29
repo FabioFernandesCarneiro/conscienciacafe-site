@@ -1,0 +1,460 @@
+{
+  "version": "1.0",
+  "ultima_atualizacao": "2026-01-28",
+  "notas": "Atualizado com fornecedores descobertos na categorização do trimestre",
+  "fornecedores": {
+    "cafe": [
+      {
+        "nome": "Alexandre Alexandrini",
+        "tipo": "CPV_CAFE",
+        "patterns": ["Alexandre Alexandrini", "ALEXANDRE ALEXANDRINI"],
+        "valor_medio_mensal": 9860,
+        "notas": "Fornecedor principal de cafe - 80%"
+      },
+      {
+        "nome": "Altilina Evaristo",
+        "tipo": "CPV_CAFE",
+        "patterns": ["Altilina Evaristo", "ALTILINA EVARISTO"],
+        "valor_medio_mensal": 1195
+      },
+      {
+        "nome": "Cristina de Araujo Tavares",
+        "tipo": "CPV_CAFE",
+        "patterns": ["CRISTINA DE ARAUJO TAVARES", "Cristina de Araujo"],
+        "valor_medio_mensal": 1251
+      },
+      {
+        "nome": "Rei do Cafe",
+        "tipo": "CPV_CAFE",
+        "patterns": ["Www.Reidocafe.Com.Br", "REIDOCAFE", "Rei do Cafe"]
+      }
+    ],
+    "insumos": [
+      {
+        "nome": "Supermercado Consalter",
+        "tipo": "CPV_INSUMOS",
+        "patterns": ["Superm Consalter", "SUPERM CONSALTER", "Consalter"]
+      },
+      {
+        "nome": "Lima e Bulla",
+        "tipo": "CPV_INSUMOS",
+        "patterns": ["LIMAE BULLA", "Lima e Bulla", "LIMA E BULLA"],
+        "notas": "Fornecedor de açaí e polpa de frutas congeladas"
+      },
+      {
+        "nome": "Priscila Silva de Carvalho",
+        "tipo": "CPV_INSUMOS",
+        "patterns": ["PRISCILA SILVA DE CARVALHO"],
+        "notas": "Fornecedora de pão de beijo"
+      },
+      {
+        "nome": "Amazon",
+        "tipo": "CPV_INSUMOS",
+        "patterns": ["AMAZON", "Amazonmktplc"],
+        "notas": "Equipamentos e insumos para cafeteria"
+      },
+      {
+        "nome": "Mercado do Polaco",
+        "tipo": "CPV_INSUMOS",
+        "patterns": ["Mercado do Polaco", "MERCADO DO POLACO"]
+      },
+      {
+        "nome": "Sao Bento Distribuidor",
+        "tipo": "CPV_INSUMOS",
+        "patterns": ["Sao Bento Distribuido", "SAO BENTO"]
+      },
+      {
+        "nome": "Oliva Foods",
+        "tipo": "CPV_INSUMOS",
+        "patterns": ["Oliva Foods", "Olivafoods", "OLIVAFOODS"]
+      },
+      {
+        "nome": "Shopvita",
+        "tipo": "CPV_INSUMOS",
+        "patterns": ["Shopvita Foz do Iguacu", "SHOPVITA"]
+      },
+      {
+        "nome": "Coliseu",
+        "tipo": "CPV_INSUMOS",
+        "patterns": ["Coliseu", "COLISEU"]
+      },
+      {
+        "nome": "Casa Vitoria",
+        "tipo": "CPV_INSUMOS",
+        "patterns": ["Casa Vitoria", "CASA VITORIA"]
+      },
+      {
+        "nome": "Rota Colonial Panifica",
+        "tipo": "CPV_INSUMOS",
+        "patterns": ["Rota Colonial Panifica", "ROTA COLONIAL"]
+      },
+      {
+        "nome": "Confeitaria Jauense",
+        "tipo": "CPV_INSUMOS",
+        "patterns": ["Confeitaria Jauense", "JAUENSE"]
+      },
+      {
+        "nome": "Aline Dalsgaard de Niemeyer",
+        "tipo": "CPV_INSUMOS",
+        "patterns": ["ALINE DALSGAARD", "Aline Dalsgaard"],
+        "notas": "Fornecedora de livros"
+      },
+      {
+        "nome": "Casa D'Antonio",
+        "tipo": "CPV_INSUMOS",
+        "patterns": ["Casa D'Antonio", "Casa Dantonio", "CASA DANTONIO"],
+        "notas": "Fornecedor de chocolate para bolos e bebidas"
+      },
+      {
+        "nome": "Carlos Eduardo Ferreira Paes Artesa",
+        "tipo": "CPV_INSUMOS",
+        "patterns": ["CARLOS EDUARDO.*ARTESA", "Artesa", "CARLOS EDUARDO FERREIRA PAES"],
+        "notas": "Fornecedor de pães"
+      },
+      {
+        "nome": "Havan",
+        "tipo": "CPV_INSUMOS",
+        "patterns": ["HAVAN", "Havan"],
+        "notas": "Pratos e caixas para armazenar café"
+      }
+    ],
+    "bebidas": [
+      {
+        "nome": "DR BAO Industria de Bebidas",
+        "tipo": "CPV_BEBIDAS",
+        "patterns": ["DR BAO INDUSTRIA DE BEBIDAS", "DR BAO"]
+      }
+    ],
+    "sorvete": [
+      {
+        "nome": "Ignacio Francisco Emperador",
+        "tipo": "CPV_SORVETE",
+        "patterns": ["Ignacio Francisco Emperador", "IGNACIO"]
+      },
+      {
+        "nome": "Oficina do Sorvete",
+        "tipo": "CPV_SORVETE",
+        "patterns": ["OFICINA DO SORVETE", "Oficina do Sorvete"]
+      }
+    ],
+    "outros_cpv": [
+      {
+        "nome": "Pereira e Frigotto",
+        "tipo": "CPV_OUTROS",
+        "patterns": ["PEREIRA E FRIGOTTO", "Pereira e Frigotto"]
+      },
+      {
+        "nome": "Grupo Pereira",
+        "tipo": "CPV_OUTROS",
+        "patterns": ["GRUPO PEREIRA"]
+      },
+      {
+        "nome": "Frimesa",
+        "tipo": "CPV_OUTROS",
+        "patterns": ["FRIMESA"]
+      }
+    ],
+    "embalagens": [
+      {
+        "nome": "Kromapack",
+        "tipo": "VAR_EMBALAGENS",
+        "patterns": ["Kromapack", "KROMAPACK"]
+      },
+      {
+        "nome": "Embalafoz",
+        "tipo": "VAR_EMBALAGENS",
+        "patterns": ["Embalafoz A", "EMBALAFOZ", "Pack Foz Embalagens", "ESMAG FOZ", "Esmag Foz"],
+        "notas": "Embalagens e descartáveis (inclui Esmag Foz)"
+      },
+      {
+        "nome": "MP Embalagens",
+        "tipo": "VAR_EMBALAGENS",
+        "patterns": ["Shopee *Mpembalagensfl", "MPEMBALAGENS"]
+      },
+      {
+        "nome": "B.F.A.V. E-Commerce",
+        "tipo": "VAR_EMBALAGENS",
+        "patterns": ["B.F.A.V. E-COMMERCE", "BFAV"],
+        "notas": "Fornecedor de embalagens"
+      },
+      {
+        "nome": "Isabeli Quartero Galvez",
+        "tipo": "VAR_EMBALAGENS",
+        "patterns": ["ISABELI QUARTERO GALVEZ"],
+        "notas": "Designer de embalagens"
+      }
+    ],
+    "frete": [
+      {
+        "nome": "Jadlog",
+        "tipo": "VAR_FRETE",
+        "patterns": ["JADLOG LOGISTICA", "Jadlog", "JADLOG"]
+      },
+      {
+        "nome": "Foz do Iguaçu Passagens",
+        "tipo": "VAR_FRETE",
+        "patterns": ["FOZ DO IGUACU PASSAGEN", "Foz do Iguacu Passagen", "RODOVIARIA"],
+        "notas": "Frete via rodoviária"
+      }
+    ],
+    "marketing": [
+      {
+        "nome": "Facebook Ads",
+        "tipo": "FIX_MARKETING",
+        "patterns": ["Facebk *", "FACEBK", "Facebook Ads"]
+      },
+      {
+        "nome": "Google Ads",
+        "tipo": "FIX_MARKETING",
+        "patterns": ["Google Ads", "GOOGLE ADS"]
+      },
+      {
+        "nome": "360imprimir",
+        "tipo": "FIX_MARKETING",
+        "patterns": ["Mp *360imprimir", "360IMPRIMIR"]
+      },
+      {
+        "nome": "Giorgio Tararthuch Bastos",
+        "tipo": "FIX_MARKETING",
+        "patterns": ["GIORGIO TARARTHUCH"],
+        "notas": "Responsável pelo marketing"
+      },
+      {
+        "nome": "Grafimar",
+        "tipo": "FIX_MARKETING",
+        "patterns": ["GRAFIMAR"],
+        "notas": "Gráfica"
+      },
+      {
+        "nome": "Encoprint",
+        "tipo": "FIX_MARKETING",
+        "patterns": ["ENCOPRINT", "Ramondasilva", "RAMONDASILVA"],
+        "notas": "Gráfica (PIX via Ramondasilva)"
+      }
+    ],
+    "pessoal_clt": [
+      {
+        "nome": "Elaine Campos Alves",
+        "tipo": "FIX_PESSOAL_CLT",
+        "patterns": ["Elaine Campos Alves", "ELAINE CAMPOS"],
+        "valor_medio_mensal": 1740,
+        "funcao": "Funcionaria"
+      },
+      {
+        "nome": "Manuely Martins de Souza",
+        "tipo": "FIX_PESSOAL_CLT",
+        "patterns": ["Manuely Martins de Souza", "MANUELY MARTINS"],
+        "valor_medio_mensal": 1690,
+        "funcao": "Funcionaria"
+      },
+      {
+        "nome": "Jhonathan Raphael Maldonado",
+        "tipo": "FIX_PESSOAL_CLT",
+        "patterns": ["Jhonathan Raphael Maldonado", "JHONATHAN RAPHAEL"],
+        "valor_medio_mensal": 1343,
+        "funcao": "Funcionario"
+      }
+    ],
+    "pessoal_extra": [
+      {
+        "nome": "Ana Carolina Goncalves Ayala",
+        "tipo": "FIX_PESSOAL_EXTRA",
+        "patterns": ["Ana Carolina Goncalves Ayala", "ANA CAROLINA GONCALVES"]
+      },
+      {
+        "nome": "Ana Carolina Kobayashi",
+        "tipo": "FIX_PESSOAL_EXTRA",
+        "patterns": ["Ana Carolina Kobayashi", "ANA CAROLINA KOBAYASHI"]
+      },
+      {
+        "nome": "Cesar Augusto Muller Padilha",
+        "tipo": "FIX_PESSOAL_EXTRA",
+        "patterns": ["Cesar Augusto Muller Padilha", "CESAR AUGUSTO"]
+      },
+      {
+        "nome": "Saymon Emanuel Cornelio Fuentes",
+        "tipo": "FIX_PESSOAL_EXTRA",
+        "patterns": ["SAYMON EMANUEL", "Saymon Emanuel"]
+      },
+      {
+        "nome": "Rafael Florentin Cheng",
+        "tipo": "FIX_PESSOAL_EXTRA",
+        "patterns": ["RAFAEL FLORENTIN CHENG", "Rafael Florentin"]
+      }
+    ],
+    "encargos": [
+      {
+        "nome": "CEF FGTS",
+        "tipo": "FIX_FGTS",
+        "patterns": ["CEF MATRIZ", "CAIXA ECONOMICA FEDERAL"]
+      },
+      {
+        "nome": "Zoop VR",
+        "tipo": "FIX_VR",
+        "patterns": ["ZOOP BRASIL", "Zoop"]
+      },
+      {
+        "nome": "Performance Academia",
+        "tipo": "FIX_VR",
+        "patterns": ["Performance Academia", "PERFORMANCE ACADEMIA"],
+        "notas": "Benefício academia para funcionários"
+      },
+      {
+        "nome": "Genusclin",
+        "tipo": "FIX_MANUTENCAO",
+        "patterns": ["GENUSCLIN"],
+        "notas": "Medicina do trabalho"
+      }
+    ],
+    "manutencao": [
+      {
+        "nome": "Rosane Godinho da Rosa",
+        "tipo": "FIX_LIMPEZA",
+        "patterns": ["Rosane Godinho da Rosa", "ROSANE GODINHO"],
+        "notas": "Diarista limpeza"
+      },
+      {
+        "nome": "Jose Sergio Feitosa",
+        "tipo": "FIX_MANUTENCAO",
+        "patterns": ["Jose Sergio Feitosa", "JOSE SERGIO"],
+        "notas": "Manutencao (faz tudo)"
+      },
+      {
+        "nome": "Cleison da Rosa",
+        "tipo": "FIX_MANUTENCAO",
+        "patterns": ["Cleison da Rosa", "CLEISON"],
+        "notas": "Desentupidor"
+      },
+      {
+        "nome": "Erluk",
+        "tipo": "FIX_MANUTENCAO",
+        "patterns": ["ERLUK COMERCIO DE MOVEIS", "ERLUK"],
+        "notas": "Manutencao moveis"
+      },
+      {
+        "nome": "Anacristinatelles",
+        "tipo": "FIX_MANUTENCAO",
+        "patterns": ["Anacristinatelles", "ANACRISTINATELLES"],
+        "notas": "Loja de materiais de construção - ferramentas, lâmpadas, etc"
+      }
+    ],
+    "administrativo": [
+      {
+        "nome": "Railway",
+        "tipo": "FIX_SISTEMA",
+        "patterns": ["Railway", "RAILWAY"]
+      },
+      {
+        "nome": "ON Registro Civil",
+        "tipo": "FIX_ADMIN",
+        "patterns": ["ON DO REGISTRO CIVIL"]
+      },
+      {
+        "nome": "Republica Argentina (Encopel)",
+        "tipo": "FIX_ADMIN",
+        "patterns": ["Republica Argentina", "REPUBLICA ARGENTINA"],
+        "notas": "Papelaria - materiais de escritório"
+      },
+      {
+        "nome": "Prefeitura Foz do Iguaçu",
+        "tipo": "IMP_IPTU",
+        "patterns": ["PREF MUN FOZ DO IGUA", "PM FOZ DO IGUACU", "PMFI"],
+        "notas": "IPTU (valores menores ~R$130) ou Alvará (valores maiores ~R$500+)"
+      },
+      {
+        "nome": "Receita Federal - DARF/INSS",
+        "tipo": "IMP_INSS",
+        "patterns": ["RECEITA FED-DARF", "MINISTERIO DA FAZENDA", "DARF"],
+        "notas": "INSS vinculado à folha de pagamento"
+      },
+      {
+        "nome": "Spotify",
+        "tipo": "FIX_SISTEMA",
+        "patterns": ["Dm*Spotify", "Dm *Spotify", "SPOTIFY"],
+        "notas": "Serviço de música para cafeteria"
+      },
+      {
+        "nome": "GrandChef",
+        "tipo": "FIX_SISTEMA",
+        "patterns": ["GRANDCHEF", "GrandChef", "Grand Chef"],
+        "notas": "Sistema de frente de loja (PDV)"
+      }
+    ],
+    "ocupacao": [
+      {
+        "nome": "Aluguel",
+        "tipo": "FIX_ALUGUEL",
+        "patterns": ["ALUGUEL", "Aluguel"],
+        "valor_medio_mensal": 4422
+      },
+      {
+        "nome": "Copel Energia",
+        "tipo": "FIX_ENERGIA",
+        "patterns": ["COPEL", "Copel"],
+        "valor_medio_mensal": 1159
+      },
+      {
+        "nome": "Consórcio Exata01",
+        "tipo": "FIX_ENERGIA",
+        "patterns": ["CONSORCIO EXATA01", "EXATA01"],
+        "notas": "Energia por geração distribuída"
+      },
+      {
+        "nome": "Sanepar Agua",
+        "tipo": "FIX_AGUA",
+        "patterns": ["SANEPAR", "Sanepar", "AGUA"],
+        "valor_medio_mensal": 234
+      }
+    ],
+    "clientes_b2b": [
+      {
+        "nome": "CMS Caty Cafe",
+        "tipo": "REC_B2B",
+        "patterns": ["CMS CATY CAFE", "Caty Cafe"]
+      },
+      {
+        "nome": "Cha Exponencial",
+        "tipo": "REC_B2B",
+        "patterns": ["CHA EXPONENCIAL", "Cha Exponencial"]
+      },
+      {
+        "nome": "Cataratas Park Hotel",
+        "tipo": "REC_B2B",
+        "patterns": ["Cataratas Park Hotel", "CATARATAS PARK"]
+      },
+      {
+        "nome": "AFD Treinamentos",
+        "tipo": "REC_B2B",
+        "patterns": ["AFD TREINAMENTOS", "AFD"]
+      }
+    ],
+    "pessoal_socio": [
+      {
+        "nome": "Lendas Bar",
+        "tipo": "PESSOAL_SOCIO",
+        "patterns": ["LENDAS BAR", "Lendas Bar"],
+        "notas": "Consumo pessoal"
+      },
+    ]
+  },
+  "regras_receita": {
+    "REC_IFOOD": ["IFOOD", "Depósito recebido - IFOOD"],
+    "REC_GRANITO_CRED": ["GRANITO S.A. * Crédito", "GRANITO.*Crédito"],
+    "REC_GRANITO_DEB": ["GRANITO S.A. * Débito", "GRANITO.*Débito"],
+    "REC_PIX": ["Transferência recebida pelo Pix", "Transferência Recebida"],
+    "REC_CAIXINHA": ["Clientes - Revenda de Mercadoria"]
+  },
+  "regras_operacional": {
+    "OP_SANGRIA": ["Depósito Recebido por Boleto"],
+    "OP_PAGAMENTO_FATURA": ["Pagamento recebido"],
+    "OP_TRANSFERENCIA": ["Transferência enviada pelo Pix", "Transferência"]
+  },
+  "regras_caixinha": {
+    "REC_CAIXINHA": ["Clientes - Revenda de Mercadoria"],
+    "CPV_INSUMOS": ["Compras de Mercadorias para Revenda"],
+    "VAR_FRETE": ["Frete"],
+    "FIX_PESSOAL_EXTRA": ["extra", "extras", "exra"],
+    "OP_SANGRIA": ["Transferência", "Sangria"],
+    "AJUSTE": ["Diferença"]
+  }
+}

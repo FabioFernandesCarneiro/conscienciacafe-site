@@ -1,0 +1,56 @@
+{
+  "version": "1.0",
+  "ultima_atualizacao": "2026-01-28",
+  "reconciliacoes": [
+    {
+      "id": "rec_001",
+      "data": "2025-10-20",
+      "tipo": "sangria_caixinha",
+      "lancamento_conta": "cc_20251020_191",
+      "lancamento_caixinha": "cx_20251020_655",
+      "valor_conta": 300,
+      "valor_caixinha": -300,
+      "diferenca": 0,
+      "status": "ok"
+    },
+    {
+      "id": "rec_002",
+      "data": "2025-10-27",
+      "tipo": "sangria_caixinha",
+      "lancamento_conta": "cc_20251027_255",
+      "lancamento_caixinha": "cx_20251027_669",
+      "valor_conta": 1000,
+      "valor_caixinha": -1000,
+      "diferenca": 0,
+      "status": "ok"
+    },
+    {
+      "id": "rec_003",
+      "data": "2025-11-03",
+      "tipo": "sangria_caixinha",
+      "lancamento_conta": "cc_20251103_331",
+      "lancamento_caixinha": "cx_20251103_690",
+      "valor_conta": 2000,
+      "valor_caixinha": -2000,
+      "diferenca": 0,
+      "status": "ok"
+    },
+    {
+      "id": "rec_004",
+      "data": "2025-12-23",
+      "tipo": "sangria_caixinha",
+      "lancamento_conta": "cc_20251223_839",
+      "lancamento_caixinha": "cx_20251222_810",
+      "valor_conta": 1700,
+      "valor_caixinha": -1696,
+      "diferenca": 4,
+      "status": "diferenca"
+    }
+  ],
+  "resumo": {
+    "total_reconciliados": 4,
+    "total_pendentes": 47,
+    "soma_reconciliada": 5000,
+    "soma_pendente": 0
+  }
+}

@@ -1,0 +1,534 @@
+{
+  "version": "1.0",
+  "ultima_atualizacao": "2026-01-28",
+  "pendentes": [
+    {
+      "lancamento_id": "cc_20251007_059",
+      "descricao": "Transferência enviada pelo Pix - MARLEI ARAUJO AMERICO - •••.536.519-•• - COOP SICREDI VANGUARDA PR/SP/RJ Agência: 710 Conta: 83682-6",
+      "valor": -17,
+      "data": "2025-10-07",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251007_061",
+      "descricao": "Transferência enviada pelo Pix - ERINEIA SANTANA DE OLIVEIRA - •••.365.539-•• - BANCO INTER (0077) Agência: 1 Conta: 3779383-7",
+      "valor": -405,
+      "data": "2025-10-07",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251009_080",
+      "descricao": "Transferência enviada pelo Pix - RHAVIER CORDEIRO DA COSTA - •••.447.059-•• - ITAÚ UNIBANCO S.A. (0341) Agência: 629 Conta: 64426-1",
+      "valor": -70,
+      "data": "2025-10-09",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251010_088",
+      "descricao": "Transferência enviada pelo Pix - Gabriel Hoffmann Cavaglieri - •••.314.359-•• - NU PAGAMENTOS - IP (0260) Agência: 1 Conta: 473952163-3",
+      "valor": -12,
+      "data": "2025-10-10",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251012_102",
+      "descricao": "Transferência enviada pelo Pix - LUIZ CARLOS DE OLIVEIRA ROCHA JUNIOR - •••.755.429-•• - BCO SANTANDER (BRASIL) S.A. (0033) Agência: 2981 Conta: 2005739-4",
+      "valor": -12,
+      "data": "2025-10-12",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251012_103",
+      "descricao": "Transferência enviada pelo Pix - Thiago Moraes Silva - •••.990.323-•• - NU PAGAMENTOS - IP (0260) Agência: 1 Conta: 12166969-1",
+      "valor": -17,
+      "data": "2025-10-12",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251012_105",
+      "descricao": "Transferência enviada pelo Pix - RHAVIER CORDEIRO DA COSTA - •••.447.059-•• - ITAÚ UNIBANCO S.A. (0341) Agência: 629 Conta: 64426-1",
+      "valor": -70,
+      "data": "2025-10-12",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251015_129",
+      "descricao": "Pagamento de boleto efetuado - LIMAE BULLA LTDA ME",
+      "valor": -113.6,
+      "data": "2025-10-15",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251015_142",
+      "descricao": "Transferência enviada pelo Pix - Fernando Augusto Habitzreuter - •••.283.469-•• - NU PAGAMENTOS - IP (0260) Agência: 1 Conta: 285253917-1",
+      "valor": -8,
+      "data": "2025-10-15",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251017_164",
+      "descricao": "Transferência enviada pelo Pix - 50 264 932 cristiane ramao dos santos - 50.264.932/0001-10 - BCO C6 S.A. (0336) Agência: 1 Conta: 28029991-5",
+      "valor": -19,
+      "data": "2025-10-17",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251017_165",
+      "descricao": "Transferência enviada pelo Pix - BRUNA ALINE DOS SANTOS - •••.351.769-•• - PAGSEGURO INTERNET IP S.A. (0290) Agência: 1 Conta: 7150280-1",
+      "valor": -6,
+      "data": "2025-10-17",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251017_166",
+      "descricao": "Transferência enviada pelo Pix - William Pereira - •••.961.269-•• - NU PAGAMENTOS - IP (0260) Agência: 1 Conta: 40314098-8",
+      "valor": -14,
+      "data": "2025-10-17",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251022_208",
+      "descricao": "Transferência enviada pelo Pix - JEAN CARLOS ARAUJO DE LIMA - •••.314.219-•• - BANCO INTER (0077) Agência: 1 Conta: 44946744-9",
+      "valor": -36,
+      "data": "2025-10-22",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251024_234",
+      "descricao": "Transferência enviada pelo Pix - BRUNO ALMEIDA SILVA - •••.731.958-•• - BANCO INTER (0077) Agência: 1 Conta: 3065372-0",
+      "valor": -450,
+      "data": "2025-10-24",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251026_247",
+      "descricao": "Transferência enviada pelo Pix - Aline Dalsgaard de Niemeyer - •••.639.007-•• - BANCO INTER (0077) Agência: 1 Conta: 30450433-5",
+      "valor": -96,
+      "data": "2025-10-26",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251027_253",
+      "descricao": "Transferência enviada pelo Pix - BRENO MOIZES MATHEUS - •••.559.319-•• - BCO C6 S.A. (0336) Agência: 1 Conta: 23169133-5",
+      "valor": -10,
+      "data": "2025-10-27",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251027_257",
+      "descricao": "Transferência enviada pelo Pix - CARLINHO MOREIRA DO PRADO JUNIOR 06283337902 - 46.696.913/0001-95 - BANCO BTG PACTUAL S.A. (0208) Agência: 50 Conta: 914330-9",
+      "valor": -41,
+      "data": "2025-10-27",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251031_299",
+      "descricao": "Pagamento de boleto efetuado - 51 715 497 GIORGIO TARARTHUCH BASTOS",
+      "valor": -1297,
+      "data": "2025-10-31",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251031_308",
+      "descricao": "Transferência enviada pelo Pix - JEAN CARLOS ARAUJO DE LIMA - •••.314.219-•• - BANCO INTER (0077) Agência: 1 Conta: 44946744-9",
+      "valor": -18,
+      "data": "2025-10-31",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251105_352",
+      "descricao": "Pagamento de boleto efetuado - LIMAE BULLA LTDA ME",
+      "valor": -139.6,
+      "data": "2025-11-05",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251108_383",
+      "descricao": "Transferência enviada pelo Pix - RAFAEL FLORENTIN CHENG - •••.896.139-•• - BANCO INTER (0077) Agência: 1 Conta: 33936880-2",
+      "valor": -70,
+      "data": "2025-11-08",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251108_388",
+      "descricao": "Transferência enviada pelo Pix - Saymon Emanuel Cornélio Fuentes - •••.349.039-•• - NU PAGAMENTOS - IP (0260) Agência: 1 Conta: 94130605-6",
+      "valor": -115,
+      "data": "2025-11-08",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251117_466",
+      "descricao": "Transferência enviada pelo Pix - SHIN MIN HOU JUNIOR - •••.113.279-•• - BANCO INTER (0077) Agência: 1 Conta: 35284906-1",
+      "valor": -2,
+      "data": "2025-11-17",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251117_467",
+      "descricao": "Transferência enviada pelo Pix - JOAO VICTOR SANTOS DA SILVA - •••.801.045-•• - BCO DO BRASIL S.A. (0001) Agência: 3460 Conta: 78718-3",
+      "valor": -18,
+      "data": "2025-11-17",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251122_517",
+      "descricao": "Transferência enviada pelo Pix - Saymon Emanuel Cornélio Fuentes - •••.349.039-•• - NU PAGAMENTOS - IP (0260) Agência: 1 Conta: 94130605-6",
+      "valor": -15,
+      "data": "2025-11-22",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251125_534",
+      "descricao": "Pagamento de boleto efetuado - LIMAE BULLA LTDA ME",
+      "valor": -178.6,
+      "data": "2025-11-25",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251125_546",
+      "descricao": "Transferência enviada pelo Pix - ANA CAROLINE GULART DO PRADO - •••.019.999-•• - BANCO INTER (0077) Agência: 1 Conta: 5207101-4",
+      "valor": -30.4,
+      "data": "2025-11-25",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251127_563",
+      "descricao": "Transferência enviada pelo Pix - ANA CAROLINE GULART DO PRADO - •••.019.999-•• - BANCO INTER (0077) Agência: 1 Conta: 5207101-4",
+      "valor": -10.8,
+      "data": "2025-11-27",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251127_564",
+      "descricao": "Transferência enviada pelo Pix - 32733055 LAURA POSSOBAM - 32.733.055/0001-05 - SISPRIME DO BRASIL - COOP (0084) Agência: 38 Conta: 110689-9",
+      "valor": -113,
+      "data": "2025-11-27",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251201_601",
+      "descricao": "Transferência enviada pelo Pix - JEAN CARLOS ARAUJO DE LIMA - •••.314.219-•• - BANCO INTER (0077) Agência: 1 Conta: 44946744-9",
+      "valor": -54,
+      "data": "2025-12-01",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251205_655",
+      "descricao": "Transferência enviada pelo Pix - B.F.A.V. E-COMMERCE COMERCIO LTDA - 62.363.217/0001-13 - BCO DO BRASIL S.A. (0001) Agência: 2494 Conta: 22863-0",
+      "valor": -1056,
+      "data": "2025-12-05",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251205_656",
+      "descricao": "Transferência enviada pelo Pix - ISABELI QUARTERO GALVEZ - •••.890.798-•• - ITAÚ UNIBANCO S.A. (0341) Agência: 3094 Conta: 27032-3",
+      "valor": -1250,
+      "data": "2025-12-05",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251210_694",
+      "descricao": "Pagamento de boleto efetuado - LIMAE BULLA LTDA ME",
+      "valor": -379.4,
+      "data": "2025-12-10",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251213_729",
+      "descricao": "Transferência enviada pelo Pix - Maria Yohhana Pereira Lara - •••.990.879-•• - NU PAGAMENTOS - IP (0260) Agência: 1 Conta: 95482963-0",
+      "valor": -5,
+      "data": "2025-12-13",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251216_764",
+      "descricao": "Transferência enviada pelo Pix - Priscila Silva de Carvalho - •••.076.992-•• - PICPAY (0380) Agência: 1 Conta: 19954732-7",
+      "valor": -70,
+      "data": "2025-12-16",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251216_767",
+      "descricao": "Transferência enviada pelo Pix - Rafael Florentin Cheng - •••.896.139-•• - BANCO INTER (0077) Agência: 1 Conta: 33936880-2",
+      "valor": -88,
+      "data": "2025-12-16",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cc_20251223_849",
+      "descricao": "Transferência enviada pelo Pix - ADILSON MORETTI RODRIGUES - •••.474.719-•• - COOP SICREDI VANGUARDA PR/SP/RJ Agência: 710 Conta: 1749410-4",
+      "valor": -150,
+      "data": "2025-12-23",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20251014_003",
+      "descricao": "Amazon",
+      "valor": -71.81,
+      "data": "2025-10-14",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20251012_005",
+      "descricao": "Amazon",
+      "valor": -59.59,
+      "data": "2025-10-12",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20251008_011",
+      "descricao": "Amazonmktplc*Lhsindust - Parcela 1/2",
+      "valor": -49.5,
+      "data": "2025-10-08",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20251006_013",
+      "descricao": "Amazonmktplc*Vfcomerci - Parcela 1/2",
+      "valor": -39.5,
+      "data": "2025-10-06",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20251001_020",
+      "descricao": "Amazon",
+      "valor": -50.63,
+      "data": "2025-10-01",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20251001_022",
+      "descricao": "Amazon",
+      "valor": -71.82,
+      "data": "2025-10-01",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20250928_027",
+      "descricao": "Amazon - Parcela 1/8",
+      "valor": -54.55,
+      "data": "2025-09-28",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20250916_041",
+      "descricao": "Pagamento recebido",
+      "valor": -9220.39,
+      "data": "2025-09-16",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20250915_046",
+      "descricao": "Amazonmktplc*Duarfreco - Parcela 4/6",
+      "valor": -44.32,
+      "data": "2025-09-15",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20250915_047",
+      "descricao": "Amazonmktplc*Vfcomrcio - Parcela 2/2",
+      "valor": -39.49,
+      "data": "2025-09-15",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20250915_051",
+      "descricao": "Amazon Marketplace - Parcela 3/6",
+      "valor": -56.49,
+      "data": "2025-09-15",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20250915_053",
+      "descricao": "Mercado*Importsclios - Parcela 2/6",
+      "valor": -10.26,
+      "data": "2025-09-15",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20250915_054",
+      "descricao": "Amazon - Parcela 2/3",
+      "valor": -33,
+      "data": "2025-09-15",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20250915_056",
+      "descricao": "Amazon Retail Br Cpi - Parcela 9/12",
+      "valor": -92.59,
+      "data": "2025-09-15",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20250915_057",
+      "descricao": "Amazonmktplc*Vfcomrcio - Parcela 2/6",
+      "valor": -38.48,
+      "data": "2025-09-15",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20250915_058",
+      "descricao": "Amazonmktplc*Muellerfo - Parcela 6/10",
+      "valor": -103.9,
+      "data": "2025-09-15",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20250915_059",
+      "descricao": "Amazon - Parcela 5/6",
+      "valor": -38.45,
+      "data": "2025-09-15",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20250915_060",
+      "descricao": "Amazonmktplc*Wbcomerci - Parcela 3/5",
+      "valor": -31.11,
+      "data": "2025-09-15",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20250915_063",
+      "descricao": "Pg *Nuvem Mugsandmore - Parcela 4/5",
+      "valor": -94.94,
+      "data": "2025-09-15",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20250915_065",
+      "descricao": "Amazonmktplc*Lhsindust - Parcela 3/3",
+      "valor": -34.66,
+      "data": "2025-09-15",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20250915_066",
+      "descricao": "Amazonmktplc*Amaralcom - Parcela 2/8",
+      "valor": -55.87,
+      "data": "2025-09-15",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20250915_069",
+      "descricao": "Amazon - Parcela 9/10",
+      "valor": -190.7,
+      "data": "2025-09-15",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20250915_071",
+      "descricao": "Amazon - Parcela 3/10",
+      "valor": -142.91,
+      "data": "2025-09-15",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20251113_077",
+      "descricao": "Amazonmktplc*Vfcomerci",
+      "valor": -157.98,
+      "data": "2025-11-13",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20251030_100",
+      "descricao": "Amazon",
+      "valor": -55.99,
+      "data": "2025-10-30",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20251025_109",
+      "descricao": "Amazon - Parcela 1/10",
+      "valor": -53.19,
+      "data": "2025-10-25",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20251210_126",
+      "descricao": "Amazonmktplc*Silveiras",
+      "valor": -85,
+      "data": "2025-12-10",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20251210_127",
+      "descricao": "Amazonmktplc*Ebeybesto",
+      "valor": -59.99,
+      "data": "2025-12-10",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20251204_134",
+      "descricao": "Amazon",
+      "valor": -49.9,
+      "data": "2025-12-04",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20251201_140",
+      "descricao": "Amazon",
+      "valor": -44.1,
+      "data": "2025-12-01",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20251130_141",
+      "descricao": "Amazon",
+      "valor": -64.62,
+      "data": "2025-11-30",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20251127_151",
+      "descricao": "Amazonmktplc*Flaviohen",
+      "valor": -459.98,
+      "data": "2025-11-27",
+      "sugestoes": []
+    },
+    {
+      "lancamento_id": "cart_20251125_154",
+      "descricao": "Amazon - Parcela 1/6",
+      "valor": -46.82,
+      "data": "2025-11-25",
+      "sugestoes": []
+    }
+  ],
+  "categorias_disponiveis": [
+    "REC_GRANITO_CRED",
+    "REC_GRANITO_DEB",
+    "REC_PIX",
+    "REC_IFOOD",
+    "REC_B2B",
+    "REC_CAIXINHA",
+    "CPV_CAFE",
+    "CPV_INSUMOS",
+    "CPV_BEBIDAS",
+    "CPV_SORVETE",
+    "CPV_OUTROS",
+    "VAR_FRETE",
+    "VAR_EMBALAGENS",
+    "VAR_TAXAS",
+    "FIX_ALUGUEL",
+    "FIX_ENERGIA",
+    "FIX_AGUA",
+    "FIX_PESSOAL_CLT",
+    "FIX_PESSOAL_EXTRA",
+    "FIX_FGTS",
+    "FIX_VR",
+    "FIX_CONTADOR",
+    "FIX_SISTEMA",
+    "FIX_MARKETING",
+    "FIX_MANUTENCAO",
+    "FIX_LIMPEZA",
+    "INV_EQUIPAMENTO",
+    "IMP_DAS",
+    "IMP_DARF",
+    "IMP_PREFEITURA",
+    "IMP_IOF",
+    "OP_SANGRIA",
+    "OP_PAGAMENTO_FATURA",
+    "OP_TRANSFERENCIA",
+    "PESSOAL_SOCIO",
+    "A_CATEGORIZAR"
+  ]
+}

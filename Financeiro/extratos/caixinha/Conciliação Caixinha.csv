@@ -1,0 +1,843 @@
+Data,Descrição,Valor,Tipo
+,,,
+25/01/2025,Clientes - Revenda de Mercadoria,15,CRÉDITO
+25/01/2025,Compras de Mercadorias para Revenda,-10,DÉBITO
+26/01/2025,Clientes - Revenda de Mercadoria,"199,9",CRÉDITO
+27/01/2025,Clientes - Revenda de Mercadoria,"129,4",CRÉDITO
+28/01/2025,Clientes - Revenda de Mercadoria,"132,1",CRÉDITO
+29/01/2025,Clientes - Revenda de Mercadoria,"43,9",CRÉDITO
+30/01/2025,Clientes - Revenda de Mercadoria,61,CRÉDITO
+30/01/2025,Transferência,-900,DÉBITO
+01/02/2025,Clientes - Revenda de Mercadoria,20,CRÉDITO
+02/02/2025,Clientes - Revenda de Mercadoria,1517,CRÉDITO
+02/02/2025,Diferença,"1,1",CRÉDITO
+02/02/2025,Frete,-22,DÉBITO
+02/02/2025,Transferência,-1400,DÉBITO
+03/02/2025,Clientes - Revenda de Mercadoria,50,CRÉDITO
+03/02/2025,extra,-80,DÉBITO
+04/02/2025,Clientes - Revenda de Mercadoria,58,CRÉDITO
+04/02/2025,Frete,"-30,5",DÉBITO
+04/02/2025,Compras de Mercadorias para Revenda,-85,DÉBITO
+05/02/2025,Clientes - Revenda de Mercadoria,60,CRÉDITO
+05/02/2025,extra,-100,DÉBITO
+06/02/2025,Compras de Mercadorias para Revenda,-21,DÉBITO
+06/02/2025,extras ,-120,DÉBITO
+07/02/2025,Clientes - Revenda de Mercadoria,171,CRÉDITO
+07/02/2025,extras ,-120,DÉBITO
+09/02/2025,Frete,-10,DÉBITO
+10/02/2025,Clientes - Revenda de Mercadoria,40,CRÉDITO
+11/02/2025,Clientes - Revenda de Mercadoria,71,CRÉDITO
+11/02/2025,Frete,-32,DÉBITO
+11/02/2025,extra,-100,DÉBITO
+11/02/2025,Diferença,16,CRÉDITO
+12/02/2025,Clientes - Revenda de Mercadoria,178,CRÉDITO
+13/02/2025,Diferença,-17,DÉBITO
+14/02/2025,Clientes - Revenda de Mercadoria,190,CRÉDITO
+14/02/2025,Frete,-10,DÉBITO
+15/02/2025,Clientes - Revenda de Mercadoria,287,CRÉDITO
+15/02/2025,extras,-840,DÉBITO
+15/02/2025,Diferença,1,CRÉDITO
+16/02/2025,Clientes - Revenda de Mercadoria,79,CRÉDITO
+16/02/2025,Frete,-10,DÉBITO
+17/02/2025,Clientes - Revenda de Mercadoria,86,CRÉDITO
+18/02/2025,extra,-60,DÉBITO
+19/02/2025,Clientes - Revenda de Mercadoria,29,CRÉDITO
+19/02/2025,Frete,-27,DÉBITO
+20/02/2025,Clientes - Revenda de Mercadoria,"86,25",CRÉDITO
+21/02/2025,Diferença,-17,DÉBITO
+22/02/2025,Clientes - Revenda de Mercadoria,45,CRÉDITO
+23/02/2025,Clientes - Revenda de Mercadoria,75,CRÉDITO
+23/02/2025,extra ,-120,DÉBITO
+24/02/2025,Clientes - Revenda de Mercadoria,"112,4",CRÉDITO
+24/02/2025,Compras de Mercadorias para Revenda,-60,DÉBITO
+24/02/2025,extra ,-60,DÉBITO
+24/02/2025,Diferença,"-7,55",DÉBITO
+25/02/2025,Clientes - Revenda de Mercadoria,12,CRÉDITO
+25/05/2025,Diferença,"-2,45",DÉBITO
+26/02/2025,Clientes - Revenda de Mercadoria,21,CRÉDITO
+26/02/2025,extra ,-60,DÉBITO
+27/02/2025,Clientes - Revenda de Mercadoria,78,CRÉDITO
+27/02/2025,Frete,-35,DÉBITO
+28/02/2025,Clientes - Revenda de Mercadoria,103,CRÉDITO
+28/02/2025,Frete,-12,DÉBITO
+01/03/2025,Clientes - Revenda de Mercadoria,"54,15",CRÉDITO
+02/03/2025,Clientes - Revenda de Mercadoria,749,CRÉDITO
+02/03/2025,Transferência,-800,DÉBITO
+02/03/2025,extra,-60,DÉBITO
+02/03/2025,Diferença,"-36,05",DÉBITO
+04/03/2025,Clientes - Revenda de Mercadoria,1800,CRÉDITO
+04/03/2025,Transferência,-1323,DÉBITO
+04/03/2025,Frete,-12,DÉBITO
+04/03/2025,extra ,-60,DÉBITO
+04/03/2025,Diferença,"1,5",CRÉDITO
+05/03/2025,Clientes - Revenda de Mercadoria,73,CRÉDITO
+05/03/2025,extra,-140,DÉBITO
+05/03/2025,Compras de Mercadorias para Revenda,-70,DÉBITO
+05/03/2025,Diferença,-18,DÉBITO
+06/03/2025,Clientes - Revenda de Mercadoria,"235,1",CRÉDITO
+06/03/2025,Compras de Mercadorias para Revenda,-69,DÉBITO
+07/03/2025,Clientes - Revenda de Mercadoria,308,CRÉDITO
+07/03/2025,Frete,-9,DÉBITO
+08/03/2025,Clientes - Revenda de Mercadoria,208,CRÉDITO
+08/03/2025,extra,-780,DÉBITO
+08/03/2025,Diferença,-84,DÉBITO
+09/03/2025,Clientes - Revenda de Mercadoria,101,CRÉDITO
+09/03/2025,Frete,-12,DÉBITO
+10/03/2025,Clientes - Revenda de Mercadoria,12,CRÉDITO
+10/03/2025,Frete,-47,DÉBITO
+10/03/2025,extra ,-160,DÉBITO
+11/03/2025,Clientes - Revenda de Mercadoria,70,CRÉDITO
+11/03/2025,Frete,-19,DÉBITO
+11/03/2025,extra ,-180,DÉBITO
+12/03/2025,Clientes - Revenda de Mercadoria,45,CRÉDITO
+12/03/2025,Frete,-14,DÉBITO
+13/03/2025,Clientes - Revenda de Mercadoria,69,CRÉDITO
+13/03/2025,Frete,-17,DÉBITO
+14/03/2025,Clientes - Revenda de Mercadoria,276,CRÉDITO
+14/03/2025,Frete,-20,DÉBITO
+15/03/2025,Clientes - Revenda de Mercadoria,163,CRÉDITO
+15/03/2025,extra,-430,DÉBITO
+16/03/2025,Clientes - Revenda de Mercadoria,352,CRÉDITO
+17/03/2025,Clientes - Revenda de Mercadoria,90,CRÉDITO
+´      17/03/2025,Diferença,1,CRÉDITO
+18/03/2025,Clientes - Revenda de Mercadoria,97,CRÉDITO
+18/03/2025,extra,-100,DÉBITO
+18/03/2025,Diferença,-30,DÉBITO
+19/03/2025,Clientes - Revenda de Mercadoria,123,CRÉDITO
+19/03/2025,Frete,-15,DÉBITO
+19/03/2025,extra ,-260,DÉBITO
+20/03/2025,Clientes - Revenda de Mercadoria,"19,2",CRÉDITO
+21/03/2025,Clientes - Revenda de Mercadoria,42,CRÉDITO
+21/03/2025,extra,-347,DÉBITO
+21/03/2025,Frete,-10,DÉBITO
+22/03/2025,Clientes - Revenda de Mercadoria,201,CRÉDITO
+22/03/2025,Frete,-9,DÉBITO
+23/03/2025,Clientes - Revenda de Mercadoria,120,CRÉDITO
+23/03/2025,Compras de Mercadorias para Revenda,-70,DÉBITO
+24/03/2025,Clientes - Revenda de Mercadoria,330,CRÉDITO
+24/03/2025,extra,-160,DÉBITO
+24/03/2025,Frete,-17,DÉBITO
+25/03/2025,Clientes - Revenda de Mercadoria,"34,78",CRÉDITO
+25/03/2025,extra,-180,DÉBITO
+25/03/2025,Diferença,"2,22",CRÉDITO
+26/03/2025,Clientes - Revenda de Mercadoria,"17,4",CRÉDITO
+26/03/2025,Compras de Mercadorias para Revenda,-100,DÉBITO
+26/03/2025,extra,-220,DÉBITO
+26/03/2025,Frete,-9,DÉBITO
+27/03/2025,Clientes - Revenda de Mercadoria,"1121,25",CRÉDITO
+27/03/2025,Transferência,-700,DÉBITO
+27/03/2025,Frete,-25,DÉBITO
+27/03/2025,extra,-90,DÉBITO
+27/03/2025,Diferença,"-10,25",DÉBITO
+29/03/2025,Clientes - Revenda de Mercadoria,"66,96",CRÉDITO
+29/04/2025,Diferença,"-24,96",DÉBITO
+30/03/2025,Clientes - Revenda de Mercadoria,115,CRÉDITO
+30/03/2025,Diferença,5,CRÉDITO
+31/03/2025,Clientes - Revenda de Mercadoria,"5,4",CRÉDITO
+31/03/2025,Frete,-17,DÉBITO
+31/03/2025,Diferença,"-0,9",DÉBITO
+01/04/2025,Clientes - Revenda de Mercadoria,27,CRÉDITO
+01/04/2025,extra,-100,DÉBITO
+01/04/2025,Diferença,-100,DÉBITO
+02/04/2025,Clientes - Revenda de Mercadoria,576,CRÉDITO
+02/04/2025,Frete,-10,DÉBITO
+02/04/2025,Diferença,10,CRÉDITO
+03/04/2025,Clientes - Revenda de Mercadoria,36,CRÉDITO
+03/04/2025,Compras de Mercadorias para Revenda,-85,DÉBITO
+03/04/2025,Diferença,"-49,5",DÉBITO
+04/04/2025,Clientes - Revenda de Mercadoria,108,CRÉDITO
+05/04/2025,Clientes - Revenda de Mercadoria,28,CRÉDITO
+05/04/2025,Diferença,"1,5",CRÉDITO
+06/05/2025,Clientes - Revenda de Mercadoria,134,CRÉDITO
+06/04/2025,Frete,-23,DÉBITO
+06/04/2025,Diferença,"12,5",CRÉDITO
+07/04/2025,Clientes - Revenda de Mercadoria,18,CRÉDITO
+07/04/2025,sangria,-600,DÉBITO
+07/04/2025,Frete,-15,DÉBITO
+07/04/2025,Diferença,2,CRÉDITO
+08/04/2025,Clientes - Revenda de Mercadoria,170,CRÉDITO
+08/04/2025,extra,-100,DÉBITO
+08/04/2025,Compras de Mercadorias para Revenda,-180,DÉBITO
+08/04/2025,Diferença,60,CRÉDITO
+09/04/2025,Clientes - Revenda de Mercadoria,27,CRÉDITO
+09/04/2025,Frete,-29,DÉBITO
+09/04/2025,extra,-120,DÉBITO
+10/04/2025,Clientes - Revenda de Mercadoria,341,CRÉDITO
+10/04/2025,extra,-60,DÉBITO
+11/04/2025,Clientes - Revenda de Mercadoria,72,CRÉDITO
+11/04/2025,Frete,-12,DÉBITO
+12/04/2025,Clientes - Revenda de Mercadoria,92,CRÉDITO
+12/04/2025,Diferença ,-12,DÉBITO
+13/04/2025,Clientes - Revenda de Mercadoria,135,CRÉDITO
+13/04/2025,extra,-180,DÉBITO
+13/04/2025,Diferença,1,CRÉDITO
+14/04/2025,Diferença,-20,DÉBITO
+15/04/2025,Clientes - Revenda de Mercadoria,59,CRÉDITO
+15/04/2025,Diferença,-89,DÉBITO
+16/04/2025,Clientes - Revenda de Mercadoria,"45,3",CRÉDITO
+17/04/2025,Clientes - Revenda de Mercadoria,50,CRÉDITO
+17/04/2025,extra,-80,DÉBITO
+18/04/2025,Clientes - Revenda de Mercadoria,66,CRÉDITO
+19/04/2025,Clientes - Revenda de Mercadoria,107,CRÉDITO
+19/04/2025,Diferença,6,CRÉDITO
+20/04/2025,Clientes - Revenda de Mercadoria,45,CRÉDITO
+20/04/2025,Compras de Mercadorias para Revenda,"-6,74",DÉBITO
+20/04/2025,extra ,-140,DÉBITO
+20/04/2025,Diferença,"9,99",CRÉDITO
+21/04/2025,Clientes - Revenda de Mercadoria,2177,CRÉDITO
+21/04/2025,Transferência,-2300,DÉBITO
+21/04/2025,Frete,-42,DÉBITO
+21/04/2025,Diferença,15,CRÉDITO
+22/04/2025,Clientes - Revenda de Mercadoria,110,CRÉDITO
+22/04/2025,Frete,-21,DÉBITO
+22/04/2025,Diferença,-7,DÉBITO
+23/04/2025,Clientes - Revenda de Mercadoria,18,CRÉDITO
+23/04/2025,Compras de Mercadorias para Revenda,-30,DÉBITO
+23/04/2025,extra,-50,DÉBITO
+24/04/2025,Clientes - Revenda de Mercadoria,99,CRÉDITO
+24/04/2025,Frete,-12,DÉBITO
+24/04/2025,Diferença,1,CRÉDITO
+25/04/2025,Clientes - Revenda de Mercadoria,70,CRÉDITO
+25/04/2025,extra,-442,DÉBITO
+26/04/2025,Clientes - Revenda de Mercadoria,182,CRÉDITO
+26/04/2025,extra,-70,DÉBITO
+26/04/2025,Diferença,14,CRÉDITO
+27/04/2025,extra,-160,DÉBITO
+27/04/2025,Diferença,-3,DÉBITO
+28/04/2025,Clientes - Revenda de Mercadoria,"62,9",CRÉDITO
+28/04/2025,Diferença,"-17,9",DÉBITO
+29/04/2025,Clientes - Revenda de Mercadoria,116,CRÉDITO
+29/04/2025,extra,-250,DÉBITO
+30/04/2025,Clientes - Revenda de Mercadoria,59,CRÉDITO
+01/05/2025,Clientes - Revenda de Mercadoria,62,CRÉDITO
+02/05/2025,Frete,-12,DÉBITO
+02/05/2025,Diferença,-58,DÉBITO
+03/05/2025,Clientes - Revenda de Mercadoria,245,CRÉDITO
+03/05/2025,Diferença,"-21,8",DÉBITO
+04/05/2025,Clientes - Revenda de Mercadoria,438,CRÉDITO
+04/05/2025,Diferença,"14,05",CRÉDITO
+05/05/2025,Clientes - Revenda de Mercadoria,"93,6",CRÉDITO
+05/05/2025,sangria ,-600,DÉBITO
+05/05/2025,extra,-210,DÉBITO
+05/05/2025,Diferença,"57,2",CRÉDITO
+06/05/2025,Clientes - Revenda de Mercadoria,179,CRÉDITO
+07/05/2025,extra,-100,DÉBITO
+07/05/2025,Frete,-12,DÉBITO
+08/05/2025,Clientes - Revenda de Mercadoria,49,CRÉDITO
+08/05/2025,Compras de Mercadorias para Revenda,-30,DÉBITO
+10/05/2025,Clientes - Revenda de Mercadoria,30,CRÉDITO
+10/05/2025,extra,-60,DÉBITO
+11/05/2025,Clientes - Revenda de Mercadoria,1578,CRÉDITO
+11/05/2025,Transferência,-1485,DÉBITO
+11/05/2025,Frete,-10,DÉBITO
+12/05/2025,Clientes - Revenda de Mercadoria,172,CRÉDITO
+12/05/2025,Diferença ,-9,DÉBITO
+13/05/2025,Clientes - Revenda de Mercadoria,36,CRÉDITO
+13/05/2025,extra,-100,DÉBITO
+14/05/2025,Clientes - Revenda de Mercadoria,95,CRÉDITO
+14/05/2025,extra,-70,DÉBITO
+15/05/2025,Clientes - Revenda de Mercadoria,198,CRÉDITO
+15/05/2025,extra ,-100,DÉBITO
+15/05/2025,Compras de Mercadorias para Revenda,-23,DÉBITO
+16/05/2025,Clientes - Revenda de Mercadoria,57,CRÉDITO
+16/05/2025,Frete,-12,DÉBITO
+16/05/2025,extra ,-50,DÉBITO
+16/05/2025,Compras de Mercadorias para Revenda,-30,DÉBITO
+17/05/2025,Clientes - Revenda de Mercadoria,57,CRÉDITO
+17/05/2025,Diferença ,"50,5",CRÉDITO
+18/05/2025,Clientes - Revenda de Mercadoria,175,CRÉDITO
+18/05/2025,extras,-160,DÉBITO
+18/05/2025,Frete,-10,DÉBITO
+19/05/2025,Clientes - Revenda de Mercadoria,88,CRÉDITO
+19/05/2025,Compras de Mercadorias para Revenda,-400,DÉBITO
+20/05/2025,Clientes - Revenda de Mercadoria,359,CRÉDITO
+20/05/2025,extras,-300,DÉBITO
+20/05/2025,Frete,-26,DÉBITO
+20/05/2025,Diferença ,"-9,1",DÉBITO
+21/05/2025,Frete,-10,DÉBITO
+21/05/2025,extras,-130,DÉBITO
+22/05/2025,Clientes - Revenda de Mercadoria,47,CRÉDITO
+22/05/2025,extras,-150,DÉBITO
+23/05/2025,Clientes - Revenda de Mercadoria,88,CRÉDITO
+23/05/2025,Diferença,-23,DÉBITO
+24/05/2025,Clientes - Revenda de Mercadoria,134,CRÉDITO
+24/05/2025,Compras de Mercadorias para Revenda,"-14,15",DÉBITO
+24/05/2025,extras ,-140,DÉBITO
+24/05/2025,Diferença ,"1,05",CRÉDITO
+25/05/2025,Clientes - Revenda de Mercadoria,1237,CRÉDITO
+25/05/2025,extra,-100,DÉBITO
+25/05/2025,Transferência,-1100,DÉBITO
+26/05/2025,Clientes - Revenda de Mercadoria,672,CRÉDITO
+26/05/2025,extra,-80,DÉBITO
+26/05/2025,frete,-24,DÉBITO
+26/05/2025,Diferença ,2,CRÉDITO
+27/05/2025,Clientes - Revenda de Mercadoria,69,CRÉDITO
+27/05/2025,Transferência,-600,DÉBITO
+28/05/2025,Clientes - Revenda de Mercadoria,100,CRÉDITO
+29/05/2025,Clientes - Revenda de Mercadoria,83,CRÉDITO
+29/05/2025,frete,-12,DÉBITO
+29/05/2025,extra,-100,DÉBITO
+29/05/2025,Diferença ,2,CRÉDITO
+30/05/2025,Clientes - Revenda de Mercadoria,67,CRÉDITO
+30/05/2025,frete,-12,DÉBITO
+31/05/2025,Clientes - Revenda de Mercadoria,710,CRÉDITO
+31/05/2025,frete,-18,DÉBITO
+31/05/2025,extra,-230,DÉBITO
+31/05/2025,Transferência,-660,DÉBITO
+01/06/2025,frete,-7,DÉBITO
+03/06/2025,Clientes - Revenda de Mercadoria,31,CRÉDITO
+04/06/2025,Clientes - Revenda de Mercadoria,109,CRÉDITO
+04/06/2025,extra,-60,DÉBITO
+04/06/2025,frete,-17,DÉBITO
+05/06/2025,extra,-60,DÉBITO
+05/06/2025,frete,-10,DÉBITO
+05/06/2025,Diferença ,-10,CRÉDITO
+06/06/2025,Clientes - Revenda de Mercadoria,153,CRÉDITO
+07/06/2025,Clientes - Revenda de Mercadoria,145,CRÉDITO
+07/06/2025,Diferença,-6,DÉBITO
+08/06/2025,Clientes - Revenda de Mercadoria,1813,CRÉDITO
+08/06/2025,Transferência,-1650,DÉBITO
+08/06/2025,Diferença ,-20,DÉBITO
+09/06/2025,Clientes - Revenda de Mercadoria,11,CRÉDITO
+10/06/2025,Clientes - Revenda de Mercadoria,47,CRÉDITO
+10/06/2025,extra,-180,DÉBITO
+11/06/2025,Clientes - Revenda de Mercadoria,88,CRÉDITO
+11/06/2025,frete,-18,DÉBITO
+12/06/2025,Clientes - Revenda de Mercadoria,"477,85",CRÉDITO
+12/06/2025,extra,-120,DÉBITO
+13/06/2025,Clientes - Revenda de Mercadoria,11,CRÉDITO
+14/06/2025,Clientes - Revenda de Mercadoria,264,CRÉDITO
+14/06/2025,extra,-60,DÉBITO
+14/06/2025,frete,-17,DÉBITO
+15/06/2025,Clientes - Revenda de Mercadoria,42,CRÉDITO
+16/06/2025,Clientes - Revenda de Mercadoria,130,CRÉDITO
+16/06/2025,extra,-100,DÉBITO
+16/06/2025,frete,-12,DÉBITO
+16/06/2025,Transferência,-600,DÉBITO
+17/06/2025,Clientes - Revenda de Mercadoria,110,CRÉDITO
+17/06/2025,frete,-22,DÉBITO
+17/06/2025,extra ,-160,DÉBITO
+17/06/2025,Diferença ,12,CRÉDITO
+18/06/2025,Clientes - Revenda de Mercadoria,69,CRÉDITO
+18/06/2025,Compras de Mercadorias para Revenda,-30,DÉBITO
+19/06/2025,Clientes - Revenda de Mercadoria,42,CRÉDITO
+20/06/2025,Clientes - Revenda de Mercadoria,36,CRÉDITO
+20/06/2025,Compras de Mercadorias para Revenda,-35,DÉBITO
+20/06/2025,extra,-120,DÉBITO
+20/06/2025,frete,-46,DÉBITO
+21/06/2025,Clientes - Revenda de Mercadoria,2512,CRÉDITO
+21/06/2025,Transferência,-2138,DÉBITO
+22/06/2025,Clientes - Revenda de Mercadoria,109,CRÉDITO
+22/06/2025,extra,-60,DÉBITO
+23/06/2025,Clientes - Revenda de Mercadoria,722,CRÉDITO
+23/06/2025,frete,-10,DÉBITO
+23/06/2025,Transferência,-900,DÉBITO
+24/06/2025,Clientes - Revenda de Mercadoria,18,CRÉDITO
+24/06/2025,extra,-100,DÉBITO
+25/06/2025,Clientes - Revenda de Mercadoria,82,CRÉDITO
+25/06/2025,extra,-60,DÉBITO
+25/06/2025,frete,-9,DÉBITO
+26/06/2025,Clientes - Revenda de Mercadoria,227,CRÉDITO
+26/06/2025,frete,-27,DÉBITO
+26/06/2025,extra,-167,DÉBITO
+27/06/2025,Clientes - Revenda de Mercadoria,182,CRÉDITO
+27/06/2025,Compras de Mercadorias para Revenda,-100,DÉBITO
+27/06/2025,frete,-8,DÉBITO
+28/06/2025,Clientes - Revenda de Mercadoria,"146,9",CRÉDITO
+28/06/2025,extra,-310,DÉBITO
+29/06/2025,Clientes - Revenda de Mercadoria,750,CRÉDITO
+29/06/2025,extra,-270,DÉBITO
+29/06/2025,Diferença ,-35,DÉBITO
+29/06/2025,Transferência,-600,DÉBITO
+30/06/2025,Clientes - Revenda de Mercadoria,306,CRÉDITO
+30/06/2025,extra,-100,DÉBITO
+30/06/2025,frete,-43,DÉBITO
+30/06/2025,Diferença ,-14,DÉBITO
+01/07/2025,Clientes - Revenda de Mercadoria,591,CRÉDITO
+01/07/2025,extra,-323,DÉBITO
+02/07/2025,Clientes - Revenda de Mercadoria,113,CRÉDITO
+02/07/2025,frete,-15,DÉBITO
+02/07/2025,extra,-132,DÉBITO
+03/07/2025,Clientes - Revenda de Mercadoria,623,CRÉDITO
+03/07/2025,compras de Mercadorias para Revenda,-23,DÉBITO
+03/07/2025,frete,-17,DÉBITO
+03/07/2025,extra,-70,DÉBITO
+04/07/2025,Clientes - Revenda de Mercadoria,42,CRÉDITO
+04/07/2025,compras de Mercadorias para Revenda,-100,DÉBITO
+04/07/2025,Transferência,-800,DÉBITO
+04/07/2025,extra,-70,DÉBITO
+05/07/2025,Clientes - Revenda de Mercadoria,1253,CRÉDITO
+05/07/2025,frete,-12,DÉBITO
+05/07/2025,extra,-70,DÉBITO
+05/07/2025,Transferência,-1200,DÉBITO
+06/07/2025,Clientes - Revenda de Mercadoria,59,CRÉDITO
+06/07/2025,extra,-70,DÉBITO
+06/07/2025,frete,"-16,75",DÉBITO
+06/07/2025,Diferença,-24,DÉBITO
+07/07/2025,Clientes - Revenda de Mercadoria,776,CRÉDITO
+07/07/2025,frete,-17,DÉBITO
+07/07/2025,extra,-70,DÉBITO
+08/07/2025,Clientes - Revenda de Mercadoria,146,CRÉDITO
+08/07/2025,extra,-150,DÉBITO
+09/07/2025,Clientes - Revenda de Mercadoria,105,CRÉDITO
+09/07/2025,frete,-17,DÉBITO
+10/07/2025,Clientes - Revenda de Mercadoria,319,CRÉDITO
+10/07/2025,extra,-157,DÉBITO
+11/07/2025,Clientes - Revenda de Mercadoria,70,CRÉDITO
+11/07/2025,extra,-170,DÉBITO
+12/07/2025,Clientes - Revenda de Mercadoria,291,CRÉDITO
+12/07/2025,extra,-210,DÉBITO
+13/07/2025,frete ,-37,DÉBITO
+14/07/2025,Clientes - Revenda de Mercadoria,11,CRÉDITO
+14/07/2025,extra,-310,DÉBITO
+14/07/2025,frete,-12,DÉBITO
+14/07/2025,Devoluçao,-500,DÉBITO
+15/07/2025,Clientes - Revenda de Mercadoria,840,CRÉDITO
+15/07/2025,compras de Mercadorias para Revenda,-140,DÉBITO
+15/07/2025,frete,-27,DÉBITO
+15/07/2025,extra,-240,DÉBITO
+16/07/2025,Clientes - Revenda de Mercadoria,436,CRÉDITO
+16/07/2025,compras de Mercadorias para Revenda,-80,DÉBITO
+16/07/2025,extra,-200,DÉBITO
+16/07/2025,frete,-15,DÉBITO
+17/07/2025,Clientes - Revenda de Mercadoria,153,CRÉDITO
+17/07/2025,compras de Mercadorias para Revenda,-45,DÉBITO
+17/07/2025,extra,-100,DÉBITO
+17/07/2025,frete,-15,DÉBITO
+18/07/2025,Clientes - Revenda de Mercadoria,122,CRÉDITO
+18/07/2025,frete,-17,DÉBITO
+19/07/2025,Clientes - Revenda de Mercadoria,36,CRÉDITO
+19/07/2025,compras de Mercadorias para Revenda,-15,DÉBITO
+19/07/2025,exra,-340,DÉBITO
+20/07/2025,Clientes - Revenda de Mercadoria,259,CRÉDITO
+20/07/2025,compras de Mercadorias para Revenda,-12,DÉBITO
+20/07/2025,frete,-17,DÉBITO
+20/07/2025,extra,-70,DÉBITO
+21/07/2025,Clientes - Revenda de Mercadoria,41,CRÉDITO
+21/07/2025,extra,-100,DÉBITO
+22/07/2025,Clientes - Revenda de Mercadoria,16,CRÉDITO
+22/07/2025,frete,-20,DÉBITO
+22/07/2025,extra,-170,DÉBITO
+23/07/2025,Clientes - Revenda de Mercadoria,970,CRÉDITO
+23/07/2025,compras de Mercadorias para Revenda,-130,DÉBITO
+23/07/2025,frete,-44,DÉBITO
+23/07/2025,extra,-170,DÉBITO
+23/07/2025,Transferência,-850,DÉBITO
+24/07/2025,Clientes - Revenda de Mercadoria,131,CRÉDITO
+24/07/2025,extra,-150,DÉBITO
+24/07/2025,frete,-17,DÉBITO
+25/07/2025,Clientes - Revenda de Mercadoria,18,CRÉDITO
+25/07/2025,compras de Mercadorias para Revenda,-19,DÉBITO
+26/07/2025,clientes - Revenda de Mercadoria,920,CRÉDITO
+26/07/2025,frete,-27,DÉBITO
+26/07/2025,extra,-235,DÉBITO
+26/07/2025,Transferência,-600,DÉBITO
+26/07/2025,compras de Mercadorias para Revenda,-70,DÉBITO
+27/07/2025,clientes - Revenda de Mercadoria,2015,CRÉDITO
+27/07/2025,extra,-70,DÉBITO
+27/07/2025,frete,-24,DÉBITO
+27/07/2025,Transferência,-1725,DÉBITO
+28/07/2025,clientes - Revenda de Mercadoria,163,CRÉDITO
+28/07/2025,extra,-120,DÉBITO
+28/07/2025,frete,-12,DÉBITO
+29/07/2025,clientes - Revenda de Mercadoria,210,CRÉDITO
+29/07/2025,extra,-80,DÉBITO
+29/07/2025,frete,-10,DÉBITO
+29/07/2025,compras de Mercadorias para Revenda,-53,DÉBITO
+30/07/2025,clientes - Revenda de Mercadoria,21,CRÉDITO
+30/07/2025,extra,-210,DÉBITO
+30/07/2025,frete,-10,DÉBITO
+31/07/2025,clientes - Revenda de Mercadoria,150,CRÉDITO
+31/07/2025,compras de Mercadorias para Revenda,-183,DÉBITO
+31/07/2025,extra,-70,DÉBITO
+01/08/2025,clientes - Revenda de Mercadoria,58,CRÉDITO
+02/08/2025,clientes - Revenda de Mercadoria,35,CRÉDITO
+02/08/2025,extra,-140,DÉBITO
+03/08/2025,clientes - Revenda de Mercadoria,333,CRÉDITO
+03/08/2025,frete,-10,DÉBITO
+03/08/2025,extra,-100,DÉBITO
+04/08/2025,clientes - Revenda de Mercadoria,840,CRÉDITO
+04/08/2025,extra,-70,DÉBITO
+04/08/2025,Transferência,-800,DÉBITO
+05/08/2025,clientes - Revenda de Mercadoria,126,CRÉDITO
+05/08/2025,extra,-300,DÉBITO
+05/08/2025,compras de Mercadorias para Revenda,-70,DÉBITO
+06/08/2025,clientes - Revenda de Mercadoria,36,CRÉDITO
+06/08/2025,frete ,-25,DÉBITO
+07/08/2025,clientes - Revenda de Mercadoria,108,CRÉDITO
+07/08/2025,extra,-70,DÉBITO
+08/08/2025,clientes - Revenda de Mercadoria,178,CRÉDITO
+08/08/2025,frete,-12,DÉBITO
+09/08/2025,clientes - Revenda de Mercadoria,227,CRÉDITO
+09/08/2025,extra,-190,DÉBITO
+10/08/2025,clientes - Revenda de Mercadoria,246,CRÉDITO
+10/08/2025,extra,-100,DÉBITO
+10/08/2025,frete,-59,DÉBITO
+11/08/2025,clientes - Revenda de Mercadoria,"2765,3",CRÉDITO
+11/08/2025,Transferência,-2490,DÉBITO
+11/08/2025,extra,-40,DÉBITO
+11/08/2025,frete,-17,DÉBITO
+12/08/2025,clientes - Revenda de Mercadoria,117,CRÉDITO
+12/08/2025,extra,-270,DÉBITO
+13/08/2025,clientes - Revenda de Mercadoria,80,CRÉDITO
+13/08/2025,frete,-17,DÉBITO
+13/08/2025,extra,-152,DÉBITO
+14/08/2025,clientes - Revenda de Mercadoria,158,CRÉDITO
+14/08/2025,extra,-140,DÉBITO
+14/08/2025,compras de Mercadorias para Revenda,-85,DÉBITO
+15/08/2025,clientes - Revenda de Mercadoria,59,CRÉDITO
+15/08/2025,compras de Mercadorias para Revenda,-9,DÉBITO
+15/08/2025,extra,-80,DÉBITO
+15/08/2025,frete,-12,DÉBITO
+16/08/2025,clientes - Revenda de Mercadoria,6,CRÉDITO
+16/08/2025,frete,-17,DÉBITO
+16/08/2025,extra,-70,DÉBITO
+17/08/2025,clientes - Revenda de Mercadoria,1740,CRÉDITO
+17/08/2025,extra,-70,DÉBITO
+17/08/2025,Transferência,-1443,DÉBITO
+18/08/2025,clientes - Revenda de Mercadoria,15,CRÉDITO
+18/08/2025,frete,-39,DÉBITO
+18/08/2025,extra,-70,DÉBITO
+19/08/2025,clientes - Revenda de Mercadoria,89,CRÉDITO
+19/08/2025,compras de Mercadorias para Revenda,-51,DÉBITO
+19/08/2025,extra,-42,DÉBITO
+19/08/2025,frete,-12,DÉBITO
+20/08/2025,frete,-29,DÉBITO
+20/08/2025,extra,-70,DÉBITO
+21/08/2025,clientes - Revenda de Mercadoria,195,CRÉDITO
+21/08/2025,frete,-14,DÉBITO
+21/08/2025,extra,-70,DÉBITO
+22/08/2025,clientes - Revenda de Mercadoria,12,CRÉDITO
+23/08/2025,clientes - Revenda de Mercadoria,924,CRÉDITO
+24/08/2025,clientes - Revenda de Mercadoria,306,CRÉDITO
+24/08/2025,extra,-190,DÉBITO
+24/08/2025,frete,-12,DÉBITO
+24/08/2025,Transferência,-600,DÉBITO
+25/08/2025,clientes - Revenda de Mercadoria,134,CRÉDITO
+25/08/2025,frete,-34,DÉBITO
+25/08/2025,extra,-140,DÉBITO
+26/08/2025,clientes - Revenda de Mercadoria,"27,2",CRÉDITO
+26/08/2025,compras de Mercadorias para Revenda,-100,DÉBITO
+26/08/2025,frete,-31,DÉBITO
+26/08/2025,extra,-160,DÉBITO
+27/08/2025,clientes - Revenda de Mercadoria,44,CRÉDITO
+27/08/2025,frete,-14,DÉBITO
+27/08/2025,extra,-170,DÉBITO
+28/08/2025,clientes - Revenda de Mercadoria,38,CRÉDITO
+28/08/2025,compras de Mercadorias para Revenda,"-94,5",DÉBITO
+28/08/2025,frete,-17,DÉBITO
+29/08/2025,clientes - Revenda de Mercadoria,138,CRÉDITO
+30/08/2025,clientes - Revenda de Mercadoria,189,CRÉDITO
+30/08/2025,extra,-150,DÉBITO
+31/08/2025,clientes - Revenda de Mercadoria,2012,CRÉDITO
+31/08/2025,frete,-22,DÉBITO
+31/08/2025,Transferência,-1870,DÉBITO
+01/09/2025,clientes - Revenda de Mercadoria,195,CRÉDITO
+01/09/2025,compras de Mercadorias para Revenda,-170,DÉBITO
+01/09/2025,extra,-130,DÉBITO
+02/09/2025,clientes - Revenda de Mercadoria,150,CRÉDITO
+02/09/2025,extra,-170,DÉBITO
+02/09/2025,frete,-14,DÉBITO
+03/09/2025,clientes - Revenda de Mercadoria,288,CRÉDITO
+03/09/2025,extra,-100,DÉBITO
+03/09/2025,frete,-12,DÉBITO
+04/09/2025,clientes - Revenda de Mercadoria,560,CRÉDITO
+04/09/2025,extra,-400,DÉBITO
+04/09/2025,frete,-39,DÉBITO
+05/09/2025,clientes - Revenda de Mercadoria,"262,5",CRÉDITO
+05/09/2025,extra ,-173,DÉBITO
+05/09/2025,frete,-10,DÉBITO
+06/09/2025,clientes - Revenda de Mercadoria,349,CRÉDITO
+07/09/2025,clientes - Revenda de Mercadoria,148,CRÉDITO
+07/09/2025,extra,-400,DÉBITO
+07/09/2025,frete,-12,DÉBITO
+08/09/2025,clientes - Revenda de Mercadoria,899,CRÉDITO
+08/09/2025,Transferência,-1090,DÉBITO
+08/09/2025,extra,-140,DÉBITO
+08/09/2025,frete,-14,DÉBITO
+09/09/2025,clientes - Revenda de Mercadoria,49,CRÉDITO
+09/09/2025,extra,-270,DÉBITO
+09/09/2025,frete,-27,DÉBITO
+10/09/2025,clientes - Revenda de Mercadoria,474,CRÉDITO
+10/09/2025,extra,-139,DÉBITO
+10/09/2025,frete,-17,DÉBITO
+11/09/2025,clientes - Revenda de Mercadoria,"56,7",CRÉDITO
+11/09/2025,compras de Mercadorias para Revenda,"-29,5",DÉBITO
+11/09/2025,extra,-70,DÉBITO
+12/09/2025,extra,-200,DÉBITO
+13/09/2025,extra ,-259,DÉBITO
+14/09/2025,clientes - Revenda de Mercadoria,150,CRÉDITO
+14/09/2025,extra,-80,DÉBITO
+15/09/2025,clientes - Revenda de Mercadoria,2154,CRÉDITO
+15/09/2025,Transferência,-1757,DÉBITO
+15/09/2025,extra,-70,DÉBITO
+16/09/2025,extra,-190,DÉBITO
+16/09/2025,frete,-20,DÉBITO
+17/09/2025,clientes - Revenda de Mercadoria,46,CRÉDITO
+17/09/2025,extra,-156,DÉBITO
+18/09/2025,clientes - Revenda de Mercadoria,28,CRÉDITO
+18/09/2025,extra,-84,DÉBITO
+18/09/2025,frete,-27,DÉBITO
+19/09/2025,clientes - Revenda de Mercadoria,367,CRÉDITO
+19/09/2025,frete,-17,DÉBITO
+20/09/2025,clientes - Revenda de Mercadoria,135,CRÉDITO
+20/09/2025,frete,-18,DÉBITO
+21/09/2025,clientes - Revenda de Mercadoria,568,CRÉDITO
+21/09/2025,frete,-10,DÉBITO
+22/09/2025,clientes - Revenda de Mercadoria,260,CRÉDITO
+22/09/2025,Transferência,-1000,DÉBITO
+22/09/2025,frete,-10,DÉBITO
+22/09/2025,extra,-170,DÉBITO
+23/09/2025,clientes - Revenda de Mercadoria,1820,CRÉDITO
+23/09/2025,compras de Mercadorias para Revenda,-200,DÉBITO
+23/09/2025,Transferência,-1650,DÉBITO
+23/09/2025,frete,-23,DÉBITO
+23/09/2025,extra,-50,DÉBITO
+24/09/2025,clientes - Revenda de Mercadoria,99,CRÉDITO
+24/09/2025,extra,-170,DÉBITO
+24/09/2025,frete,-32,DÉBITO
+25/09/2025,frete,-29,DÉBITO
+26/09/2025,clientes - Revenda de Mercadoria,297,CRÉDITO
+26/09/2025,frete,-34,DÉBITO
+26/09/2025,extra,-100,DÉBITO
+27/09/2025,clientes - Revenda de Mercadoria,108,CRÉDITO
+27/09/2025,extra,-80,DÉBITO
+28/09/2025,clientes - Revenda de Mercadoria,372,CRÉDITO
+28/09/2025,extra,-490,DÉBITO
+28/09/2025,frete,-12,DÉBITO
+29/09/2025,clientes - Revenda de Mercadoria,330,CRÉDITO
+29/09/2025,extra ,-100,DÉBITO
+29/09/2025,frete,-20,DÉBITO
+30/09/2025,clientes - Revenda de Mercadoria,84,CRÉDITO
+30/09/2025,compras de Mercadorias para Revenda,-70,DÉBITO
+30/09/2025,extra,-290,DÉBITO
+01/10/2025,clientes - Revenda de Mercadoria,99,CRÉDITO
+01/10/2025,extra,-112,DÉBITO
+02/10/2025,clientes - Revenda de Mercadoria,41,CRÉDITO
+02/10/2025,frete,-10,DÉBITO
+03/10/2025,frete,-40,DÉBITO
+04/10/2025,clientes - Revenda de Mercadoria,"74,4",CRÉDITO
+05/10/2025,extra,-100,DÉBITO
+05/10/2025,frete,-12,DÉBITO
+06/10/2025,clientes - Revenda de Mercadoria,865,CRÉDITO
+06/10/2025,extra,-35,DÉBITO
+07/10/2025,clientes - Revenda de Mercadoria,36,CRÉDITO
+07/10/2025,compras de Mercadorias para Revenda,-100,DÉBITO
+07/10/2025,extra,-35,DEBITO
+08/10/2025,clientes - Revenda de Mercadoria,123,CRÉDITO
+09/10/2025,clientes - Revenda de Mercadoria,52,CRÉDITO
+09/10/2025,extra,-250,DEBITO
+09/10/2025,Transferência,-500,DEBITO
+09/10/2025,frete,-17,DEBITO
+10/10/2025,clientes - Revenda de Mercadoria,63,CRÉDITO
+10/10/2025,extra,-80,DEBITO
+12/10/2025,extra,-200,DEBITO
+13/10/2025,clientes - Revenda de Mercadoria,1464,CRÉDITO
+13/10/2025,Transferência,-1000,DEBITO
+13/10/2025,frete,-24,DEBITO
+14/10/2025,clientes - Revenda de Mercadoria,226,CRÉDITO
+14/10/2025,extra,-200,DEBITO
+15/10/2025,clientes - Revenda de Mercadoria,382,CRÉDITO
+15/10/2025,frete,-46,DEBITO
+16/10/2025,clientes - Revenda de Mercadoria,50,CRÉDITO
+16/10/2025,compras de Mercadorias para Revenda,-80,DEBITO
+16/10/2025,frete,-12,DEBITO
+17/10/2025,clientes - Revenda de Mercadoria,2177,CRÉDITO
+17/10/2025,compras de Mercadorias para Revenda,-102,DEBITO
+17/10/2025,Transferência,-1970,DEBITO
+17/10/2025,extra,-350,DEBITO
+18/10/2025,clientes - Revenda de Mercadoria,143,CRÉDITO
+18/10/2025,frete,-17,DEBITO
+19/10/2025,clientes - Revenda de Mercadoria,"129,55",CRÉDITO
+19/10/2025,extra,-180,DEBITO
+19/10/2025,frete,-14,DEBITO
+20/10/2025,clientes - Revenda de Mercadoria,136,CRÉDITO
+20/10/2025,frete,-10,DEBITO
+20/10/2025,extra,-35,DEBITO
+20/10/2025,Transferência,-300,DEBITO
+21/10/2025,frete,-82,DEBITO
+21/10/2025,extra,-140,DEBITO
+22/10/2025,clientes - Revenda de Mercadoria,20,CRÉDITO
+22/10/2025,compras de Mercadorias para Revenda,-130,DEBITO
+23/10/2025,clientes - Revenda de Mercadoria,59,CRÉDITO
+23/10/2025,extra,-70,DEBITO
+24/10/2025,frete,-12,DEBITO
+25/10/2025,clientes - Revenda de Mercadoria,113,CRÉDITO
+25/10/2025,extra ,-90,DEBITO
+26/10/2025,clientes - Revenda de Mercadoria,151,CRÉDITO
+26/10/2025,frete,-12,DEBITO
+27/10/2025,clientes - Revenda de Mercadoria,1162,CRÉDITO
+27/10/2025,frete,-10,DEBITO
+27/10/2025,Transferência,-1000,DEBITO
+28/10/2025,clientes - Revenda de Mercadoria,34,CRÉDITO
+28/10/2025,frete,-17,DEBITO
+28/10/2025,extra,-165,DEBITO
+29/10/2025,clientes - Revenda de Mercadoria,"209,27",CRÉDITO
+29/10/2025,compras de Mercadorias para Revenda,-150,DEBITO
+29/10/2025,frete,-12,DEBITO
+30/10/2025,clientes - Revenda de Mercadoria,235,CRÉDITO
+30/10/2025,frete,-12,DEBITO
+30/10/2025,extra,-50,DEBITO
+31/10/2025,extra,-220,DEBITO
+31/10/2025,frete,-22,DEBITO
+31/10/2025,compras de Mercadorias para Revenda,-18,DEBITO
+01/11/2025,clientes - Revenda de Mercadoria,36,CRÉDITO
+01/11/2025,extra,-200,DEBITO
+01/11/2025,frete,-12,DEBITO
+02/11/2025,clientes - Revenda de Mercadoria,1130,CRÉDITO
+02/11/2025,compras de Mercadorias para Revenda,"-7,4",DEBITO
+02/11/2025,frete,-12,DEBITO
+02/11/2025,extra,-70,DEBITO
+03/11/2025,clientes - Revenda de Mercadoria,1339,CRÉDITO
+03/11/2025,Transferência,-2000,DEBITO
+03/11/2025,extra,-35,DEBITO
+04/11/2025,clientes - Revenda de Mercadoria,59,CRÉDITO
+04/11/2025,extra,-130,DEBITO
+04/11/2025,frete,-22,DEBITO
+05/11/2025,clientes - Revenda de Mercadoria,18,CRÉDITO
+05/11/2025,extra,-70,DEBITO
+05/11/2025,frete,-20,DEBITO
+07/11/2025,clientes - Revenda de Mercadoria,64,CRÉDITO
+08/11/2025,clientes - Revenda de Mercadoria,114,CRÉDITO
+08/11/2025,frete,-8,DEBITO
+09/11/2025,clientes - Revenda de Mercadoria,240,CRÉDITO
+09/11/2025,extra,-135,DEBITO
+10/11/2025,clientes - Revenda de Mercadoria,651,CRÉDITO
+10/11/2025,Transferência,-650,DEBITO
+10/11/2025,frete,-46,DEBITO
+10/11/2025,extra,-100,DEBITO
+11/11/2025,compras de Mercadorias para Revenda,"-146,45",DEBITO
+11/11/2025,frete,-12,DEBITO
+11/11/2025,extra,-130,DEBITO
+12/11/2025,clientes - Revenda de Mercadoria,21,CRÉDITO
+12/11/2025,frete,-12,DEBITO
+12/11/2025,extra,-100,DEBITO
+13/11/2025,clientes - Revenda de Mercadoria,234,CRÉDITO
+13/11/2025,frete,-10,DEBITO
+14/11/2025,clientes - Revenda de Mercadoria,20,CRÉDITO
+14/11/2025,extra,-140,DEBITO
+15/11/2025,clientes - Revenda de Mercadoria,344,CRÉDITO
+15/11/2025,extra,-80,DEBITO
+15/11/2025,frete,-12,DEBITO
+16/11/2025,clientes - Revenda de Mercadoria,1340,CRÉDITO
+16/11/2025,extra,-100,DEBITO
+16/11/2025,Transferência,-1192,DEBITO
+17/11/2025,clientes - Revenda de Mercadoria,"1938,9",CRÉDITO
+17/11/2025,frete,-20,DEBITO
+17/11/2025,Transferência,-1750,DEBITO
+18/11/2025,clientes - Revenda de Mercadoria,17,CRÉDITO
+18/11/2025,compras de Mercadorias para Revenda,-30,DEBITO
+18/11/2025,extra,-200,DEBITO
+19/11/2025,clientes - Revenda de Mercadoria,45,CRÉDITO
+19/11/2025,frete,-12,DEBITO
+20/11/2025,clientes - Revenda de Mercadoria,30,CRÉDITO
+20/11/2025,extra,-240,DEBITO
+20/11/2025,frete,-10,DEBITO
+21/11/2025,clientes - Revenda de Mercadoria,28,CRÉDITO
+21/11/2025,frete,-59,DEBITO
+22/11/2025,clientes - Revenda de Mercadoria,226,CRÉDITO
+22/11/2025,extra,-300,DEBITO
+23/11/2025,clientes - Revenda de Mercadoria,56,CRÉDITO
+23/11/2025,frete,-10,DEBITO
+24/11/2025,clientes - Revenda de Mercadoria,"1079,2",CRÉDITO
+24/11/2025,frete,-15,DEBITO
+24/11/2025,extra,-70,DEBITO
+24/11/2025,Transferência,-975,DEBITO
+25/11/2025,clientes - Revenda de Mercadoria,198,CRÉDITO
+25/11/2025,extra,-160,DEBITO
+26/11/2025,clientes - Revenda de Mercadoria,33,CRÉDITO
+26/11/2025,extra,-205,DEBITO
+27/11/2025,clientes - Revenda de Mercadoria,"94,8",CRÉDITO
+28/11/2025,clientes - Revenda de Mercadoria,102,CRÉDITO
+28/11/2025,compras de Mercadorias para Revenda,-70,DEBITO
+29/11/2025,clientes - Revenda de Mercadoria,"156,55",CRÉDITO
+29/11/2025,extra,-100,DEBITO
+30/11/2025,clientes - Revenda de Mercadoria,274,CRÉDITO
+30/11/2025,frete,-32,DEBITO
+01/12/2025,clientes - Revenda de Mercadoria,1909,CRÉDITO
+01/12/2025,frete,-12,DEBITO
+01/12/2025,extra,-70,DEBITO
+01/12/2025,Transferência,-1819,DEBITO
+02/12/2025,clientes - Revenda de Mercadoria,51,CRÉDITO
+02/12/2025,frete,-23,DEBITO
+02/12/2025,extra,-300,DEBITO
+03/12/2025,clientes - Revenda de Mercadoria,227,CRÉDITO
+03/12/2025,frete,-25,DEBITO
+03/12/2025,extra,-70,DEBITO
+04/12/2025,clientes - Revenda de Mercadoria,481,CRÉDITO
+04/12/2025,frete,-10,DEBITO
+05/12/2025,clientes - Revenda de Mercadoria,19,CRÉDITO
+06/12/2025,frete,-17,DEBITO
+06/12/2025,extra,-300,DEBITO
+07/12/2025,clientes - Revenda de Mercadoria,626,CRÉDITO
+07/12/2025,frete,-10,DEBITO
+07/12/2025,extra,-150,DEBITO
+08/12/2025,clientes - Revenda de Mercadoria,24,CRÉDITO
+08/12/2025,frete,-38,DEBITO
+08/12/2025,extra,-170,DEBITO
+09/12/2025,clientes - Revenda de Mercadoria,44,CRÉDITO
+09/12/2025,compras de Mercadorias para Revenda,-100,DEBITO
+09/12/2025,extra,-140,DEBITO
+09/12/2025,frete,-17,DEBITO
+10/12/2025,clientes - Revenda de Mercadoria,15,CRÉDITO
+10/12/2025,frete,-54,DEBITO
+10/12/2025,extra,-175,DEBITO
+11/12/2025,clientes - Revenda de Mercadoria,188,CRÉDITO
+11/12/2025,compras de Mercadorias para Revenda,-85,DEBITO
+12/12/2025,clientes - Revenda de Mercadoria,64,CRÉDITO
+12/12/2025,extra,-323,DEBITO
+12/12/2025,frete,-36,DEBITO
+13/12/2025,clientes - Revenda de Mercadoria,92,CRÉDITO
+13/12/2025,extra,-90,DEBITO
+13/12/2025,frete,-12,DEBITO
+14/12/2025,clientes - Revenda de Mercadoria,135,CRÉDITO
+14/12/2025,frete,-10,DEBITO
+15/12/2025,clientes - Revenda de Mercadoria,"2201,35",CRÉDITO
+15/12/2025,Transferência,-2170,DEBITO
+15/12/2025,frete,-12,DEBITO
+15/12/2025,extra,-180,DEBITO
+16/12/2025,clientes - Revenda de Mercadoria,237,CRÉDITO
+16/12/2025,frete,-12,DEBITO
+17/12/2025,clientes - Revenda de Mercadoria,171,CRÉDITO
+18/12/2025,clientes - Revenda de Mercadoria,"108,05",CRÉDITO
+18/12/2025,frete,-27,DEBITO
+18/12/2025,extra,-88,DEBITO
+19/12/2025,clientes - Revenda de Mercadoria,368,CRÉDITO
+19/12/2025,frete,-34,DEBITO
+19/12/2025,extra,-400,DEBITO
+20/12/2025,frete,-10,DEBITO
+20/12/2025,extra,-97,DEBITO
+21/12/2025,extra,-90,DEBITO
+22/12/2025,clientes - Revenda de Mercadoria,1749,CRÉDITO
+22/12/2025,Transferência,-1696,DEBITO
+22/12/2025,extra,-90,DEBITO
+22/12/2025,frete,-15,DEBITO
+23/12/2025,clientes - Revenda de Mercadoria,37,CRÉDITO
+23/12/2025,extra,-130,DEBITO
+23/12/2025,frete,-10,DEBITO
+26/12/2025,extra,-70,DEBITO
+26/12/2025,frete,-8,DEBITO
+27/12/2025,frete,-14,DEBITO
+29/12/2025,frete,-22,DEBITO
+30/12/2025,extra,-70,DEBITO
+02/01/2026,frete,-10,DEBITO
+04/01/2026,extra,-100,DEBITO
+05/01/2026,frete,-25,DEBITO
+05/01/2026,extra,-170,DEBITO
+06/01/2026,compras de Mercadorias para Revenda,-150,DEBITO
+07/01/2026,extra,-300,DEBITO
+07/01/2026,frete,-43,DEBITO
+07/01/2026,Transferência,-1200,DEBITO
+08/01/2026,frete,-10,DEBITO
+09/01/2026,frete,-54,DEBITO
+10/01/2026,frete,-17,DEBITO
+10/01/2026,extra,-70,DEBITO
+12/01/2026,extra,-70,DEBITO
+13/01/2026,extra,-205,DEBITO
+13/01/2026,compras de Mercadorias para Revenda,-100,DEBITO
+14/01/2026,frete,-37,DEBITO
+14/01/2026,compras de Mercadorias para Revenda,-30,DEBITO
+15/01/2026,extra,-140,DEBITO
+16/01/2026,frete,-37,DEBITO
+16/01/2026,extra,-400,DEBITO
+19/01/2026,,,

@@ -190,18 +190,50 @@
         }
     }
 
+    function getSelectedLeadCustomerType() {
+        const leadId = document.getElementById('lead_id').value;
+        if (!leadId) return 'B2B';
+        const lead = LEADS.find(l => String(l.id) === String(leadId));
+        return lead?.customer_type || 'B2B';
+    }
+
     function obterPrecoSugerido(coffeeId, packageSize) {
         if (!coffeeId || !packageSize) {
             return '';
         }
         const coffee = COFFEES.find(c => String(c.id) === String(coffeeId));
-        if (!coffee || !coffee.prices_by_currency) {
+        if (!coffee) {
             return '';
         }
         const currency = getCurrentCurrency();
-        const pricesByCurrency = coffee.prices_by_currency[currency] || {};
-        const price = pricesByCurrency[packageSize];
-        return price !== undefined ? price : '';
+        const customerType = getSelectedLeadCustomerType();
+
+        // Try prices_by_customer first (new format with B2B/B2C)
+        if (coffee.prices_by_customer) {
+            const prices = coffee.prices_by_customer[customerType]?.[currency] || {};
+            const price = prices[packageSize];
+            if (price !== undefined) {
+                return price;
+            }
+            // Fallback to B2B if B2C price not set
+            if (customerType === 'B2C') {
+                const b2bPrices = coffee.prices_by_customer['B2B']?.[currency] || {};
+                if (b2bPrices[packageSize] !== undefined) {
+                    return b2bPrices[packageSize];
+                }
+            }
+        }
+
+        // Fallback to legacy format (prices_by_currency)
+        if (coffee.prices_by_currency) {
+            const pricesByCurrency = coffee.prices_by_currency[currency] || {};
+            const price = pricesByCurrency[packageSize];
+            if (price !== undefined) {
+                return price;
+            }
+        }
+
+        return '';
     }
 
     function anexarEventosLinha(row, item = {}) {
@@ -305,6 +337,7 @@
                 leadIdInput.value = this.dataset.id;
                 leadSearchInput.value = this.dataset.name;
                 suggestionsDiv.style.display = 'none';
+                onLeadChanged();
             });
 
             item.addEventListener('mouseenter', function() {
@@ -328,6 +361,11 @@
         const filtered = filterLeads(query);
         showSuggestions(filtered);
     });
+
+    // Atualiza precos quando o lead mudar (para refletir B2B/B2C do lead)
+    function onLeadChanged() {
+        atualizarPrecosAoMudarMoeda();
+    }
 
     // Hide suggestions when clicking outside
     document.addEventListener('click', function(e) {

@@ -197,6 +197,7 @@ class CRMService:
             lead = CRMLead(
                 name=name,
                 category=payload.get('category'),
+                customer_type=payload.get('customer_type', 'B2B'),
                 status=normalized_status,
                 source=payload.get('source'),
                 search_keyword=payload.get('search_keyword'),
@@ -597,7 +598,7 @@ class CRMService:
                 return None
 
             allowed_fields = [
-                'name', 'category', 'status', 'source', 'search_keyword', 'search_city',
+                'name', 'category', 'customer_type', 'status', 'source', 'search_keyword', 'search_city',
                 'address_line', 'address_number', 'address_complement', 'neighborhood',
                 'city', 'state', 'postal_code', 'country', 'latitude', 'longitude',
                 'phone', 'whatsapp', 'email', 'instagram', 'website', 'primary_contact_name',
@@ -661,6 +662,7 @@ class CRMService:
             'id': lead.id,
             'name': lead.name,
             'category': lead.category,
+            'customer_type': lead.customer_type or 'B2B',
             'status': lead.status,
             'source': lead.source,
             'search_keyword': lead.search_keyword,

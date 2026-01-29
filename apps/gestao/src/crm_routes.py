@@ -69,6 +69,7 @@ def create_crm_blueprint(
                 lead_id = crm_service.create_lead(
                     name=payload.get('name', '').strip(),
                     category=payload.get('category'),
+                    customer_type=payload.get('customer_type', 'B2B'),
                     city=payload.get('city'),
                     state=payload.get('state'),
                     country=payload.get('country'),

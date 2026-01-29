@@ -7,7 +7,7 @@ from typing import Any, Dict, List, Optional
 from sqlalchemy.orm import Session
 
 from ..db import session_scope
-from ..models import CoffeeProduct, CoffeePackagingPrice, CURRENCIES
+from ..models import CoffeeProduct, CoffeePackagingPrice, CURRENCIES, CUSTOMER_TYPES
 
 PACKAGE_SIZES = ['250g', '500g', '1kg']
 
@@ -31,15 +31,17 @@ class CatalogService:
         self,
         coffee_id: int,
         package_size: str,
-        currency: str = 'BRL'
+        currency: str = 'BRL',
+        customer_type: str = 'B2B'
     ) -> Optional[float]:
         """
-        Get the price for a specific coffee, package size, and currency.
+        Get the price for a specific coffee, package size, currency, and customer type.
 
         Args:
             coffee_id: The coffee product ID
             package_size: Package size (e.g., '250g', '500g', '1kg')
             currency: Currency code (default 'BRL')
+            customer_type: Customer type ('B2B' or 'B2C', default 'B2B')
 
         Returns:
             The price or None if not found
@@ -50,7 +52,8 @@ class CatalogService:
                 .filter(
                     CoffeePackagingPrice.coffee_id == coffee_id,
                     CoffeePackagingPrice.package_size == package_size,
-                    CoffeePackagingPrice.currency == currency.upper()
+                    CoffeePackagingPrice.currency == currency.upper(),
+                    CoffeePackagingPrice.customer_type == customer_type.upper()
                 )
                 .first()
             )
@@ -113,33 +116,44 @@ class CatalogService:
         """
         Persist prices for a coffee product.
 
-        Supports two formats:
+        Supports three formats:
         - Simple (BRL only): {'250g': 50, '500g': 90}
         - Multi-currency: {'BRL': {'250g': 50}, 'PYG': {'250g': 35000}}
+        - By customer type: {'B2B': {'BRL': {'250g': 50}}, 'B2C': {'BRL': {'250g': 60}}}
         """
-        # Detect format: if first value is a dict, it's multi-currency
-        is_multi_currency = any(
-            isinstance(v, dict) for v in prices.values() if v is not None
+        # Detect format: check if first level keys are customer types
+        is_by_customer_type = any(
+            k in CUSTOMER_TYPES for k in prices.keys()
         )
 
-        if is_multi_currency:
-            self._persist_multi_currency_prices(session, coffee, prices)
+        if is_by_customer_type:
+            self._persist_prices_by_customer_type(session, coffee, prices)
         else:
-            # Legacy single-currency format (assume BRL)
-            self._persist_single_currency_prices(session, coffee, prices, 'BRL')
+            # Detect format: if first value is a dict, it's multi-currency
+            is_multi_currency = any(
+                isinstance(v, dict) for v in prices.values() if v is not None
+            )
+
+            if is_multi_currency:
+                # Multi-currency without customer type: assume B2B
+                self._persist_multi_currency_prices(session, coffee, prices, 'B2B')
+            else:
+                # Legacy single-currency format (assume BRL, B2B)
+                self._persist_single_currency_prices(session, coffee, prices, 'BRL', 'B2B')
 
     def _persist_single_currency_prices(
         self,
         session: Session,
         coffee: CoffeeProduct,
         prices: Dict[str, Any],
-        currency: str
+        currency: str,
+        customer_type: str = 'B2B'
     ) -> None:
-        """Persist prices for a single currency."""
+        """Persist prices for a single currency and customer type."""
         existing = {
             price.package_size: price
             for price in coffee.prices
-            if price.currency == currency
+            if price.currency == currency and price.customer_type == customer_type
         }
 
         for size in PACKAGE_SIZES:
@@ -154,6 +168,7 @@ class CatalogService:
                     coffee_id=coffee.id,
                     package_size=size,
                     currency=currency,
+                    customer_type=customer_type,
                     price=value
                 ))
 
@@ -161,13 +176,15 @@ class CatalogService:
         self,
         session: Session,
         coffee: CoffeeProduct,
-        prices: Dict[str, Dict[str, Any]]
+        prices: Dict[str, Dict[str, Any]],
+        customer_type: str = 'B2B'
     ) -> None:
-        """Persist prices for multiple currencies."""
-        # Build map of existing prices by (currency, size)
+        """Persist prices for multiple currencies and a single customer type."""
+        # Build map of existing prices by (currency, size) for this customer_type
         existing = {
             (price.currency, price.package_size): price
             for price in coffee.prices
+            if price.customer_type == customer_type
         }
 
         for currency in CURRENCIES:
@@ -190,26 +207,48 @@ class CatalogService:
                         coffee_id=coffee.id,
                         package_size=size,
                         currency=currency,
+                        customer_type=customer_type,
                         price=value
                     ))
+
+    def _persist_prices_by_customer_type(
+        self,
+        session: Session,
+        coffee: CoffeeProduct,
+        prices: Dict[str, Dict[str, Dict[str, Any]]]
+    ) -> None:
+        """Persist prices organized by customer type, then currency."""
+        for customer_type in CUSTOMER_TYPES:
+            customer_prices = prices.get(customer_type, {})
+            if not customer_prices:
+                continue
+            self._persist_multi_currency_prices(session, coffee, customer_prices, customer_type)
 
     def _serialize_coffee(self, coffee: CoffeeProduct) -> Dict[str, Any]:
         """
         Serialize a coffee product.
 
-        Returns prices in both formats for backward compatibility:
-        - prices_map: Legacy format (BRL only): {'250g': 50, ...}
-        - prices_by_currency: Multi-currency format: {'BRL': {'250g': 50}, 'PYG': {...}}
+        Returns prices in multiple formats for backward compatibility:
+        - prices_map: Legacy format (BRL only, B2B): {'250g': 50, ...}
+        - prices_by_currency: Multi-currency format (B2B): {'BRL': {'250g': 50}, 'PYG': {...}}
+        - prices_by_customer: By customer type: {'B2B': {'BRL': {...}}, 'B2C': {'BRL': {...}}}
         """
-        # Build multi-currency prices map
-        prices_by_currency: Dict[str, Dict[str, float]] = {currency: {} for currency in CURRENCIES}
+        # Build prices organized by customer_type -> currency -> size
+        prices_by_customer: Dict[str, Dict[str, Dict[str, float]]] = {
+            customer_type: {currency: {} for currency in CURRENCIES}
+            for customer_type in CUSTOMER_TYPES
+        }
 
         for price in coffee.prices:
             currency = price.currency or 'BRL'
-            if currency in prices_by_currency:
-                prices_by_currency[currency][price.package_size] = price.price
+            customer_type = getattr(price, 'customer_type', None) or 'B2B'
+            if customer_type in prices_by_customer and currency in prices_by_customer[customer_type]:
+                prices_by_customer[customer_type][currency][price.package_size] = price.price
 
-        # Legacy prices_map (BRL only for backward compatibility)
+        # Legacy: prices_by_currency (B2B only for backward compatibility)
+        prices_by_currency = prices_by_customer.get('B2B', {currency: {} for currency in CURRENCIES})
+
+        # Legacy prices_map (BRL, B2B only for backward compatibility)
         prices_map = prices_by_currency.get('BRL', {})
 
         return {
@@ -222,11 +261,12 @@ class CatalogService:
             'sensorial_notes': coffee.sensorial_notes,
             'sca_score': coffee.sca_score,
             'active': coffee.active,
-            'prices_map': prices_map,  # Legacy: BRL only
-            'prices_map_brl': prices_by_currency.get('BRL', {}),
-            'prices_map_pyg': prices_by_currency.get('PYG', {}),
-            'prices_by_currency': prices_by_currency,  # New: all currencies
+            'prices_map': prices_map,  # Legacy: BRL, B2B only
+            'prices_map_brl': prices_by_currency.get('BRL', {}),  # Legacy: B2B BRL
+            'prices_map_pyg': prices_by_currency.get('PYG', {}),  # Legacy: B2B PYG
+            'prices_by_currency': prices_by_currency,  # Legacy: B2B all currencies
+            'prices_by_customer': prices_by_customer,  # New: by customer type
         }
 
 
-__all__ = ['CatalogService', 'PACKAGE_SIZES', 'CURRENCIES']
+__all__ = ['CatalogService', 'PACKAGE_SIZES', 'CURRENCIES', 'CUSTOMER_TYPES']

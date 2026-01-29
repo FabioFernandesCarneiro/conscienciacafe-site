@@ -14,6 +14,7 @@ from .db import Base
 # Constants
 CURRENCIES = ['BRL', 'PYG']
 COUNTRIES = ['BR', 'PY']
+CUSTOMER_TYPES = ['B2B', 'B2C']
 
 
 class CoffeeProduct(Base):
@@ -37,13 +38,15 @@ class CoffeeProduct(Base):
 class CoffeePackagingPrice(Base):
     __tablename__ = 'coffee_packaging_prices'
     __table_args__ = (
-        UniqueConstraint('coffee_id', 'package_size', 'currency', name='uq_coffee_package_currency'),
+        UniqueConstraint('coffee_id', 'package_size', 'currency', 'customer_type',
+                         name='uq_coffee_package_currency_type'),
     )
 
     id = Column(Integer, primary_key=True)
     coffee_id = Column(Integer, ForeignKey('coffee_products.id', ondelete='CASCADE'), nullable=False)
     package_size = Column(String, nullable=False)
     currency = Column(String(3), default='BRL', nullable=False)  # 'BRL' or 'PYG'
+    customer_type = Column(String, default='B2B', nullable=False)  # 'B2B' or 'B2C'
     price = Column(Float, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -230,6 +233,7 @@ class CRMLead(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     category = Column(String)
+    customer_type = Column(String, default='B2B')  # 'B2B' or 'B2C'
     status = Column(String, default='nao_contactado')
     source = Column(String)
     search_keyword = Column(String)
@@ -352,5 +356,5 @@ __all__ = [
     'CRMUser', 'Account', 'Category', 'Client', 'Transaction',
     'ImportBatch', 'MLTrainingData', 'CRMLead', 'CRMInteraction',
     'CommissionRate', 'Commission', 'ExchangeRate',
-    'CURRENCIES', 'COUNTRIES'
+    'CURRENCIES', 'COUNTRIES', 'CUSTOMER_TYPES'
 ]

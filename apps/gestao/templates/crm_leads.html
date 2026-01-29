@@ -152,6 +152,7 @@
     const FIELD_LABELS = {
         name: 'Nome',
         category: 'Categoria',
+        customer_type: 'Tipo de Cliente',
         city: 'Cidade',
         state: 'Estado',
         country: 'País',
@@ -436,9 +437,13 @@
             const stageLabel = lead.status_label || stageInfo.label || stageValue;
             const locationLine = [lead.city, lead.state].filter(Boolean).join(' / ');
 
+            const customerTypeBadge = lead.customer_type === 'B2C'
+                ? '<span class="badge bg-info ms-2">B2C</span>'
+                : '<span class="badge bg-secondary ms-2">B2B</span>';
+
             row.innerHTML = `
                 <td>
-                    <strong>${safeLeadName || '-'}</strong><br>
+                    <strong>${safeLeadName || '-'}</strong>${customerTypeBadge}<br>
                     <small class="text-muted">Origem: ${escapeHtml(lead.source || 'N/A')}</small>
                 </td>
                 <td>
@@ -839,6 +844,7 @@
             id: null,
             name: '',
             category: '',
+            customer_type: 'B2B',
             phone: '',
             whatsapp: '',
             instagram: '',
@@ -921,6 +927,13 @@
                                     <input type="text" class="form-control" name="source" value="${safe(lead.source)}" placeholder="Google Maps, Indicação...">
                                 </div>
                                 ${renderUserField(lead.user_id)}
+                                <div class="col-md-4">
+                                    <label class="form-label">Tipo de Cliente</label>
+                                    <select class="form-select" name="customer_type">
+                                        <option value="B2B" ${safe(lead.customer_type) === 'B2C' ? '' : 'selected'}>B2B - Revenda/Atacado</option>
+                                        <option value="B2C" ${safe(lead.customer_type) === 'B2C' ? 'selected' : ''}>B2C - Consumidor Final</option>
+                                    </select>
+                                </div>
                                 <div class="col-md-4">
                                     <label class="form-label">Status</label>
                                     ${renderStageSelect({ selected: safe(lead.status) || DEFAULT_STAGE })}

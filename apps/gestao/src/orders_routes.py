@@ -23,34 +23,56 @@ def _parse_brazilian_number(value: str) -> float:
     return float(normalized)
 
 
-def _parse_price_form(form) -> Dict[str, Dict[str, float]]:
-    """Parse price form fields for BRL and PYG currencies."""
-    prices: Dict[str, Dict[str, float]] = {'BRL': {}, 'PYG': {}}
+def _parse_price_form(form) -> Dict[str, Dict[str, Dict[str, float]]]:
+    """Parse price form fields for B2B/B2C customer types, BRL and PYG currencies."""
+    prices: Dict[str, Dict[str, Dict[str, float]]] = {
+        'B2B': {'BRL': {}, 'PYG': {}},
+        'B2C': {'BRL': {}, 'PYG': {}},
+    }
 
+    for customer_type in ['B2B', 'B2C']:
+        prefix = customer_type.lower()
+
+        for size in PACKAGE_SIZES:
+            # Parse BRL prices
+            brl_value = form.get(f'{prefix}_price_brl_{size}')
+            if brl_value:
+                try:
+                    prices[customer_type]['BRL'][size] = _parse_brazilian_number(brl_value)
+                except ValueError:
+                    raise ValueError(f'Preco {customer_type} BRL invalido para {size}')
+
+            # Parse PYG prices
+            pyg_value = form.get(f'{prefix}_price_pyg_{size}')
+            if pyg_value:
+                try:
+                    prices[customer_type]['PYG'][size] = _parse_brazilian_number(pyg_value)
+                except ValueError:
+                    raise ValueError(f'Preco {customer_type} PYG invalido para {size}')
+
+    # Fallback: legacy format (price_brl_{size} and price_pyg_{size}) -> B2B
     for size in PACKAGE_SIZES:
-        # Parse BRL prices
-        brl_value = form.get(f'price_brl_{size}')
-        if brl_value:
+        legacy_brl = form.get(f'price_brl_{size}')
+        if legacy_brl and size not in prices['B2B']['BRL']:
             try:
-                prices['BRL'][size] = _parse_brazilian_number(brl_value)
+                prices['B2B']['BRL'][size] = _parse_brazilian_number(legacy_brl)
             except ValueError:
-                raise ValueError(f'Preço BRL inválido para {size}')
+                raise ValueError(f'Preco BRL invalido para {size}')
 
-        # Parse PYG prices
-        pyg_value = form.get(f'price_pyg_{size}')
-        if pyg_value:
+        legacy_pyg = form.get(f'price_pyg_{size}')
+        if legacy_pyg and size not in prices['B2B']['PYG']:
             try:
-                prices['PYG'][size] = _parse_brazilian_number(pyg_value)
+                prices['B2B']['PYG'][size] = _parse_brazilian_number(legacy_pyg)
             except ValueError:
-                raise ValueError(f'Preço PYG inválido para {size}')
+                raise ValueError(f'Preco PYG invalido para {size}')
 
-        # Fallback: legacy format (price_{size})
+        # Fallback: very old format (price_{size}) -> B2B BRL
         legacy_value = form.get(f'price_{size}')
-        if legacy_value and size not in prices['BRL']:
+        if legacy_value and size not in prices['B2B']['BRL']:
             try:
-                prices['BRL'][size] = _parse_brazilian_number(legacy_value)
+                prices['B2B']['BRL'][size] = _parse_brazilian_number(legacy_value)
             except ValueError:
-                raise ValueError(f'Preço inválido para {size}')
+                raise ValueError(f'Preco invalido para {size}')
 
     return prices
 

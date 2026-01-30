@@ -1,0 +1,279 @@
+---
+// Cardápio de Sugestões dos Clientes - Monte seu Lanche - Consciência Café
+// Para imprimir: Ctrl+P (ou Cmd+P no Mac)
+// Formato: A4 (1 página) - Layout A5 (105mm × 297mm)
+---
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sugestões dos Clientes | Consciência Café</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+      /* ========================================
+         VARIÁVEIS E RESET
+         ======================================== */
+      :root {
+        --primary: #1A1A1A;
+        --accent: #E85A1E;
+        --gray: #666666;
+        --gray-light: #F5F5F5;
+        --white: #FFFFFF;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Inter', system-ui, sans-serif;
+        font-size: 10pt;
+        line-height: 1.3;
+        color: var(--primary);
+        background: var(--white);
+      }
+
+      h1, h2, h3, h4 {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-weight: 600;
+      }
+
+      /* ========================================
+         CONTAINER PRINCIPAL - A5 (METADE DO A4)
+         ======================================== */
+      .sugestoes-page {
+        width: 105mm;
+        min-height: 297mm;
+        padding: 8mm 10mm;
+        background: var(--white);
+        margin: 0 auto;
+      }
+
+      /* ========================================
+         HEADER CENTRALIZADO
+         ======================================== */
+      .sugestoes-header {
+        text-align: center;
+        margin-bottom: 4mm;
+        border-bottom: 1px solid var(--accent);
+        padding-bottom: 2mm;
+      }
+
+      .sugestoes-header .logo {
+        height: 8mm;
+        margin-bottom: 2mm;
+      }
+
+      .sugestoes-header h1 {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: 14pt;
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 1mm;
+        letter-spacing: 0.05em;
+      }
+
+      .sugestoes-header .subtitle {
+        font-size: 7.5pt;
+        color: var(--gray);
+      }
+
+      /* ========================================
+         ITEM DE SUGESTÃO - LAYOUT CENTRALIZADO
+         ======================================== */
+      .sugestao-item {
+        margin-bottom: 4mm;
+        break-inside: avoid;
+        page-break-inside: avoid;
+        text-align: center;
+      }
+
+      .sugestao-cliente {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: 12pt;
+        font-weight: 700;
+        color: var(--accent);
+        margin-bottom: 1.5mm;
+      }
+
+      .sugestao-cliente .extra {
+        font-size: 8pt;
+        font-weight: 500;
+        color: var(--gray);
+        font-family: 'Inter', system-ui, sans-serif;
+        display: block;
+        margin-top: 0.5mm;
+      }
+
+      .sugestao-base {
+        font-size: 9pt;
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 1mm;
+      }
+
+      .sugestao-ingredientes {
+        font-size: 8pt;
+        color: var(--gray);
+        line-height: 1.4;
+        padding: 0 3mm;
+      }
+
+      /* ========================================
+         SEPARADOR ENTRE SUGESTÕES
+         ======================================== */
+      .sugestao-divider {
+        border-bottom: 1px dashed #ddd;
+        margin: 3mm 0;
+      }
+
+      /* ========================================
+         ESTILOS DE IMPRESSÃO
+         ======================================== */
+      @media print {
+        @page {
+          size: A4 portrait;
+          margin: 0;
+        }
+
+        body {
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+          background: white;
+        }
+
+        .sugestoes-page {
+          page-break-after: avoid;
+          box-shadow: none;
+        }
+
+        .sugestao-item {
+          break-inside: avoid;
+          page-break-inside: avoid;
+        }
+
+        .print-hint {
+          display: none !important;
+        }
+      }
+
+      /* ========================================
+         PREVIEW NA TELA
+         ======================================== */
+      @media screen {
+        body {
+          background: #e0e0e0;
+          padding: 20px;
+        }
+
+        .sugestoes-page {
+          box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+          margin-bottom: 20px;
+        }
+
+        .print-hint {
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: var(--accent);
+          color: white;
+          padding: 12px 20px;
+          border-radius: 8px;
+          font-size: 12pt;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+          z-index: 100;
+        }
+
+        .print-hint kbd {
+          background: rgba(255,255,255,0.2);
+          padding: 2px 6px;
+          border-radius: 3px;
+          font-family: monospace;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Dica de impressão (apenas na tela) -->
+    <div class="print-hint no-print">
+      Pressione <kbd>Ctrl+P</kbd> para imprimir
+    </div>
+
+    <!-- ==========================================
+         PÁGINA: SUGESTÕES DOS CLIENTES
+         ========================================== -->
+    <div class="sugestoes-page">
+      <!-- Header -->
+      <header class="sugestoes-header">
+        <img src="/images/LOGOBRANCO.png" alt="Consciência Café" class="logo" style="filter: invert(1);">
+        <h1>Sugestões dos Clientes</h1>
+        <p class="subtitle">Combinações favoritas para o Monte seu Lanche</p>
+      </header>
+
+      <!-- SUGESTÃO 1: Bruna - 29 (proteína extra) -->
+      <div class="sugestao-item">
+        <div class="sugestao-cliente">
+          Bruna - 29
+          <span class="extra">(proteína extra)</span>
+        </div>
+        <div class="sugestao-base">Waffle de Pão de Queijo</div>
+        <div class="sugestao-ingredientes">
+          Frango fritinho, azeitona, bacon e orégano
+        </div>
+      </div>
+
+      <div class="sugestao-divider"></div>
+
+      <!-- SUGESTÃO 2: Jusci - 24 -->
+      <div class="sugestao-item">
+        <div class="sugestao-cliente">Jusci - 24</div>
+        <div class="sugestao-base">Waffle de Pão de Queijo</div>
+        <div class="sugestao-ingredientes">
+          Frango, queijo, requeijão e orégano
+        </div>
+      </div>
+
+      <div class="sugestao-divider"></div>
+
+      <!-- SUGESTÃO 3: Teresa - 24 -->
+      <div class="sugestao-item">
+        <div class="sugestao-cliente">Teresa - 24</div>
+        <div class="sugestao-base">Ciabatta</div>
+        <div class="sugestao-ingredientes">
+          Ovo mexido, queijo, tomate, manteiga e homus
+        </div>
+      </div>
+
+      <div class="sugestao-divider"></div>
+
+      <!-- SUGESTÃO 4: Taiana e Fabio - 24 -->
+      <div class="sugestao-item">
+        <div class="sugestao-cliente">Taiana e Fabio - 24</div>
+        <div class="sugestao-base">Tapioca Virada</div>
+        <div class="sugestao-ingredientes">
+          Frango, requeijão, cebola, orégano e pesto
+        </div>
+      </div>
+
+      <div class="sugestao-divider"></div>
+
+      <!-- SUGESTÃO 5: Carol - 24 -->
+      <div class="sugestao-item">
+        <div class="sugestao-cliente">Carol - 24</div>
+        <div class="sugestao-base">Pão de Fermentação</div>
+        <div class="sugestao-ingredientes">
+          Bacon, tomate, queijo e orégano
+        </div>
+      </div>
+
+    </div>
+  </body>
+</html>
